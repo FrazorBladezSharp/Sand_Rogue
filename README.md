@@ -2,6 +2,7 @@
 A Rogue Like Game written in C
 
 ##############################################
+ 
  Project created by Frazor Sharp 2020 Jul 22
 
  Sand_Rogue for C / C++ Version 0.1
@@ -13,6 +14,7 @@ A Rogue Like Game written in C
 
  All code is free to use as you please
  free for all Licence !
+
 ##############################################
 
 # Dependencies
