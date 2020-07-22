@@ -2,8 +2,11 @@
   <dictionary name="frazor">
     <words>
       <w>assimp</w>
+      <w>bladez</w>
       <w>cglm</w>
+      <w>frazor</w>
       <w>glew</w>
+      <w>opensourcelicence</w>
     </words>
   </dictionary>
 </component>
