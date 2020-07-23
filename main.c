@@ -175,17 +175,18 @@ main() {
     // create Dungeon Level - can be done anytime before main game loop
 
     // window openGL - NOTE : must be done first to get the openGL context.
-    SDL_Window *window;                                     // Declare a pointer
 
-    SDL_Init(SDL_INIT_EVERYTHING);                     // Initialize SDL2
+    SDL_Window *window;                                   // Declare a pointer
+
+    SDL_Init(SDL_INIT_EVERYTHING);                   // Initialize SDL2
 
     window = SDL_CreateWindow(
-            WINDOW_TITLE,                              // window title
-            1000,                                // initial x position
-            250,                                // initial y position
-            WINDOW_WIDTH,                              // width, in pixels
-            WINDOW_HEIGHT,                             // height, in pixels
-            SDL_WINDOW_OPENGL                   // flags - see below
+            WINDOW_TITLE,                                 // window title
+            1000,                                      // initial x position
+            250,                                       // initial y position
+            WINDOW_WIDTH,                                 // width, in pixels
+            WINDOW_HEIGHT,                                // height, in pixels
+            SDL_WINDOW_OPENGL                        // flags
     );
 
     ////////////// initializing OpenGL 3.3 ///////////////
@@ -196,7 +197,7 @@ main() {
     );
 
     SDL_GL_SetAttribute(
-            SDL_GL_CONTEXT_MINOR_VERSION,
+            SDL_GL_CONTEXT_MINOR_VERSION,           // set the OpenGL version
             3
     );
 
@@ -207,7 +208,7 @@ main() {
 
     SDL_GLContext gfx;
 
-    gfx = SDL_GL_CreateContext(
+    gfx = SDL_GL_CreateContext(                         // create our windows OpenGL context
             window
     );
 
@@ -220,7 +221,7 @@ main() {
         return 1;
     }
 
-    if(glewInit() != GLEW_OK){
+    if(glewInit() != GLEW_OK){                          // generate the OpenGL functions
 
         printf(
                 "failed to initialize openGL (GLEW)."
@@ -230,7 +231,7 @@ main() {
     }
 
     SDL_GL_SetSwapInterval(
-            1                               // 1 = vsync
+            1                                    // 1 = vsync
     );
 
     printf(
@@ -238,7 +239,7 @@ main() {
             glGetString(GL_VERSION)
     );
 
-    glClearColor(
+    glClearColor(                                    // the window background color
             0.4f,
             0.4f,
             0.8f,
@@ -269,11 +270,11 @@ main() {
             &vaoID
     );
 
-    glBindVertexArray(
+    glBindVertexArray(                          // bind the VAO to record what we do
             vaoID
     );
 
-    u32 vboID;
+    u32 vboID;                                  // Vertex Buffer Object for the vertices
 
     glCreateBuffers(
             1,
@@ -285,7 +286,7 @@ main() {
             vboID
     );
 
-    glBufferData(
+    glBufferData(                               // send our data to the gfx card
             GL_ARRAY_BUFFER,
             sizeof(vertex_array) * 4,
             vertex_array,
@@ -298,7 +299,7 @@ main() {
     );
 
     glVertexAttribPointer(
-            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+            0,                  // attribute must match the layout in the shader.
             3,                  // size
             GL_FLOAT,           // type
             GL_FALSE,           // normalized?
@@ -306,7 +307,7 @@ main() {
             (void*)0            // array buffer offset
     );
 
-    u32 iboID;
+    u32 iboID;                              // Index Buffer Object for our Indices
 
     glCreateBuffers(
             1,
@@ -318,23 +319,23 @@ main() {
             iboID
     );
 
-    glBufferData(
+    glBufferData(                           // send our data to the Gfx Card
             GL_ELEMENT_ARRAY_BUFFER,
             sizeof(index_array) * 4,
             index_array,
             GL_STATIC_DRAW
     );
 
-    glBindVertexArray(
+    glBindVertexArray(                      // disable our VAO
             0
     );
 
-    glBindBuffer(
+    glBindBuffer(                           // disable our VBO
             GL_ELEMENT_ARRAY_BUFFER,
             0
     );
 
-    glBindBuffer(
+    glBindBuffer(                           // disable oud IBO
             GL_ARRAY_BUFFER,
             0
     );
@@ -375,17 +376,17 @@ main() {
         );
 
 
-        glBindVertexArray(
+        glBindVertexArray(                          // set which VAO to draw
                 vaoID
         );
 
-        glDrawArrays(
+        glDrawArrays(                               // draw using Triangles
                 GL_TRIANGLES,
                 0,
                 sizeof(index_array)
         );
 
-        glBindVertexArray(
+        glBindVertexArray(                          // disable the used VAO
                 0
         );
 
@@ -394,7 +395,7 @@ main() {
                 window
         );
 
-        SDL_Delay(
+        SDL_Delay(                                 // give the cpu a well earned break !
                 10
         );
 
