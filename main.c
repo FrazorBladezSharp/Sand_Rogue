@@ -15,33 +15,33 @@
 ###############################################################
 */
 
-#include <SDL2/SDL.h>
+//#include <SDL2/SDL.h>
 #include <GL/glew.h>
-#include <GL/gl.h>
+//#include <GL/gl.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <cglm/cglm.h>
 /* assimp include files. These three are usually needed. */
-#include <assimp/cimport.h>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+//#include <assimp/cimport.h>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 
-typedef uint8_t		u8;
+//typedef uint8_t		u8;
 typedef uint32_t	u32;
-typedef uint64_t	u64;
-typedef int8_t		i8;
+//typedef uint64_t	u64;
+//typedef int8_t		i8;
 typedef int32_t		i32;
-typedef int64_t		i64;
+//typedef int64_t		i64;
 
 //////////////////////////// Defines //////////////////////////////////
 
 #define UNUSED -1
 
-#define WINDOW_TITLE "Sand_Rogue V0.1"
-#define WINDOW_WIDTH 900
-#define WINDOW_HEIGHT 500
+//#define WINDOW_TITLE "Sand_Rogue V0.1"
+//#define WINDOW_WIDTH 900
+//#define WINDOW_HEIGHT 500
 
 #define MAP_WIDTH 80
 #define MAP_HEIGHT 40
@@ -50,31 +50,31 @@ typedef int64_t		i64;
 
 ///////////////////////////// Structs /////////////////////////////////
 
-typedef struct {
-    vec3 position;
-    float rotationX;
-    float rotationY;
-    float rotationZ;
-    mat4 view_matrix;
-} Main_Camera;
+//typedef struct {
+//    vec3 position;
+//    float rotationX;
+//    float rotationY;
+//    float rotationZ;
+//    mat4 view_matrix;
+//} Main_Camera;
 
-typedef struct
-{
-    unsigned int object_id;
-    GLuint vaoID;
-    GLuint num_indices;
-    mat4 model_matrix
-} Floor_Tile;
+//typedef struct
+//{
+//    unsigned int object_id;
+//    GLuint vaoID;
+//    GLuint num_indices;
+//    mat4 model_matrix
+//} Floor_Tile;
 
 typedef enum
 {
     COMP_POSITION = 0,
-    COMP_Model,
-    COMP_VISIBILITY,
-    COMP_SOLID_BODY,
-    COMP_MOVEMENT,
+//    COMP_Model,
+//    COMP_VISIBILITY,
+//    COMP_SOLID_BODY,
+//    COMP_MOVEMENT,
 
-    COMP_COUNT
+//    COMP_COUNT                                  // keep a count on how many components we have
 
 }Game_Component;
 
@@ -98,16 +98,16 @@ typedef struct
     mat4 model_matrix;
 } Position;
 
-typedef struct
-{
-    i32 object_id;
-    GLuint vaoID;
-    GLuint num_indices;
-} Model;
+//typedef struct
+//{
+//    i32 object_id;
+//    GLuint vaoID;
+//    GLuint num_indices;
+//} Model;
 
 ////////////////////// Global Variables /////////////////////////////
 
-mat4 projection_matrix;
+//mat4 projection_matrix;
 bool g_map_cells[MAP_WIDTH][MAP_HEIGHT];
 Position g_position_component[MAX_ENTITIES];
 
@@ -116,66 +116,66 @@ int
 /// The run time entry point for Sand_Rogue
 /// \return 0 = all ok.
 main() {
-    printf("Welcome to Sand_Rogue !\n\n");
+    printf(
+            "Welcome to Sand_Rogue !\n\n"
+    );
 
-    // create an empty map
-    for(u32 x = 0; x < MAP_WIDTH; x++){
+    for(u32 x = 0; x < MAP_WIDTH; x++){                     // create an empty map
         for(u32 y = 0; y < MAP_HEIGHT; y++){
-            g_map_cells[x][y] = false;
+            g_map_cells[x][y] = false;                      // false = wall : true = floor tile
         }
     }
 
-    // initialize Entities and a player.
+
     Game_Entities game_entities;
-    for(u32 index = 0; index < MAX_ENTITIES; index++){
-        game_entities.entity_id[index] = UNUSED;
+    for(u32 index = 0; index < MAX_ENTITIES; index++){      // initialize Entities
+        game_entities.entity_id[index] = UNUSED;            // set all entities to unused
     }
 
     Game_Object *player;
 
-    for(u32 index = 0; index < MAX_ENTITIES; index++){
-        if(game_entities.entity_id[index] == UNUSED){
-            game_entities.entity_id[index] = index;
-            player->object_id = index;
+    for(u32 index = 0; index < MAX_ENTITIES; index++){      // find an unused entity slot
+        if(game_entities.entity_id[index] == UNUSED){       // initialize player
+            game_entities.entity_id[index] = index;         // register player as an entity
+            player->object_id = index;                      // assign the player an entity id
             break;
         }
     }
-    assert(player != NULL);
+    assert(player != NULL);                                 // stop the program if init fails
 
-    // how are we going to treat our objects
-    // ECS = Entity, Components, System.
-    // camera is NOT an Entity.
 
-    // initialize position component
-    for(u32 index = 0; index < MAX_ENTITIES; index++){
+    for(u32 index = 0; index < MAX_ENTITIES; index++){      // initialize position component
         g_position_component[index].object_id = UNUSED;
     }
-    // add position component to player
+
     Position  *player_position;
-    // NOTE: you must free the memory before game exit
+    // NOTE: you must free the memory before game exit      *** NOTE ****
     player_position = (Position*)malloc(sizeof(Position));
 
-    // set values for the player position.
-    player_position->object_id = player->object_id;
-    player_position->position[0] = 0.0f;
+    player_position->object_id = player->object_id;         // set values for the player position.
+    player_position->position[0] = 0.0f;                    // initialize all to zero
     player_position->position[1] = 0.0f;
     player_position->position[2] = 0.0f;
     player_position->rotationX = 0.0f;
     player_position->rotationY = 0.0f;
     player_position->rotationZ = 0.0f;
-    player_position->scale = 0.1f;
+    player_position->scale = 0.1f;                          // assimp scales up all loaded models
 
-    player->component[COMP_POSITION] = player_position;
+    player->component[COMP_POSITION] = player_position;     // add position component to player
 
 
-    g_position_component[player->object_id].object_id = player->object_id;
+    g_position_component[player->object_id].object_id =     // keep track of all position components
+            player->object_id;
 
     /////////////////////////////////////////////////////////////////
 
-    // window openGL - must be done first to get the openGL context.
+    // create Dungeon Level - can be done anytime before main game loop
 
-    // floor tile
-    // create Dungeon Level
+    // window openGL - NOTE : must be done first to get the openGL context.
+
+    // floor tile - start with a triangle and build up from there
+    // we will need a basic shader to get colors
+
     // player model component
     // camera
 
@@ -184,10 +184,10 @@ main() {
     // camera movement for debug
     // rendering functionality
 
+    ///////////////////////////////////////////////////////////////
+
     // free up resources
     free(player->component[COMP_POSITION]);
 
     return 0;
 }
-
-
