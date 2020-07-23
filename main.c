@@ -245,7 +245,101 @@ main() {
             1.0f
     );
 
+    glEnable(
+            GL_DEPTH_TEST
+    );
+
+    //////////////////// create a Triangle /////////////////////////
     // floor tile - start with a triangle and build up from there
+
+    float vertex_array[] = {
+            -0.5f,  0.5f, -1.0f, // v0 top left
+            -0.5f, -0.5f, -1.0f, // v1 bottom left
+             0.5f, -0.5f, -1.0f  // v2 bottom right
+    };
+
+    u32 index_array[] = {
+            0, 1, 2             // triangle 0
+    };
+
+    u32 vaoID;
+
+    glCreateVertexArrays(
+            1,
+            &vaoID
+    );
+
+    glBindVertexArray(
+            vaoID
+    );
+
+    u32 vboID;
+
+    glCreateBuffers(
+            1,
+            &vboID
+    );
+
+    glBindBuffer(
+            GL_ARRAY_BUFFER,
+            vboID
+    );
+
+    glBufferData(
+            GL_ARRAY_BUFFER,
+            sizeof(vertex_array) * 4,
+            vertex_array,
+            GL_STATIC_DRAW
+    );
+
+    // 1st attribute buffer : vertices
+    glEnableVertexAttribArray(
+            0
+    );
+
+    glVertexAttribPointer(
+            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+            3,                  // size
+            GL_FLOAT,           // type
+            GL_FALSE,           // normalized?
+            0,                  // stride
+            (void*)0            // array buffer offset
+    );
+
+    u32 iboID;
+
+    glCreateBuffers(
+            1,
+            &iboID
+    );
+
+    glBindBuffer(
+            GL_ELEMENT_ARRAY_BUFFER,
+            iboID
+    );
+
+    glBufferData(
+            GL_ELEMENT_ARRAY_BUFFER,
+            sizeof(index_array) * 4,
+            index_array,
+            GL_STATIC_DRAW
+    );
+
+    glBindVertexArray(
+            0
+    );
+
+    glBindBuffer(
+            GL_ELEMENT_ARRAY_BUFFER,
+            0
+    );
+
+    glBindBuffer(
+            GL_ARRAY_BUFFER,
+            0
+    );
+
+    ////////////////////////////////////////////////////////
 
 
     // we will need a basic shader to get colors
@@ -255,13 +349,13 @@ main() {
 
     // main run time game loop
     bool running = true;
-    SDL_Event *event;
+    SDL_Event event;
 
     while(running){
 
-        while(SDL_PollEvent(event) == SDL_TRUE){
+        while(SDL_PollEvent(&event) == SDL_TRUE){
 
-            if(event->type == SDL_QUIT){
+            if(event.type == SDL_QUIT){
 
                 running = false;
 
@@ -274,9 +368,27 @@ main() {
         // game update
 
         // render
+
         glClear(
-                GL_COLOR_BUFFER_BIT
+                GL_COLOR_BUFFER_BIT |
+                GL_DEPTH_BUFFER_BIT
         );
+
+
+        glBindVertexArray(
+                vaoID
+        );
+
+        glDrawArrays(
+                GL_TRIANGLES,
+                0,
+                sizeof(index_array)
+        );
+
+        glBindVertexArray(
+                0
+        );
+
         // swap buffers for OpenGL
         SDL_GL_SwapWindow(
                 window
