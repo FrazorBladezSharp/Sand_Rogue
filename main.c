@@ -15,13 +15,13 @@
 ###############################################################
 */
 
-//#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #include <GL/glew.h>
 //#include <GL/gl.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <assert.h>
+//#include <assert.h>
 #include <cglm/cglm.h>
 /* assimp include files. These three are usually needed. */
 //#include <assimp/cimport.h>
@@ -39,9 +39,9 @@ typedef int32_t		i32;
 
 #define UNUSED -1
 
-//#define WINDOW_TITLE "Sand_Rogue V0.1"
-//#define WINDOW_WIDTH 900
-//#define WINDOW_HEIGHT 500
+#define WINDOW_TITLE "Sand_Rogue V0.1"
+#define WINDOW_WIDTH 900
+#define WINDOW_HEIGHT 500
 
 #define MAP_WIDTH 80
 #define MAP_HEIGHT 40
@@ -132,16 +132,15 @@ main() {
         game_entities.entity_id[index] = UNUSED;            // set all entities to unused
     }
 
-    Game_Object *player;
+    Game_Object player;
 
     for(u32 index = 0; index < MAX_ENTITIES; index++){      // find an unused entity slot
         if(game_entities.entity_id[index] == UNUSED){       // initialize player
             game_entities.entity_id[index] = index;         // register player as an entity
-            player->object_id = index;                      // assign the player an entity id
+            player.object_id = index;                      // assign the player an entity id
             break;
         }
     }
-    assert(player != NULL);                                 // stop the program if init fails
 
 
     for(u32 index = 0; index < MAX_ENTITIES; index++){      // initialize position component
@@ -149,10 +148,14 @@ main() {
     }
 
     Position  *player_position;
-    // NOTE: you must free the memory before game exit      *** NOTE ****
-    player_position = (Position*)malloc(sizeof(Position));
 
-    player_position->object_id = player->object_id;         // set values for the player position.
+    // NOTE: you must free the memory before game exit      *** NOTE ****
+
+    player_position = (Position*)malloc(
+            sizeof(Position)
+    );
+
+    player_position->object_id = player.object_id;         // set values for the player position.
     player_position->position[0] = 0.0f;                    // initialize all to zero
     player_position->position[1] = 0.0f;
     player_position->position[2] = 0.0f;
@@ -161,25 +164,130 @@ main() {
     player_position->rotationZ = 0.0f;
     player_position->scale = 0.1f;                          // assimp scales up all loaded models
 
-    player->component[COMP_POSITION] = player_position;     // add position component to player
+    player.component[COMP_POSITION] = player_position;     // add position component to player
 
 
-    g_position_component[player->object_id].object_id =     // keep track of all position components
-            player->object_id;
+    g_position_component[player.object_id].object_id =     // keep track of all position components
+            player.object_id;
 
     /////////////////////////////////////////////////////////////////
 
     // create Dungeon Level - can be done anytime before main game loop
 
     // window openGL - NOTE : must be done first to get the openGL context.
+    SDL_Window *window;                                     // Declare a pointer
+
+    SDL_Init(SDL_INIT_EVERYTHING);                     // Initialize SDL2
+
+    window = SDL_CreateWindow(
+            WINDOW_TITLE,                              // window title
+            1000,                                // initial x position
+            250,                                // initial y position
+            WINDOW_WIDTH,                              // width, in pixels
+            WINDOW_HEIGHT,                             // height, in pixels
+            SDL_WINDOW_OPENGL                   // flags - see below
+    );
+
+    ////////////// initializing OpenGL 3.3 ///////////////
+
+    SDL_GL_SetAttribute(
+            SDL_GL_CONTEXT_MAJOR_VERSION,
+            3
+    );
+
+    SDL_GL_SetAttribute(
+            SDL_GL_CONTEXT_MINOR_VERSION,
+            3
+    );
+
+    SDL_GL_SetAttribute(
+            SDL_GL_CONTEXT_PROFILE_MASK,
+            SDL_GL_CONTEXT_PROFILE_CORE
+    );
+
+    SDL_GLContext gfx;
+
+    gfx = SDL_GL_CreateContext(
+            window
+    );
+
+    if( gfx == NULL ){
+
+        printf(
+                "OpenGL context could not be created!"
+        );
+
+        return 1;
+    }
+
+    if(glewInit() != GLEW_OK){
+
+        printf(
+                "failed to initialize openGL (GLEW)."
+        );
+
+        return 1;
+    }
+
+    SDL_GL_SetSwapInterval(
+            1                               // 1 = vsync
+    );
+
+    printf(
+            "OpenGL Version : %s\n",
+            glGetString(GL_VERSION)
+    );
+
+    glClearColor(
+            0.4f,
+            0.4f,
+            0.8f,
+            1.0f
+    );
 
     // floor tile - start with a triangle and build up from there
+
+
     // we will need a basic shader to get colors
 
     // player model component
     // camera
 
     // main run time game loop
+    bool running = true;
+    SDL_Event *event;
+
+    while(running){
+
+        while(SDL_PollEvent(event) == SDL_TRUE){
+
+            if(event->type == SDL_QUIT){
+
+                running = false;
+
+            }
+
+        } // end of Poll event loop
+
+        // game input
+
+        // game update
+
+        // render
+        glClear(
+                GL_COLOR_BUFFER_BIT
+        );
+        // swap buffers for OpenGL
+        SDL_GL_SwapWindow(
+                window
+        );
+
+        SDL_Delay(
+                10
+        );
+
+    }// end of the main game loop
+
     // player movement
     // camera movement for debug
     // rendering functionality
@@ -187,7 +295,15 @@ main() {
     ///////////////////////////////////////////////////////////////
 
     // free up resources
-    free(player->component[COMP_POSITION]);
+    free(
+            player.component[COMP_POSITION]
+    );
+
+    SDL_DestroyWindow(
+            window
+    );
+
+    SDL_Quit();
 
     return 0;
 }

@@ -5,7 +5,7 @@ A Rogue Like Game written in C
  
  Project created by Frazor Sharp 2020 Jul 22
 
- Sand_Rogue for C / C++ Version 0.1
+ Sand_Rogue for C (11) Version 0.1
 
  Contact email         : frazor.sharp@virginmedia.com
  
