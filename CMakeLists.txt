@@ -6,13 +6,17 @@ set(CMAKE_C_STANDARD 11)
 include_directories(
         ./
         /usr/include
-        ../libs/cglm-master/include
+        /usr/local/include
 )
 
 add_executable(
         Sand_Rogue main.c
-        Source/Core/Text_File_Utils.c Source/Core/Text_File_Utils.h)
+        Source/Core/Text_File_Utils.c Source/Core/Text_File_Utils.h Source/OpenGL/Shaders.c Source/OpenGL/Shaders.h Source/Sand_Maths/Matrix_Utils.c Source/Sand_Maths/Matrix_Utils.h Source/Common.h)
 
 target_link_libraries(
-        Sand_Rogue SDL2 GLEW GL assimp
+        Sand_Rogue SDL2 GLEW GL assimp m
+)
+
+link_directories(
+        /usr/local/lib
 )

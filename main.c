@@ -15,97 +15,16 @@
 ###############################################################
 */
 
-#include <SDL2/SDL.h>
-#include <GL/glew.h>
-//#include <GL/gl.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-//#include <assert.h>
-#include <cglm/cglm.h>
+
 /* assimp include files. These three are usually needed. */
 //#include <assimp/cimport.h>
 //#include <assimp/scene.h>
 //#include <assimp/postprocess.h>
 
+#include "Source/Common.h"
 #include "Source/Core/Text_File_Utils.h"
-
-//typedef uint8_t		u8;
-typedef uint32_t	u32;
-//typedef uint64_t	u64;
-//typedef int8_t		i8;
-typedef int32_t		i32;
-//typedef int64_t		i64;
-
-//////////////////////////// Defines //////////////////////////////////
-
-#define UNUSED -1
-
-#define WINDOW_TITLE "Sand_Rogue V0.1"
-#define WINDOW_WIDTH 900
-#define WINDOW_HEIGHT 500
-
-#define MAP_WIDTH 80
-#define MAP_HEIGHT 40
-
-#define MAX_ENTITIES 1024
-
-///////////////////////////// Structs /////////////////////////////////
-
-//typedef struct {
-//    vec3 position;
-//    float rotationX;
-//    float rotationY;
-//    float rotationZ;
-//    mat4 view_matrix;
-//} Main_Camera;
-
-//typedef struct
-//{
-//    unsigned int object_id;
-//    GLuint vaoID;
-//    GLuint num_indices;
-//    mat4 model_matrix
-//} Floor_Tile;
-
-typedef enum
-{
-    COMP_POSITION = 0,
-//    COMP_Model,
-//    COMP_VISIBILITY,
-//    COMP_SOLID_BODY,
-//    COMP_MOVEMENT,
-
-//    COMP_COUNT                                  // keep a count on how many components we have
-
-}Game_Component;
-
-typedef struct {
-    i32 entity_id[MAX_ENTITIES];
-} Game_Entities;
-
-typedef struct {
-    i32 object_id;
-    void* component[64];
-} Game_Object;
-
-typedef struct
-{
-    i32 object_id;
-    vec3 position;
-    float rotationX;
-    float rotationY;
-    float rotationZ;
-    float scale;
-    mat4 model_matrix;
-} Position;
-
-//typedef struct
-//{
-//    i32 object_id;
-//    GLuint vaoID;
-//    GLuint num_indices;
-//} Model;
+#include "Source/OpenGL/Shaders.h"
+#include "Source/Sand_Maths/Matrix_Utils.h"
 
 ////////////////////// Global Variables /////////////////////////////
 
@@ -119,25 +38,25 @@ int
 /// \return 0 = all ok.
 main() {
     printf(
-            "Welcome to Sand_Rogue !\n\n"
+        "Welcome to Sand_Rogue !\n\n"
     );
 
-    for(u32 x = 0; x < MAP_WIDTH; x++){                     // create an empty map
-        for(u32 y = 0; y < MAP_HEIGHT; y++){
+    for (u32 x = 0; x < MAP_WIDTH; x++) {                     // create an empty map
+        for (u32 y = 0; y < MAP_HEIGHT; y++) {
             g_map_cells[x][y] = false;                      // false = wall : true = floor tile
         }
     }
 
 
     Game_Entities game_entities;
-    for(u32 index = 0; index < MAX_ENTITIES; index++){      // initialize Entities
+    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
         game_entities.entity_id[index] = UNUSED;            // set all entities to unused
     }
 
     Game_Object player;
 
-    for(u32 index = 0; index < MAX_ENTITIES; index++){      // find an unused entity slot
-        if(game_entities.entity_id[index] == UNUSED){       // initialize player
+    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // find an unused entity slot
+        if (game_entities.entity_id[index] == UNUSED) {       // initialize player
             game_entities.entity_id[index] = index;         // register player as an entity
             player.object_id = index;                      // assign the player an entity id
             break;
@@ -145,16 +64,16 @@ main() {
     }
 
 
-    for(u32 index = 0; index < MAX_ENTITIES; index++){      // initialize position component
+    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize position component
         g_position_component[index].object_id = UNUSED;
     }
 
-    Position  *player_position;
+    Position *player_position;
 
     // NOTE: you must free the memory before game exit      *** NOTE ****
 
-    player_position = (Position*)malloc(
-            sizeof(Position)
+    player_position = (Position *) malloc(
+        sizeof(Position)
     );
 
     player_position->object_id = player.object_id;         // set values for the player position.
@@ -170,7 +89,7 @@ main() {
 
 
     g_position_component[player.object_id].object_id =     // keep track of all position components
-            player.object_id;
+        player.object_id;
 
     /////////////////////////////////////////////////////////////////
 
@@ -183,106 +102,106 @@ main() {
     SDL_Init(SDL_INIT_EVERYTHING);                   // Initialize SDL2
 
     window = SDL_CreateWindow(
-            WINDOW_TITLE,                                 // window title
-            1000,                                      // initial x position
-            250,                                       // initial y position
-            WINDOW_WIDTH,                                 // width, in pixels
-            WINDOW_HEIGHT,                                // height, in pixels
-            SDL_WINDOW_OPENGL                        // flags
+        WINDOW_TITLE,                                 // window title
+        1000,                                      // initial x position
+        250,                                       // initial y position
+        WINDOW_WIDTH,                                 // width, in pixels
+        WINDOW_HEIGHT,                                // height, in pixels
+        SDL_WINDOW_OPENGL                        // flags
     );
 
     ////////////// initializing OpenGL 3.3 ///////////////
 
     SDL_GL_SetAttribute(
-            SDL_GL_CONTEXT_MAJOR_VERSION,
-            3
+        SDL_GL_CONTEXT_MAJOR_VERSION,
+        3
     );
 
     SDL_GL_SetAttribute(
-            SDL_GL_CONTEXT_MINOR_VERSION,           // set the OpenGL version
-            3
+        SDL_GL_CONTEXT_MINOR_VERSION,           // set the OpenGL version
+        3
     );
 
     SDL_GL_SetAttribute(
-            SDL_GL_CONTEXT_PROFILE_MASK,
-            SDL_GL_CONTEXT_PROFILE_CORE
+        SDL_GL_CONTEXT_PROFILE_MASK,
+        SDL_GL_CONTEXT_PROFILE_CORE
     );
 
     SDL_GLContext gfx;
 
     gfx = SDL_GL_CreateContext(                         // create our windows OpenGL context
-            window
+        window
     );
 
-    if( gfx == NULL ){
+    if (gfx == NULL) {
 
         printf(
-                "OpenGL context could not be created!"
+            "OpenGL context could not be created!"
         );
 
         return 1;
     }
 
-    if(glewInit() != GLEW_OK){                          // generate the OpenGL functions
+    if (glewInit() != GLEW_OK) {                          // generate the OpenGL functions
 
         printf(
-                "failed to initialize openGL (GLEW)."
+            "failed to initialize openGL (GLEW)."
         );
 
         return 1;
     }
 
     SDL_GL_SetSwapInterval(
-            1                                    // 1 = vsync
+        1                                    // 1 = vsync
     );
 
     printf(
-            "OpenGL Version : %s\n",
-            glGetString(GL_VERSION)
+        "OpenGL Version : %s\n",
+        glGetString(GL_VERSION)
     );
 
     glClearColor(                                    // the window background color
-            0.4f,
-            0.4f,
-            0.8f,
-            1.0f
+        0.4f,
+        0.4f,
+        0.8f,
+        1.0f
     );
 
     glEnable(
-            GL_DEPTH_TEST
+        GL_DEPTH_TEST
     );
 
     //////////////////// create a Triangle /////////////////////////
     // floor tile - start with a triangle and build up from there
 
     float vertex_array[] = {
-            -0.5f,  0.5f, 0.0f, // v0 top left
-            -0.5f, -0.5f, 0.0f, // v1 bottom left
-             0.5f, -0.5f, 0.0f, // v2 bottom right
-             0.5f,  0.5f, 0.0f  // v3 top right
+        -0.5f, 0.5f, 0.0f, // v0 top left
+        -0.5f, -0.5f, 0.0f, // v1 bottom left
+        0.5f, -0.5f, 0.0f, // v2 bottom right
+        0.5f, 0.5f, 0.0f  // v3 top right
     };
 
     float color_array[] = {
-            0.5f, 0.1f, 0.5f, 1.0f,
-            0.4f, 0.4f, 0.4f, 1.0f,
-            0.5f, 0.1f, 0.5f, 1.0f,
-            0.4f, 0.4f, 0.4f, 1.0f
+        0.5f, 0.1f, 0.5f, 1.0f,
+        0.4f, 0.4f, 0.4f, 1.0f,
+        0.5f, 0.1f, 0.5f, 1.0f,
+        0.4f, 0.4f, 0.4f, 1.0f
     };
 
     u32 index_array[] = {
-            0, 1, 2,             // triangle 0
-            2, 3, 0              // triangle 1
+        0, 1, 2,             // triangle 0
+        0, 2, 3              // triangle 1
     };
 
     u32 vaoID;
 
     glCreateVertexArrays(
-            1,
-            &vaoID
+        1,
+        &vaoID
     );
 
     glBindVertexArray(                          // bind the VAO to record what we do
-            vaoID
+        vaoID
     );
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -290,34 +209,34 @@ main() {
     u32 vboID;                                  // Vertex Buffer Object for the vertices
 
     glCreateBuffers(
-            1,
-            &vboID
+        1,
+        &vboID
     );
 
     glBindBuffer(
-            GL_ARRAY_BUFFER,
-            vboID
+        GL_ARRAY_BUFFER,
+        vboID
     );
 
     glBufferData(                               // send our data to the gfx card
-            GL_ARRAY_BUFFER,
-            sizeof(vertex_array),
-            vertex_array,
-            GL_STATIC_DRAW
+        GL_ARRAY_BUFFER,
+        sizeof(vertex_array),
+        vertex_array,
+        GL_STATIC_DRAW
     );
 
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(
-            0
+        0
     );
 
     glVertexAttribPointer(
-            0,                  // attribute must match the layout in the shader.
-            3,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized
-            0,                  // stride
-            (void*)0            // array buffer offset
+        0,                  // attribute must match the layout in the shader.
+        3,                  // size
+        GL_FLOAT,           // type
+        GL_FALSE,           // normalized
+        0,                  // stride
+        (void *) 0            // array buffer offset
     );
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -352,7 +271,7 @@ main() {
         GL_FLOAT,           // type
         GL_FALSE,           // normalized
         0,                  // stride
-        (void*)0            // array buffer offset
+        (void *) 0            // array buffer offset
     );
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -360,40 +279,66 @@ main() {
     u32 iboID;                              // Index Buffer Object for our Indices
 
     glCreateBuffers(
-            1,
-            &iboID
+        1,
+        &iboID
     );
 
     glBindBuffer(
-            GL_ELEMENT_ARRAY_BUFFER,
-            iboID
+        GL_ELEMENT_ARRAY_BUFFER,
+        iboID
     );
 
     glBufferData(                           // send our data to the Gfx Card
-            GL_ELEMENT_ARRAY_BUFFER,
-            sizeof(index_array),
-            index_array,
-            GL_STATIC_DRAW
+        GL_ELEMENT_ARRAY_BUFFER,
+        sizeof(index_array),
+        index_array,
+        GL_STATIC_DRAW
     );
 
     glBindVertexArray(                      // disable our VAO
-            0
+        0
     );
 
     glBindBuffer(                           // disable our VBO
-            GL_ELEMENT_ARRAY_BUFFER,
-            0
+        GL_ELEMENT_ARRAY_BUFFER,
+        0
     );
 
     glBindBuffer(                           // disable oud IBO
-            GL_ARRAY_BUFFER,
-            0
+        GL_ARRAY_BUFFER,
+        0
     );
 
-    ////////////////////////////////////////////////////////
+    //////////////////// Shader /////////////////////////////////
 
+    GLint shader = Load_Shader();
+    glUseProgram(shader);
 
-    // we will need a basic shader to get colors
+    /////////////////// Matrix locations in Shader ////////////////
+
+    GLint model_matrix_loc = glGetUniformLocation(shader, "model_matrix");
+    GLint view_matrix_loc = glGetUniformLocation(shader, "view_matrix");
+    GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
+
+    Main_Camera camera = Calc_Camera_View_Matrix(camera) ;
+
+    Game_Model floor = {
+        .vaoID = vaoID,
+        .num_indices = sizeof(index_array),
+        .object_id = UNUSED,
+    };
+
+    mat4 projection_matrix;
+
+    glm_perspective(
+        45.0f,
+        9.0f / 5.0f,
+        0.1,
+        50.0f,
+        projection_matrix
+    );
+
+    /////////////////////////////////////////////////////////////
 
     // player model component
     // camera
@@ -402,11 +347,11 @@ main() {
     bool running = true;
     SDL_Event event;
 
-    while(running){
+    while (running) {
 
-        while(SDL_PollEvent(&event) == SDL_TRUE){
+        while (SDL_PollEvent(&event) == SDL_TRUE) {
 
-            if(event.type == SDL_QUIT){
+            if (event.type == SDL_QUIT) {
 
                 running = false;
 
@@ -421,32 +366,70 @@ main() {
         // render
 
         glClear(
-                GL_COLOR_BUFFER_BIT |
-                GL_DEPTH_BUFFER_BIT
+            GL_COLOR_BUFFER_BIT |
+            GL_DEPTH_BUFFER_BIT
         );
 
+        ///////////////// Render ////////////////////////////////
+
+        glUseProgram(
+            shader
+        );
 
         glBindVertexArray(                          // set which VAO to draw
-                vaoID
+            floor.vaoID
+        );
+
+        glUniformMatrix4fv(
+            projection_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *)projection_matrix
+        );
+
+        glUniformMatrix4fv(
+            view_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *)camera.view_matrix
+        );
+
+        vec3 floor_position = {0.0f, 0.0f, -1.0f};
+        vec3 scale = {1.0f, 1.0f, 1.0f};
+        floor = Calc_Model_matrix(
+            floor,
+            floor_position,
+            0.0f,
+            0.0f,
+            0.0f,
+            scale
+        );
+
+        glUniformMatrix4fv(
+            model_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *)floor.model_matrix
         );
 
         glDrawArrays(                               // draw using Triangles
-                GL_TRIANGLES,
-                0,
-                sizeof(index_array)
+            GL_TRIANGLES,
+            0,
+            sizeof(index_array)
         );
 
         glBindVertexArray(                          // disable the used VAO
-                0
+            0
         );
 
+        //////////////////////////////////////////////////////////
         // swap buffers for OpenGL
         SDL_GL_SwapWindow(
-                window
+            window
         );
 
         SDL_Delay(                                 // give the cpu a well earned break !
-                10
+            10
         );
 
     }// end of the main game loop
@@ -459,11 +442,11 @@ main() {
 
     // free up resources
     free(
-            player.component[COMP_POSITION]
+        player.component[COMP_POSITION]
     );
 
     SDL_DestroyWindow(
-            window
+        window
     );
 
     SDL_Quit();
