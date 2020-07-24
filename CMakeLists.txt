@@ -11,7 +11,7 @@ include_directories(
 
 add_executable(
         Sand_Rogue main.c
-)
+        Source/Core/Text_File_Utils.c Source/Core/Text_File_Utils.h)
 
 target_link_libraries(
         Sand_Rogue SDL2 GLEW GL assimp

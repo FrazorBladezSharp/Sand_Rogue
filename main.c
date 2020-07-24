@@ -28,6 +28,8 @@
 //#include <assimp/scene.h>
 //#include <assimp/postprocess.h>
 
+#include "Source/Core/Text_File_Utils.h"
+
 //typedef uint8_t		u8;
 typedef uint32_t	u32;
 //typedef uint64_t	u64;
@@ -254,13 +256,22 @@ main() {
     // floor tile - start with a triangle and build up from there
 
     float vertex_array[] = {
-            -0.5f,  0.5f, -1.0f, // v0 top left
-            -0.5f, -0.5f, -1.0f, // v1 bottom left
-             0.5f, -0.5f, -1.0f  // v2 bottom right
+            -0.5f,  0.5f, 0.0f, // v0 top left
+            -0.5f, -0.5f, 0.0f, // v1 bottom left
+             0.5f, -0.5f, 0.0f, // v2 bottom right
+             0.5f,  0.5f, 0.0f  // v3 top right
+    };
+
+    float color_array[] = {
+            0.5f, 0.1f, 0.5f, 1.0f,
+            0.4f, 0.4f, 0.4f, 1.0f,
+            0.5f, 0.1f, 0.5f, 1.0f,
+            0.4f, 0.4f, 0.4f, 1.0f
     };
 
     u32 index_array[] = {
-            0, 1, 2             // triangle 0
+            0, 1, 2,             // triangle 0
+            2, 3, 0              // triangle 1
     };
 
     u32 vaoID;
@@ -273,6 +284,8 @@ main() {
     glBindVertexArray(                          // bind the VAO to record what we do
             vaoID
     );
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     u32 vboID;                                  // Vertex Buffer Object for the vertices
 
@@ -288,7 +301,7 @@ main() {
 
     glBufferData(                               // send our data to the gfx card
             GL_ARRAY_BUFFER,
-            sizeof(vertex_array) * 4,
+            sizeof(vertex_array),
             vertex_array,
             GL_STATIC_DRAW
     );
@@ -302,10 +315,47 @@ main() {
             0,                  // attribute must match the layout in the shader.
             3,                  // size
             GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
+            GL_FALSE,           // normalized
             0,                  // stride
             (void*)0            // array buffer offset
     );
+
+    ///////////////////////////////////////////////////////////////////////////////
+
+    u32 color_buffer;                                  // Vertex Buffer Object for the vertices
+
+    glCreateBuffers(
+        1,
+        &color_buffer
+    );
+
+    glBindBuffer(
+        GL_ARRAY_BUFFER,
+        color_buffer
+    );
+
+    glBufferData(                               // send our data to the gfx card
+        GL_ARRAY_BUFFER,
+        sizeof(color_array),
+        color_array,
+        GL_STATIC_DRAW
+    );
+
+    // 1st attribute buffer : vertices
+    glEnableVertexAttribArray(
+        1
+    );
+
+    glVertexAttribPointer(
+        1,                  // attribute must match the layout in the shader.
+        4,                  // size
+        GL_FLOAT,           // type
+        GL_FALSE,           // normalized
+        0,                  // stride
+        (void*)0            // array buffer offset
+    );
+
+    ///////////////////////////////////////////////////////////////////////////////
 
     u32 iboID;                              // Index Buffer Object for our Indices
 
@@ -321,7 +371,7 @@ main() {
 
     glBufferData(                           // send our data to the Gfx Card
             GL_ELEMENT_ARRAY_BUFFER,
-            sizeof(index_array) * 4,
+            sizeof(index_array),
             index_array,
             GL_STATIC_DRAW
     );
