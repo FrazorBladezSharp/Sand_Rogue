@@ -95,6 +95,11 @@ main() {
 
     // create Dungeon Level - can be done anytime before main game loop
 
+
+
+
+
+
     // window openGL - NOTE : must be done first to get the openGL context.
 
     SDL_Window *window;                                   // Declare a pointer
@@ -161,9 +166,9 @@ main() {
     );
 
     glClearColor(                                    // the window background color
-        0.4f,
-        0.4f,
-        0.8f,
+        0.10f,
+        0.07f,
+        0.04f,
         1.0f
     );
 
@@ -175,10 +180,10 @@ main() {
     // floor tile - start with a triangle and build up from there
 
     GLfloat vertex_array[] = {
-        -0.5f, 0.5f, 0.0f, // v0 top left
-        -0.5f, -0.5f, 0.0f, // v1 bottom left
-        0.5f, -0.5f, 0.0f, // v2 bottom right
-        0.5f, 0.5f, 0.0f  // v3 top right
+        -0.5f, 0.0f, -0.5f, // v0 far left
+        -0.5f, 0.0f, 0.5f, // v1 near left
+        0.5f, 0.0f, 0.5f, // v2 near right
+        0.5f, 0.0f, -0.5f  // v3 far right
     };
 
     GLfloat color_array[] = {
@@ -335,7 +340,13 @@ main() {
     // player model component
 
     // camera
-    Main_Camera camera = Calc_Camera_View_Matrix(camera) ;
+    Main_Camera camera;
+
+    camera.position[1] = 2.0f;
+    camera.position[2] = 2.0f;
+    camera.rotationX = 45.0f;
+
+    camera = Calc_Camera_View_Matrix(camera) ;
 
     mat4 projection_matrix;
 

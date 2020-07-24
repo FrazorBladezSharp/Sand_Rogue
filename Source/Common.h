@@ -13,11 +13,12 @@
 
 /////////////////// C Standard Lib Includes ////////////////////////////
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include <assert.h>
+#include <time.h>
 #include <cglm/cglm.h>
 
 //////////////////////////// Defines //////////////////////////////////
