@@ -174,26 +174,26 @@ main() {
     //////////////////// create a Triangle /////////////////////////
     // floor tile - start with a triangle and build up from there
 
-    float vertex_array[] = {
+    GLfloat vertex_array[] = {
         -0.5f, 0.5f, 0.0f, // v0 top left
         -0.5f, -0.5f, 0.0f, // v1 bottom left
         0.5f, -0.5f, 0.0f, // v2 bottom right
         0.5f, 0.5f, 0.0f  // v3 top right
     };
 
-    float color_array[] = {
+    GLfloat color_array[] = {
         0.5f, 0.1f, 0.5f, 1.0f,
         0.4f, 0.4f, 0.4f, 1.0f,
         0.5f, 0.1f, 0.5f, 1.0f,
         0.4f, 0.4f, 0.4f, 1.0f
     };
 
-    u32 index_array[] = {
+    GLuint index_array[] = {
         0, 1, 2,             // triangle 0
         0, 2, 3              // triangle 1
     };
 
-    u32 vaoID;
+    GLuint vaoID;
 
     glCreateVertexArrays(
         1,
@@ -220,7 +220,7 @@ main() {
 
     glBufferData(                           // send our data to the Gfx Card
         GL_ELEMENT_ARRAY_BUFFER,
-        sizeof(index_array) * 4,
+        sizeof(index_array) * sizeof(GLuint),
         &index_array[0],
         GL_STATIC_DRAW
     );
@@ -228,7 +228,7 @@ main() {
 
     /////////////////////////////// Vertex Buffer ///////////////////////////////////////////////
 
-    u32 vboID;                                  // Vertex Buffer Object for the vertices
+    GLuint vboID;                                  // Vertex Buffer Object for the vertices
 
     glGenBuffers(
         1,
@@ -242,7 +242,7 @@ main() {
 
     glBufferData(                               // send our data to the gfx card
         GL_ARRAY_BUFFER,
-        sizeof(vertex_array) * 4,
+        sizeof(vertex_array) * sizeof(GLfloat),
         &vertex_array[0],
         GL_STATIC_DRAW
     );
@@ -262,7 +262,7 @@ main() {
 
     /////////////////////////// Color Buffer /////////////////////////////////////////
 
-    u32 color_buffer;                                  // Vertex Buffer Object for the vertices
+    GLuint color_buffer;                                  // Vertex Buffer Object for the vertices
 
     glGenBuffers(
         1,
@@ -276,7 +276,7 @@ main() {
 
     glBufferData(                               // send our data to the gfx card
         GL_ARRAY_BUFFER,
-        sizeof(color_array),
+        sizeof(color_array) * sizeof(GLfloat),
         &color_array[0],
         GL_STATIC_DRAW
     );
@@ -329,12 +329,6 @@ main() {
     GLint model_matrix_loc = glGetUniformLocation(shader, "model_matrix");
     GLint view_matrix_loc = glGetUniformLocation(shader, "view_matrix");
     GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
-
-
-
-
-
-
 
     /////////////////////////////////////////////////////////////
 
@@ -422,10 +416,11 @@ main() {
             (float *)floor.model_matrix
         );
 
-        glDrawArrays(                               // draw using Triangles
+        glDrawElements(                               // draw using Triangles
             GL_TRIANGLES,
-            0,
-            sizeof(index_array)
+            sizeof(index_array),
+            GL_UNSIGNED_INT,
+            (void *) 0
         );
 
         glBindVertexArray(                          // disable the used VAO

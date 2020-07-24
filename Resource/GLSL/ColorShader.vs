@@ -14,9 +14,9 @@ void main()
 {
     v_color = color;
 
-    gl_Position =  /* projection_matrix *
+    gl_Position =   projection_matrix *
                     view_matrix *
-                    model_matrix */
+                    model_matrix *
                     vec4(position, 1.0f
     );
 }
