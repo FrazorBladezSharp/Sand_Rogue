@@ -204,11 +204,33 @@ main() {
         vaoID
     );
 
-    ////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////// Index Buffer ////////////////////////////////////
+
+    u32 iboID;                              // Index Buffer Object for our Indices
+
+    glGenBuffers(
+        1,
+        &iboID
+    );
+
+    glBindBuffer(
+        GL_ELEMENT_ARRAY_BUFFER,
+        iboID
+    );
+
+    glBufferData(                           // send our data to the Gfx Card
+        GL_ELEMENT_ARRAY_BUFFER,
+        sizeof(index_array) * 4,
+        &index_array[0],
+        GL_STATIC_DRAW
+    );
+
+
+    /////////////////////////////// Vertex Buffer ///////////////////////////////////////////////
 
     u32 vboID;                                  // Vertex Buffer Object for the vertices
 
-    glCreateBuffers(
+    glGenBuffers(
         1,
         &vboID
     );
@@ -220,14 +242,9 @@ main() {
 
     glBufferData(                               // send our data to the gfx card
         GL_ARRAY_BUFFER,
-        sizeof(vertex_array),
-        vertex_array,
+        sizeof(vertex_array) * 4,
+        &vertex_array[0],
         GL_STATIC_DRAW
-    );
-
-    // 1st attribute buffer : vertices
-    glEnableVertexAttribArray(
-        0
     );
 
     glVertexAttribPointer(
@@ -239,11 +256,15 @@ main() {
         (void *) 0            // array buffer offset
     );
 
-    ///////////////////////////////////////////////////////////////////////////////
+    glEnableVertexAttribArray(
+        0
+    );
+
+    /////////////////////////// Color Buffer /////////////////////////////////////////
 
     u32 color_buffer;                                  // Vertex Buffer Object for the vertices
 
-    glCreateBuffers(
+    glGenBuffers(
         1,
         &color_buffer
     );
@@ -256,13 +277,8 @@ main() {
     glBufferData(                               // send our data to the gfx card
         GL_ARRAY_BUFFER,
         sizeof(color_array),
-        color_array,
+        &color_array[0],
         GL_STATIC_DRAW
-    );
-
-    // 1st attribute buffer : vertices
-    glEnableVertexAttribArray(
-        1
     );
 
     glVertexAttribPointer(
@@ -274,26 +290,20 @@ main() {
         (void *) 0            // array buffer offset
     );
 
-    ///////////////////////////////////////////////////////////////////////////////
-
-    u32 iboID;                              // Index Buffer Object for our Indices
-
-    glCreateBuffers(
-        1,
-        &iboID
+    glEnableVertexAttribArray(
+        1
     );
 
-    glBindBuffer(
-        GL_ELEMENT_ARRAY_BUFFER,
-        iboID
-    );
+    //////////////////// create the floor Model //////////////////////////
 
-    glBufferData(                           // send our data to the Gfx Card
-        GL_ELEMENT_ARRAY_BUFFER,
-        sizeof(index_array),
-        index_array,
-        GL_STATIC_DRAW
-    );
+    Game_Model floor = {
+        .vaoID = vaoID,
+        .num_indices = sizeof(index_array),
+        .object_id = UNUSED,
+    };
+
+    /////////////////// Unbind the buffers ////////////////////
+
 
     glBindVertexArray(                      // disable our VAO
         0
@@ -320,13 +330,18 @@ main() {
     GLint view_matrix_loc = glGetUniformLocation(shader, "view_matrix");
     GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
 
-    Main_Camera camera = Calc_Camera_View_Matrix(camera) ;
 
-    Game_Model floor = {
-        .vaoID = vaoID,
-        .num_indices = sizeof(index_array),
-        .object_id = UNUSED,
-    };
+
+
+
+
+
+    /////////////////////////////////////////////////////////////
+
+    // player model component
+
+    // camera
+    Main_Camera camera = Calc_Camera_View_Matrix(camera) ;
 
     mat4 projection_matrix;
 
@@ -337,11 +352,6 @@ main() {
         50.0f,
         projection_matrix
     );
-
-    /////////////////////////////////////////////////////////////
-
-    // player model component
-    // camera
 
     // main run time game loop
     bool running = true;
