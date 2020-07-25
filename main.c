@@ -15,24 +15,15 @@
 ###############################################################
 */
 
-
-/* assimp include files. These three are usually needed. */
-//#include <assimp/cimport.h>
-//#include <assimp/scene.h>
-//#include <assimp/postprocess.h>
-
 #include "Source/Common.h"
+Position g_position_component[MAX_ENTITIES];
+
+#include "Source/Sand_Dice.h"
 #include "Source/Core/Text_File_Utils.h"
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
+#include "Source/Core/Map.h"
 
-////////////////////// Global Variables /////////////////////////////
-
-//mat4 projection_matrix;
-bool g_map_cells[MAP_WIDTH][MAP_HEIGHT];
-Position g_position_component[MAX_ENTITIES];
-
-/////////////////////////////////////////////////////////////////////
 int
 /// The run time entry point for Sand_Rogue
 /// \return 0 = all ok.
@@ -41,11 +32,6 @@ main() {
         "Welcome to Sand_Rogue !\n\n"
     );
 
-    for (u32 x = 0; x < MAP_WIDTH; x++) {                     // create an empty map
-        for (u32 y = 0; y < MAP_HEIGHT; y++) {
-            g_map_cells[x][y] = false;                      // false = wall : true = floor tile
-        }
-    }
 
 
     Game_Entities game_entities;
@@ -93,12 +79,26 @@ main() {
 
     /////////////////////////////////////////////////////////////////
 
+    Dice_Initialize();
+
     // create Dungeon Level - can be done anytime before main game loop
+    i8 current_dungeon_level = 1;
 
+    Dungeon_Level_Current *dungeon_level_current;
 
+    dungeon_level_current = (Dungeon_Level_Current*) malloc(sizeof(Dungeon_Level_Current));
 
+    dungeon_level_current->dungeon_level = current_dungeon_level;
+    // set all locations to false.
+    for(int x = 0; x < MAP_WIDTH; x++)
+    {
+        for(int y = 0; y < MAP_HEIGHT; y++)
+        {
+            dungeon_level_current->map_cells[x][y] = false;
+        }
+    }
 
-
+    dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current);
 
     // window openGL - NOTE : must be done first to get the openGL context.
 
@@ -342,8 +342,9 @@ main() {
     // camera
     Main_Camera camera;
 
-    camera.position[1] = 2.0f;
-    camera.position[2] = 2.0f;
+    camera.position[0] = 40.0f,
+    camera.position[1] = 10.0f;
+    camera.position[2] = 50.0f;
     camera.rotationX = 45.0f;
 
     camera = Calc_Camera_View_Matrix(camera) ;
@@ -374,11 +375,13 @@ main() {
 
         } // end of Poll event loop
 
-        // game input
+        // TODO: (Frazor) player movement
 
-        // game update
 
-        // render
+        // TODO: (Frazor) camera movement for debug
+
+
+        // TODO: rendering functionality
 
         glClear(
             GL_COLOR_BUFFER_BIT |
@@ -409,30 +412,41 @@ main() {
             (float *)camera.view_matrix
         );
 
-        vec3 floor_position = {0.0f, 0.0f, -1.0f};
-        vec3 scale = {1.0f, 1.0f, 1.0f};
-        floor = Calc_Model_matrix(
-            floor,
-            floor_position,
-            0.0f,
-            0.0f,
-            0.0f,
-            scale
-        );
+        //////////////////////// Render Dungeon Map //////////////////////////
 
-        glUniformMatrix4fv(
-            model_matrix_loc,
-            1,
-            GL_FALSE,
-            (float *)floor.model_matrix
-        );
+        for(u8 x = 0 ; x <= MAP_WIDTH; x++) {
+            for(u8 z = 0; z <= MAP_HEIGHT; z++) {
 
-        glDrawElements(                               // draw using Triangles
-            GL_TRIANGLES,
-            sizeof(index_array),
-            GL_UNSIGNED_INT,
-            (void *) 0
-        );
+                if(dungeon_level_current->map_cells[x][z]) {
+
+                    vec3 floor_position = {(float)x, 0.0f, (float)z};
+                    vec3 scale = {1.0f, 1.0f, 1.0f};
+                    floor = Calc_Model_matrix(
+                        floor,
+                        floor_position,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        scale
+                    );
+
+                    glUniformMatrix4fv(
+                        model_matrix_loc,
+                        1,
+                        GL_FALSE,
+                        (float *) floor.model_matrix
+                    );
+
+                    glDrawElements(                               // draw using Triangles
+                        GL_TRIANGLES,
+                        sizeof(index_array),
+                        GL_UNSIGNED_INT,
+                        (void *) 0
+                    );
+                }
+            }
+        }
+        /////////////////////////////////////////////////////////////////////
 
         glBindVertexArray(                          // disable the used VAO
             0
@@ -450,13 +464,16 @@ main() {
 
     }// end of the main game loop
 
-    // player movement
-    // camera movement for debug
-    // rendering functionality
+
 
     ///////////////////////////////////////////////////////////////
 
     // free up resources
+
+    free(
+        dungeon_level_current
+    );
+
     free(
         player.component[COMP_POSITION]
     );

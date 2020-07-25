@@ -10,6 +10,10 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
+/* assimp include files. These three are usually needed. */
+//#include <assimp/cimport.h>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 
 /////////////////// C Standard Lib Includes ////////////////////////////
 
@@ -31,19 +35,29 @@
 
 #define MAP_WIDTH 80
 #define MAP_HEIGHT 40
+#define MAX_ROOM_WIDTH 16
+#define MAX_ROOM_HEIGHT 12
+#define MAX_ROOMS 126
 
 #define MAX_ENTITIES 1024
 
 ////////////////////////// Typedefs ////////////////////////////////////
 
-//typedef uint8_t		u8;
+typedef uint8_t		u8;
 typedef uint32_t u32;
 //typedef uint64_t	u64;
-//typedef int8_t		i8;
+typedef int8_t		i8;
 typedef int32_t i32;
 //typedef int64_t		i64;
 
+
+
 ///////////////////////////// Structs ////////////////////////////////
+
+typedef struct {
+    i8 dungeon_level;
+    bool map_cells[MAP_WIDTH][MAP_HEIGHT]
+} Dungeon_Level_Current;
 
 typedef struct {
     vec3 position;
@@ -92,6 +106,6 @@ typedef struct
     mat4 model_matrix;
 } Game_Model;
 
-///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 
 #endif //SAND_ROGUE_COMMON_H

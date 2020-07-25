@@ -11,7 +11,17 @@ include_directories(
 
 add_executable(
         Sand_Rogue main.c
-        Source/Core/Text_File_Utils.c Source/Core/Text_File_Utils.h Source/OpenGL/Shaders.c Source/OpenGL/Shaders.h Source/Sand_Maths/Matrix_Utils.c Source/Sand_Maths/Matrix_Utils.h Source/Common.h Source/Sand_Dice.h)
+        Source/Core/Text_File_Utils.c
+        Source/Core/Text_File_Utils.h
+        Source/OpenGL/Shaders.c
+        Source/OpenGL/Shaders.h
+        Source/Sand_Maths/Matrix_Utils.c
+        Source/Sand_Maths/Matrix_Utils.h
+        Source/Common.h
+        Source/Sand_Dice.h
+        Source/Core/Map.c
+        Source/Core/Map.h
+)
 
 target_link_libraries(
         Sand_Rogue SDL2 GLEW GL assimp m
