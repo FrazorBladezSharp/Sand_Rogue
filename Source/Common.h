@@ -55,8 +55,14 @@ typedef int32_t i32;
 ///////////////////////////// Structs ////////////////////////////////
 
 typedef struct {
+    u8 x;
+    u8 y;
+    u8 z;
+} Point_3D;
+
+typedef struct {
     i8 dungeon_level;
-    bool map_cells[MAP_WIDTH][MAP_HEIGHT]
+    bool map_cells[MAP_WIDTH][MAP_HEIGHT];
 } Dungeon_Level_Current;
 
 typedef struct {
