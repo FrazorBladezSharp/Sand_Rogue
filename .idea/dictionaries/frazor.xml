@@ -9,6 +9,8 @@
       <w>glew</w>
       <w>martix</w>
       <w>opensourcelicence</w>
+      <w>vao</w>
+      <w>vbo</w>
       <w>vsync</w>
     </words>
   </dictionary>

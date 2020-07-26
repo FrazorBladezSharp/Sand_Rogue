@@ -17,12 +17,15 @@
 
 #include "Source/Common.h"
 Position g_position_component[MAX_ENTITIES];
+Game_Model g_model_component[MAX_ENTITIES];
 
 #include "Source/Sand_Dice.h"
 #include "Source/Core/Text_File_Utils.h"
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
 #include "Source/Core/Map.h"
+#include "Source/Core/Sand_Vector.h"
+#include "Source/OpenGL/Load_Model_3D.h"
 
 int
 /// The run time entry point for Sand_Rogue
@@ -52,53 +55,8 @@ main() {
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize position component
         g_position_component[index].object_id = UNUSED;
+        g_model_component[index].object_id = UNUSED;
     }
-
-    Position *player_position;
-
-    // NOTE: you must free the memory before game exit      *** NOTE ****
-
-    player_position = (Position *) malloc(
-        sizeof(Position)
-    );
-
-    player_position->object_id = player.object_id;         // set values for the player position.
-    player_position->position[0] = 0.0f;                    // initialize all to zero
-    player_position->position[1] = 0.0f;
-    player_position->position[2] = 0.0f;
-    player_position->rotationX = 0.0f;
-    player_position->rotationY = 0.0f;
-    player_position->rotationZ = 0.0f;
-    player_position->scale = 0.1f;                          // assimp scales up all loaded models
-
-    player.component[COMP_POSITION] = player_position;     // add position component to player
-
-
-    g_position_component[player.object_id].object_id =     // keep track of all position components
-        player.object_id;
-
-    //////////////////////////// Create a Dungeon Level///////////////////////////////
-
-    Dice_Initialize();
-
-    // create Dungeon Level - can be done anytime before main game loop
-    i8 current_dungeon_level = 1;
-
-    Dungeon_Level_Current *dungeon_level_current;
-
-    dungeon_level_current = (Dungeon_Level_Current*) malloc(sizeof(Dungeon_Level_Current));
-
-    dungeon_level_current->dungeon_level = current_dungeon_level;
-    // set all locations to false.
-    for(int x = 0; x <= MAP_WIDTH; x++)
-    {
-        for(int y = 0; y <= MAP_HEIGHT; y++)
-        {
-            dungeon_level_current->map_cells[x][y] = false;
-        }
-    }
-
-    dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current);
 
     //////////////////////////////////////////////////////////////////////////
     // window openGL - NOTE : must be done first to get the openGL context.
@@ -177,7 +135,7 @@ main() {
         GL_DEPTH_TEST
     );
 
-    //////////////////// create a Triangle /////////////////////////
+    //////////////////// create a Square /////////////////////////
     // floor tile - start with a triangle and build up from there
 
     GLfloat vertex_array[] = {
@@ -325,6 +283,78 @@ main() {
         0
     );
 
+    ////////////////////////////////////// Create the Player ////////////////////////////
+
+    Position* player_position;
+
+    // NOTE: you must free the memory before game exit      *** NOTE ****
+
+    player_position = (Position*) malloc(
+        sizeof(Position)
+    );
+
+    player_position->object_id = player.object_id;         // set values for the player position.
+    player_position->position[0] = 0.0f;                   // initialize all to zero
+    player_position->position[1] = 0.0f;
+    player_position->position[2] = 0.0f;
+    player_position->rotationX = 0.0f;
+    player_position->rotationY = 0.0f;
+    player_position->rotationZ = 0.0f;
+    player_position->scale = 1.0f;
+
+    vec4 player_color;
+    player_color[0] = 0.1f;
+    player_color[1] = 0.5f;
+    player_color[2] = 0.1f;
+    player_color[3] = 1.0f;
+
+    Vector vao_storage;
+    Vector vbo_storage;
+
+    Vector_init(&vao_storage);
+    Vector_init(&vbo_storage);
+
+    Game_Model* player_model = Load_Model_3D(
+        "Resource/Models/Player.obj",
+        player_color,
+        &vao_storage,
+        &vbo_storage
+    );
+    player_model->object_id = player.object_id;
+    player_model->vaoID = 0;
+    player_model->num_indices = 0;
+
+    player.component[COMP_POSITION] = player_position;     // add position component to player
+    player.component[COMP_MODEL] = player_model;
+
+    g_position_component[player.object_id].object_id =     // keep track of all position components
+        player.object_id;
+    g_model_component[player.object_id].object_id =
+        player.object_id;
+
+    //////////////////////////// Create a Dungeon Level///////////////////////////////
+
+    Dice_Initialize();
+
+    // create Dungeon Level - can be done anytime before main game loop
+    i8 current_dungeon_level = 1;
+
+    Dungeon_Level_Current *dungeon_level_current;
+
+    dungeon_level_current = (Dungeon_Level_Current*) malloc(sizeof(Dungeon_Level_Current));
+
+    dungeon_level_current->dungeon_level = current_dungeon_level;
+    // set all locations to false.
+    for(int x = 0; x <= MAP_WIDTH; x++)
+    {
+        for(int y = 0; y <= MAP_HEIGHT; y++)
+        {
+            dungeon_level_current->map_cells[x][y] = false;
+        }
+    }
+
+    dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current);
+
     //////////////////// Shader /////////////////////////////////
 
     GLint shader = Load_Shader();
@@ -337,8 +367,6 @@ main() {
     GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
 
     /////////////////////////////////////////////////////////////
-
-    // player model component
 
     // camera
     Main_Camera camera;
@@ -481,7 +509,37 @@ main() {
                     );
                 }
             }
-        }
+        } // end of map render
+
+        glBindVertexArray(                          // set which VAO to draw
+            player_model->vaoID
+        );
+
+        vec3 scale = {1.0f, 1.0f, 1.0f};
+
+        *player_model = Calc_Model_matrix(
+            *player_model,
+            player_position->position,
+            0.0f,
+            0.0f,
+            0.0f,
+            scale
+        );
+
+        glUniformMatrix4fv(
+            model_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) player_model->model_matrix
+        );
+
+        glDrawElements(                               // draw using Triangles
+            GL_TRIANGLES,
+            player_model->num_indices,
+            GL_UNSIGNED_INT,
+            (void *) 0
+        );
+
         /////////////////////////////////////////////////////////////////////
 
         glBindVertexArray(                          // disable the used VAO
@@ -505,6 +563,51 @@ main() {
     ///////////////////////////////////////////////////////////////
 
     // free up resources
+    free(player_model); // TODO: we should loop through all models (ie use the ecs)
+
+    // cleanup OpenGL - anything stored on the gfx card.
+
+    glDeleteProgram(
+        shader
+    );
+
+    // delete all vao's that have been created
+    printf(
+        "Deleting VAO vectors: %d\n",
+        Vector_size(&vao_storage)
+    );
+
+    for(int index = 0; index < Vector_size(&vao_storage); index++)
+    {
+        GLuint vao = Vector_get(
+            &vao_storage,
+            index
+        );
+
+        glDeleteVertexArrays(
+            1,
+            (GLuint*)&vao
+        );
+    }
+
+    Vector_free_memory(&vao_storage);
+
+    // delete all vbo's that were created.
+    printf(
+        "Deleting VBO vectors: %d\n",
+        Vector_size(&vbo_storage)
+    );
+
+    for(int index = 0; index < Vector_size(&vbo_storage); index++)
+    {
+        GLuint vbo = Vector_get(&vbo_storage, index);
+        glDeleteBuffers(
+            1,
+            (GLuint*)&vbo
+        );
+    }
+
+    Vector_free_memory(&vbo_storage);
 
     free(
         dungeon_level_current

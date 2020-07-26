@@ -11,9 +11,9 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 /* assimp include files. These three are usually needed. */
-//#include <assimp/cimport.h>
-//#include <assimp/scene.h>
-//#include <assimp/postprocess.h>
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 /////////////////// C Standard Lib Includes ////////////////////////////
 
@@ -41,6 +41,8 @@
 
 #define MAX_ENTITIES 1024
 
+#define VECTOR_INITIAL_CAPACITY 8
+
 ////////////////////////// Typedefs ////////////////////////////////////
 
 typedef uint8_t		u8;
@@ -51,6 +53,12 @@ typedef int32_t     i32;
 //typedef int64_    i64;
 
 ///////////////////////////// Structs ////////////////////////////////
+
+typedef struct {
+    i32 size;
+    i32 capacity;
+    i32 *data;
+} Vector;
 
 typedef struct {
     u8 x;
@@ -75,7 +83,7 @@ typedef struct {
 
 typedef enum {
     COMP_POSITION = 0,
-//    COMP_MODEL,
+    COMP_MODEL,
 //    COMP_VISIBILITY,
 //    COMP_SOLID_BODY,
 //    COMP_MOVEMENT,

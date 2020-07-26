@@ -40,14 +40,13 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(Dungeon_Level_Current *dungeon_l
         );
 
         // attempt tp place room into map.
-//        bool success = Map_Carve_Room(
-//            dungeon_level_current,
-//            room_location.x,
-//            room_location.z,
-//            room_width,
-//            room_height
-//        );
-          bool success = true;
+        bool success = Map_Carve_Room(
+            dungeon_level_current,
+            room_location.x,
+            room_location.z,
+            room_width,
+            room_height
+        );
 
         if (success) {
             floor_tiles_used += (room_width) * (room_height);
