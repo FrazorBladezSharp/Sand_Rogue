@@ -295,10 +295,10 @@ main() {
 
     player_position->object_id = player.object_id;         // set values for the player position.
     player_position->position[0] = 0.0f;                   // initialize all to zero
-    player_position->position[1] = 0.0f;
+    player_position->position[1] = 0.5f;
     player_position->position[2] = 0.0f;
     player_position->rotationX = 0.0f;
-    player_position->rotationY = 0.0f;
+    player_position->rotationY = 45.0f;
     player_position->rotationZ = 0.0f;
     player_position->scale = 1.0f;
 
@@ -356,7 +356,7 @@ main() {
         }
     }
 
-    dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current);
+    dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current, player_position);
 
     //////////////////// Shader /////////////////////////////////
 
@@ -374,10 +374,11 @@ main() {
     // camera
     Main_Camera camera;
 
-    camera.position[0] = 40.0f,
-    camera.position[1] = 10.0f;
-    camera.position[2] = 50.0f;
+    camera.position[0] = player_position->position[0] - 6.0f,
+    camera.position[1] = 8.5f;
+    camera.position[2] = player_position->position[2] + 6.0f;
     camera.rotationX = 45.0f;
+    camera.rotationY = 45.0f;
 
     camera = Calc_Camera_View_Matrix(camera) ;
 
@@ -410,7 +411,7 @@ main() {
         // TODO: (Frazor) player movement
 
 
-        // TODO: (Frazor) camera movement for debug
+        // (Frazor) camera movement for debug
         const u8* currentKeyStates = SDL_GetKeyboardState( NULL );
 
         if( currentKeyStates[ SDL_SCANCODE_ESCAPE ] )
@@ -538,7 +539,7 @@ main() {
             *player_model,
             player_position->position,
             0.0f,
-            0.0f,
+             -45.0f,
             0.0f,
             scale
         );

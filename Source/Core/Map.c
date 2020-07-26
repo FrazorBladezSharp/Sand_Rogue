@@ -4,10 +4,13 @@
 
 #include "Map.h"
 
-Dungeon_Level_Current *Map_Create_Dungeon_Level(Dungeon_Level_Current *dungeon_level_current) {
+Dungeon_Level_Current *Map_Create_Dungeon_Level(
+    Dungeon_Level_Current *dungeon_level_current,
+    Position* player_position) {
 
 
     bool rooms_generating = true;
+    u8 fails = 0;
     u32 floor_tiles_used = 0;
     u32 room_count = 0;
     u8 old_room_width = 0;
@@ -62,6 +65,12 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(Dungeon_Level_Current *dungeon_l
                     old_room_height
                 );
             }
+            else{
+                player_position->position[0] =
+                    room_location.x + Dice_Roll(1, room_width) -1;
+                player_position->position[2] =
+                    room_location.z + Dice_Roll(1, room_height) - 1;
+            }
 
 
             old_room_location.x = room_location.x;
@@ -69,14 +78,14 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(Dungeon_Level_Current *dungeon_l
             old_room_width = room_width;
             old_room_height = room_height;
             room_count += 1;
+            fails = 0;
+
+        } else{
+
+            fails +=1;
         }
 
-        // TODO : Error in maths as the corridors will now block room placement.
-        // TODO: replace with a tolerance for max tries at placing rooms
-        // Exit condition
-        float delme = (float) floor_tiles_used / (float) (MAP_WIDTH * MAP_HEIGHT);
-        //printf("Map Area used : %f\n", delme);
-        if (delme > 0.25f) {
+      if(fails > 24){                               // Exit condition
             rooms_generating = false;
         }
     }

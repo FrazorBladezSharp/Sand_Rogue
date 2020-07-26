@@ -9,7 +9,10 @@
 #include "Source/Sand_Dice.h"
 
 
-Dungeon_Level_Current* Map_Create_Dungeon_Level(Dungeon_Level_Current* dungeon_level_current);
+Dungeon_Level_Current* Map_Create_Dungeon_Level(
+    Dungeon_Level_Current* dungeon_level_current,
+    Position* player_position
+);
 
 Point_3D Map_Random_Point_In_Room(
     Point_3D room_location,
