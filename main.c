@@ -412,7 +412,9 @@ main() {
             }
 
             if (event.type == SDL_MOUSEBUTTONDOWN) {
+
                 if(event.button.button == SDL_BUTTON_RIGHT) {
+
                     SDL_GetMouseState(
                         &mouseX,
                         &mouseY
@@ -424,42 +426,66 @@ main() {
 
         } // end of Poll event loop
 
-        // TODO: (Frazor) player movement
+        // TODO: (Frazor) player movement with wall detection.
 
         // Mouse R-click to move
         // get xy location of mouse
         // determine which of the 4 directions to move - 1 square
         // with community permission increase to 8 way.
         if(player_moves) {
-            if ((mouseX > WINDOW_WIDTH / 2 + 20) && (mouseY < WINDOW_HEIGHT / 2 - 5))
-            {
+
+            if ((mouseX > WINDOW_WIDTH / 2 + 20) &&
+                (mouseY < WINDOW_HEIGHT / 2 - 5)){
+
                 // players x location increases by 1
                 player_position->position[0] += 1;
-                camera.position[0] = player_position->position[0] - 6.0f;
+
+                camera.position[0] =
+                    player_position->position[0] - 6.0f;
+
                 player_moves = false;
             }
 
-            if ((mouseX > WINDOW_WIDTH / 2 + 20) && (mouseY > WINDOW_HEIGHT / 2 + 5)) {
+            if ((mouseX > WINDOW_WIDTH / 2 + 20) &&
+                (mouseY > WINDOW_HEIGHT / 2 + 5)) {
+
                 // player y location increases by 1
                 player_position->position[2] += 1;
-                camera.position[2] = player_position->position[2] + 6.0f;
+
+                camera.position[2] =
+                    player_position->position[2] + 6.0f;
+
                 player_moves = false;
             }
-            if ((mouseX < WINDOW_WIDTH / 2 + 20) && (mouseY > WINDOW_HEIGHT / 2 + 5)) {
+
+            if ((mouseX < WINDOW_WIDTH / 2 + 20) &&
+                (mouseY > WINDOW_HEIGHT / 2 + 5)) {
+
                 // players x location decreases by 1
                 player_position->position[0] -= 1;
-                camera.position[0] = player_position->position[0] - 6.0f;
+
+                camera.position[0] =
+                    player_position->position[0] - 6.0f;
+
                 player_moves = false;
             }
-            if ((mouseX < WINDOW_WIDTH / 2 + 20) && (mouseY < WINDOW_HEIGHT / 2 - 5)) {
+
+            if ((mouseX < WINDOW_WIDTH / 2 + 20) &&
+                (mouseY < WINDOW_HEIGHT / 2 - 5)) {
+
                 // player y location decreases by 1
                 player_position->position[2] -= 1;
-                camera.position[2] = player_position->position[2] + 6.0f;
+
+                camera.position[2] =
+                    player_position->position[2] + 6.0f;
+
                 player_moves = false;
             }
+
             // update camera & view_matrix
             camera = Calc_Camera_View_Matrix(camera);
         }
+
         // (Frazor) camera movement for debug
         const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
 
@@ -470,21 +496,36 @@ main() {
         if(currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
             if (currentKeyStates[SDL_SCANCODE_W]) {
-                camera.position[2] = camera.position[2] - 0.1f;
-            } else if (currentKeyStates[SDL_SCANCODE_S]) {
-                camera.position[2] = camera.position[2] + 0.1f;
+
+                camera.position[2] =
+                    camera.position[2] - 0.1f;
+            }
+            else if (currentKeyStates[SDL_SCANCODE_S]) {
+
+                camera.position[2] =
+                    camera.position[2] + 0.1f;
             }
 
             if (currentKeyStates[SDL_SCANCODE_A]) {
-                camera.position[0] = camera.position[0] - 0.1f;
-            } else if (currentKeyStates[SDL_SCANCODE_D]) {
-                camera.position[0] = camera.position[0] + 0.1f;
+
+                camera.position[0] =
+                    camera.position[0] - 0.1f;
+            }
+            else if (currentKeyStates[SDL_SCANCODE_D]) {
+
+                camera.position[0] =
+                    camera.position[0] + 0.1f;
             }
 
             if (currentKeyStates[SDL_SCANCODE_Q]) {
-                camera.position[1] = camera.position[1] - 0.1f;
-            } else if (currentKeyStates[SDL_SCANCODE_E]) {
-                camera.position[1] = camera.position[1] + 0.1f;
+
+                camera.position[1] =
+                    camera.position[1] - 0.1f;
+            }
+            else if (currentKeyStates[SDL_SCANCODE_E]) {
+
+                camera.position[1] =
+                    camera.position[1] + 0.1f;
             }
 
             camera = Calc_Camera_View_Matrix(camera);
@@ -619,7 +660,7 @@ main() {
 
 
 
-    ///////////////////////////////////////////////////////////////
+    //////////////////// Clean up and Exit //////////////////////////////
 
     // free up resources
 
@@ -679,10 +720,6 @@ main() {
     free(
         player.component[COMP_MODEL]
     );
-
-    //free(player_model);
-
-
 
     SDL_DestroyWindow(
         window
