@@ -40,13 +40,14 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(Dungeon_Level_Current *dungeon_l
         );
 
         // attempt tp place room into map.
-        bool success = Map_Carve_Room(
-            dungeon_level_current,
-            room_location.x,
-            room_location.z,
-            room_width,
-            room_height
-        );
+//        bool success = Map_Carve_Room(
+//            dungeon_level_current,
+//            room_location.x,
+//            room_location.z,
+//            room_width,
+//            room_height
+//        );
+          bool success = true;
 
         if (success) {
             floor_tiles_used += (room_width) * (room_height);
@@ -69,20 +70,19 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(Dungeon_Level_Current *dungeon_l
             old_room_width = room_width;
             old_room_height = room_height;
             room_count += 1;
-            printf("Dungeon Level has generated %u Rooms\n", room_count);
         }
 
         // TODO : Error in maths as the corridors will now block room placement.
         // TODO: replace with a tolerance for max tries at placing rooms
         // Exit condition
         float delme = (float) floor_tiles_used / (float) (MAP_WIDTH * MAP_HEIGHT);
-        printf("Map Area used : %f\n", delme);
+        //printf("Map Area used : %f\n", delme);
         if (delme > 0.25f) {
             rooms_generating = false;
         }
     }
 
-    //printf("\nDungeon Level has generated %u Rooms\n", room_count);
+    printf("\nDungeon Level has generated %u Rooms\n", room_count);
 
     return dungeon_level_current;
 }
@@ -107,7 +107,7 @@ void Map_Create_Corridor(
     Point_3D from_point = Map_Random_Point_In_Room(old_room_location, old_room_width, old_room_height);
     Point_3D to_end_point = Map_Random_Point_In_Room(room_location, room_width, room_height);
 
-    // walk along proposed corridor and create a segment list
+    // TODO : (Frazor) walk along proposed corridor and create a segment list
     // TODO: (Frazor) from room to room, discard duplicate segments.
     Point_3D midpoint = {0.0f, 0.0f, 0.0f};
 

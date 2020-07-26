@@ -77,7 +77,7 @@ main() {
     g_position_component[player.object_id].object_id =     // keep track of all position components
         player.object_id;
 
-    /////////////////////////////////////////////////////////////////
+    //////////////////////////// Create a Dungeon Level///////////////////////////////
 
     Dice_Initialize();
 
@@ -90,9 +90,9 @@ main() {
 
     dungeon_level_current->dungeon_level = current_dungeon_level;
     // set all locations to false.
-    for(int x = 0; x < MAP_WIDTH; x++)
+    for(int x = 0; x <= MAP_WIDTH; x++)
     {
-        for(int y = 0; y < MAP_HEIGHT; y++)
+        for(int y = 0; y <= MAP_HEIGHT; y++)
         {
             dungeon_level_current->map_cells[x][y] = false;
         }
@@ -100,6 +100,7 @@ main() {
 
     dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current);
 
+    //////////////////////////////////////////////////////////////////////////
     // window openGL - NOTE : must be done first to get the openGL context.
 
     SDL_Window *window;                                   // Declare a pointer
@@ -225,7 +226,7 @@ main() {
 
     glBufferData(                           // send our data to the Gfx Card
         GL_ELEMENT_ARRAY_BUFFER,
-        sizeof(index_array) * sizeof(GLuint),
+        sizeof(index_array),
         &index_array[0],
         GL_STATIC_DRAW
     );
@@ -247,7 +248,7 @@ main() {
 
     glBufferData(                               // send our data to the gfx card
         GL_ARRAY_BUFFER,
-        sizeof(vertex_array) * sizeof(GLfloat),
+        sizeof(vertex_array),
         &vertex_array[0],
         GL_STATIC_DRAW
     );
@@ -281,7 +282,7 @@ main() {
 
     glBufferData(                               // send our data to the gfx card
         GL_ARRAY_BUFFER,
-        sizeof(color_array) * sizeof(GLfloat),
+        sizeof(color_array),
         &color_array[0],
         GL_STATIC_DRAW
     );
@@ -379,6 +380,41 @@ main() {
 
 
         // TODO: (Frazor) camera movement for debug
+        const u8* currentKeyStates = SDL_GetKeyboardState( NULL );
+
+        if( currentKeyStates[ SDL_SCANCODE_ESCAPE ] )
+        {
+            running = false;
+        }
+
+        if( currentKeyStates[ SDL_SCANCODE_W ] )
+        {
+            camera.position[2] = camera.position[2] - 0.1f;
+        }
+        else if( currentKeyStates[ SDL_SCANCODE_S ] )
+        {
+            camera.position[2] = camera.position[2] + 0.1f;
+        }
+
+        if( currentKeyStates[ SDL_SCANCODE_A ] )
+        {
+            camera.position[0] = camera.position[0] - 0.1f;
+        }
+        else if( currentKeyStates[ SDL_SCANCODE_D ] )
+        {
+            camera.position[0] = camera.position[0] + 0.1f;
+        }
+
+        if( currentKeyStates[ SDL_SCANCODE_Q ] )
+        {
+            camera.position[1] = camera.position[1] - 0.1f;
+        }
+        else if( currentKeyStates[ SDL_SCANCODE_E ] )
+        {
+            camera.position[1] = camera.position[1] + 0.1f;
+        }
+
+        camera = Calc_Camera_View_Matrix(camera);
 
 
         // TODO: rendering functionality
