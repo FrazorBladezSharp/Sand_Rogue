@@ -16,6 +16,7 @@
 */
 
 #include "Source/Common.h"
+
 Position g_position_component[MAX_ENTITIES];
 Game_Model g_model_component[MAX_ENTITIES];
 
@@ -34,7 +35,6 @@ main() {
     printf(
         "Welcome to Sand_Rogue !\n\n"
     );
-
 
 
     Game_Entities game_entities;
@@ -285,11 +285,11 @@ main() {
 
     ////////////////////////////////////// Create the Player ////////////////////////////
 
-    Position* player_position;
+    Position *player_position;
 
     // NOTE: you must free the memory before game exit      *** NOTE ****
 
-    player_position = (Position*) malloc(
+    player_position = (Position *) malloc(
         sizeof(Position)
     );
 
@@ -314,10 +314,10 @@ main() {
     Vector_init(&vao_storage);
     Vector_init(&vbo_storage);
 
-    Game_Model* player_model;
-    player_model = (Game_Model*) malloc(sizeof(Game_Model));
+    Game_Model *player_model;
+    player_model = (Game_Model *) malloc(sizeof(Game_Model));
 
-    player_model =Load_Model_3D(
+    player_model = Load_Model_3D(
         "Resource/Models/Player.obj",
         player_color,
         &vao_storage,
@@ -344,14 +344,12 @@ main() {
 
     Dungeon_Level_Current *dungeon_level_current;
 
-    dungeon_level_current = (Dungeon_Level_Current*) malloc(sizeof(Dungeon_Level_Current));
+    dungeon_level_current = (Dungeon_Level_Current *) malloc(sizeof(Dungeon_Level_Current));
 
     dungeon_level_current->dungeon_level = current_dungeon_level;
     // set all locations to false.
-    for(int x = 0; x <= MAP_WIDTH; x++)
-    {
-        for(int y = 0; y <= MAP_HEIGHT; y++)
-        {
+    for (int x = 0; x <= MAP_WIDTH; x++) {
+        for (int y = 0; y <= MAP_HEIGHT; y++) {
             dungeon_level_current->map_cells[x][y] = false;
         }
     }
@@ -375,12 +373,12 @@ main() {
     Main_Camera camera;
 
     camera.position[0] = player_position->position[0] - 6.0f,
-    camera.position[1] = 8.5f;
+        camera.position[1] = 8.5f;
     camera.position[2] = player_position->position[2] + 6.0f;
     camera.rotationX = 45.0f;
     camera.rotationY = 45.0f;
 
-    camera = Calc_Camera_View_Matrix(camera) ;
+    camera = Calc_Camera_View_Matrix(camera);
 
     mat4 projection_matrix;
 
@@ -394,9 +392,16 @@ main() {
 
     // main run time game loop
     bool running = true;
+    bool player_moves;
+
     SDL_Event event;
+    i32 mouseX;
+    i32 mouseY;
 
     while (running) {
+
+        mouseX = 0;
+        mouseY = 0;
 
         while (SDL_PollEvent(&event) == SDL_TRUE) {
 
@@ -406,48 +411,83 @@ main() {
 
             }
 
+            if (event.type == SDL_MOUSEBUTTONDOWN && SDL_BUTTON_RIGHT) {
+
+                SDL_GetMouseState(
+                    &mouseX,
+                    &mouseY
+                );
+
+                player_moves = true;
+            }
+
         } // end of Poll event loop
 
         // TODO: (Frazor) player movement
 
+        // Mouse R-click to move
+        // get xy location of mouse
+        // determine which of the 4 directions to move - 1 square
+        // with community permission increase to 8 way.
+        if(player_moves) {
+            if ((mouseX > WINDOW_WIDTH / 2 + 20) && (mouseY < WINDOW_HEIGHT / 2 - 5))
+            {
+                // players x location increases by 1
+                player_position->position[0] += 1;
+                camera.position[0] = player_position->position[0] - 6.0f;
+                player_moves = false;
+            }
 
+            if ((mouseX > WINDOW_WIDTH / 2 + 20) && (mouseY > WINDOW_HEIGHT / 2 + 5)) {
+                // player y location increases by 1
+                player_position->position[2] += 1;
+                camera.position[2] = player_position->position[2] + 6.0f;
+                player_moves = false;
+            }
+            if ((mouseX < WINDOW_WIDTH / 2 + 20) && (mouseY > WINDOW_HEIGHT / 2 + 5)) {
+                // players x location decreases by 1
+                player_position->position[0] -= 1;
+                camera.position[0] = player_position->position[0] - 6.0f;
+                player_moves = false;
+            }
+            if ((mouseX < WINDOW_WIDTH / 2 + 20) && (mouseY < WINDOW_HEIGHT / 2 - 5)) {
+                // player y location decreases by 1
+                player_position->position[2] -= 1;
+                camera.position[2] = player_position->position[2] + 6.0f;
+                player_moves = false;
+            }
+            // update camera & view_matrix
+            camera = Calc_Camera_View_Matrix(camera);
+        }
         // (Frazor) camera movement for debug
-        const u8* currentKeyStates = SDL_GetKeyboardState( NULL );
+        const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
 
-        if( currentKeyStates[ SDL_SCANCODE_ESCAPE ] )
-        {
+        if (currentKeyStates[SDL_SCANCODE_ESCAPE]) {
             running = false;
         }
 
-        if( currentKeyStates[ SDL_SCANCODE_W ] )
-        {
-            camera.position[2] = camera.position[2] - 0.1f;
-        }
-        else if( currentKeyStates[ SDL_SCANCODE_S ] )
-        {
-            camera.position[2] = camera.position[2] + 0.1f;
-        }
+        if(currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-        if( currentKeyStates[ SDL_SCANCODE_A ] )
-        {
-            camera.position[0] = camera.position[0] - 0.1f;
-        }
-        else if( currentKeyStates[ SDL_SCANCODE_D ] )
-        {
-            camera.position[0] = camera.position[0] + 0.1f;
-        }
+            if (currentKeyStates[SDL_SCANCODE_W]) {
+                camera.position[2] = camera.position[2] - 0.1f;
+            } else if (currentKeyStates[SDL_SCANCODE_S]) {
+                camera.position[2] = camera.position[2] + 0.1f;
+            }
 
-        if( currentKeyStates[ SDL_SCANCODE_Q ] )
-        {
-            camera.position[1] = camera.position[1] - 0.1f;
-        }
-        else if( currentKeyStates[ SDL_SCANCODE_E ] )
-        {
-            camera.position[1] = camera.position[1] + 0.1f;
-        }
+            if (currentKeyStates[SDL_SCANCODE_A]) {
+                camera.position[0] = camera.position[0] - 0.1f;
+            } else if (currentKeyStates[SDL_SCANCODE_D]) {
+                camera.position[0] = camera.position[0] + 0.1f;
+            }
 
-        camera = Calc_Camera_View_Matrix(camera);
+            if (currentKeyStates[SDL_SCANCODE_Q]) {
+                camera.position[1] = camera.position[1] - 0.1f;
+            } else if (currentKeyStates[SDL_SCANCODE_E]) {
+                camera.position[1] = camera.position[1] + 0.1f;
+            }
 
+            camera = Calc_Camera_View_Matrix(camera);
+        }
 
         // TODO: rendering functionality
 
@@ -470,24 +510,24 @@ main() {
             projection_matrix_loc,
             1,
             GL_FALSE,
-            (float *)projection_matrix
+            (float *) projection_matrix
         );
 
         glUniformMatrix4fv(
             view_matrix_loc,
             1,
             GL_FALSE,
-            (float *)camera.view_matrix
+            (float *) camera.view_matrix
         );
 
         //////////////////////// Render Dungeon Map //////////////////////////
 
-        for(u8 x = 0 ; x <= MAP_WIDTH; x++) {
-            for(u8 z = 0; z <= MAP_HEIGHT; z++) {
+        for (u8 x = 0; x <= MAP_WIDTH; x++) {
+            for (u8 z = 0; z <= MAP_HEIGHT; z++) {
 
-                if(dungeon_level_current->map_cells[x][z]) {
+                if (dungeon_level_current->map_cells[x][z]) {
 
-                    vec3 floor_position = {(float)x, 0.0f, (float)z};
+                    vec3 floor_position = {(float) x, 0.0f, (float) z};
                     vec3 scale = {1.0f, 1.0f, 1.0f};
                     floor = Calc_Model_matrix(
                         floor,
@@ -523,14 +563,14 @@ main() {
             projection_matrix_loc,
             1,
             GL_FALSE,
-            (float *)projection_matrix
+            (float *) projection_matrix
         );
 
         glUniformMatrix4fv(
             view_matrix_loc,
             1,
             GL_FALSE,
-            (float *)camera.view_matrix
+            (float *) camera.view_matrix
         );
 
         vec3 scale = {1.0f, 1.0f, 1.0f};
@@ -539,7 +579,7 @@ main() {
             *player_model,
             player_position->position,
             0.0f,
-             -45.0f,
+            -45.0f,
             0.0f,
             scale
         );
@@ -595,8 +635,7 @@ main() {
         Vector_size(&vao_storage)
     );
 
-    for(int index = 0; index < Vector_size(&vao_storage); index++)
-    {
+    for (int index = 0; index < Vector_size(&vao_storage); index++) {
         GLuint vao = Vector_get(
             &vao_storage,
             index
@@ -604,7 +643,7 @@ main() {
 
         glDeleteVertexArrays(
             1,
-            (GLuint*)&vao
+            (GLuint *) &vao
         );
     }
 
@@ -616,12 +655,11 @@ main() {
         Vector_size(&vbo_storage)
     );
 
-    for(int index = 0; index < Vector_size(&vbo_storage); index++)
-    {
+    for (int index = 0; index < Vector_size(&vbo_storage); index++) {
         GLuint vbo = Vector_get(&vbo_storage, index);
         glDeleteBuffers(
             1,
-            (GLuint*)&vbo
+            (GLuint *) &vbo
         );
     }
 
