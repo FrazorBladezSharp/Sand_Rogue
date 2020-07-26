@@ -411,14 +411,15 @@ main() {
 
             }
 
-            if (event.type == SDL_MOUSEBUTTONDOWN && SDL_BUTTON_RIGHT) {
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
+                if(event.button.button == SDL_BUTTON_RIGHT) {
+                    SDL_GetMouseState(
+                        &mouseX,
+                        &mouseY
+                    );
 
-                SDL_GetMouseState(
-                    &mouseX,
-                    &mouseY
-                );
-
-                player_moves = true;
+                    player_moves = true;
+                }
             }
 
         } // end of Poll event loop
