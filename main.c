@@ -640,7 +640,7 @@ main() {
         player.component[COMP_MODEL]
     );
 
-    free(player_model);
+    //free(player_model);
 
 
 
