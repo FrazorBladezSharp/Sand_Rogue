@@ -9,6 +9,7 @@
 #include "Source/Core/Sand_Vector.h"
 
 Game_Model* Load_Model_3D(const char* path, vec4 color,
-                          Vector *vao_storage, Vector *vbo_storage);
+                          Vector *vao_storage, Vector *vbo_storage,
+                          Game_Model* player_model);
 
 #endif //SAND_ROGUE_LOAD_MODEL_3D_H

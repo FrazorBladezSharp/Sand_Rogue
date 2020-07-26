@@ -5,12 +5,9 @@
 #include "Load_Model_3D.h"
 
 Game_Model* Load_Model_3D(const char* path, vec4 color,
-                        Vector *vao_storage, Vector *vbo_storage)
+                        Vector *vao_storage, Vector *vbo_storage,
+                        Game_Model* loaded_asset)
 {
-    Game_Model* loaded_asset;
-
-    loaded_asset = (Game_Model*) malloc(sizeof(Game_Model));
-
     loaded_asset->vaoID = 0;
     loaded_asset->num_indices = 0;
 
@@ -21,10 +18,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         aiProcessPreset_TargetRealtime_Quality
     );
 
-    if (scene == NULL)
-    {
-        return loaded_asset;
-    }
+    assert(scene != NULL);
 
     //////////////// Setup VAO /////////////////////////////
 

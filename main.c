@@ -314,15 +314,18 @@ main() {
     Vector_init(&vao_storage);
     Vector_init(&vbo_storage);
 
-    Game_Model* player_model = Load_Model_3D(
+    Game_Model* player_model;
+    player_model = (Game_Model*) malloc(sizeof(Game_Model));
+
+    player_model =Load_Model_3D(
         "Resource/Models/Player.obj",
         player_color,
         &vao_storage,
-        &vbo_storage
+        &vbo_storage,
+        player_model
     );
+
     player_model->object_id = player.object_id;
-    player_model->vaoID = 0;
-    player_model->num_indices = 0;
 
     player.component[COMP_POSITION] = player_position;     // add position component to player
     player.component[COMP_MODEL] = player_model;
@@ -515,6 +518,20 @@ main() {
             player_model->vaoID
         );
 
+        glUniformMatrix4fv(
+            projection_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *)projection_matrix
+        );
+
+        glUniformMatrix4fv(
+            view_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *)camera.view_matrix
+        );
+
         vec3 scale = {1.0f, 1.0f, 1.0f};
 
         *player_model = Calc_Model_matrix(
@@ -563,7 +580,7 @@ main() {
     ///////////////////////////////////////////////////////////////
 
     // free up resources
-    free(player_model); // TODO: we should loop through all models (ie use the ecs)
+
 
     // cleanup OpenGL - anything stored on the gfx card.
 
@@ -613,9 +630,19 @@ main() {
         dungeon_level_current
     );
 
+
+    // TODO: we should loop through all models (ie use the ecs)
     free(
         player.component[COMP_POSITION]
     );
+
+    free(
+        player.component[COMP_MODEL]
+    );
+
+    free(player_model);
+
+
 
     SDL_DestroyWindow(
         window
