@@ -21,7 +21,11 @@ add_executable(
         Source/Sand_Dice.h
         Source/Core/Map.c
         Source/Core/Map.h
-        Source/OpenGL/Load_Model_3D.c Source/OpenGL/Load_Model_3D.h Source/Core/Sand_Vector.c Source/Core/Sand_Vector.h)
+        Source/OpenGL/Load_Model_3D.c
+        Source/OpenGL/Load_Model_3D.h
+        Source/Core/Sand_Vector.c
+        Source/Core/Sand_Vector.h
+)
 
 target_link_libraries(
         Sand_Rogue SDL2 GLEW GL assimp m

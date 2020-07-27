@@ -18,8 +18,8 @@
 # Open Source licence   : doc.qt.io/qt-5/opensourcelicence.html
 ###############################################################
 */
-#ifndef TEXTFILEUTILS_H
-#define TEXTFILEUTILS_H
+#ifndef TEXT_FILE_UTILS_H
+#define TEXT_FILE_UTILS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,4 +30,4 @@ char *Read_A_Text_File(
 );
 
 
-#endif // TEXTFILEUTILS_H
+#endif // TEXT_FILE_UTILS_H

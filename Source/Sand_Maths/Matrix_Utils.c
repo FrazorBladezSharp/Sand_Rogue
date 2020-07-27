@@ -4,9 +4,9 @@
 
 /*
 ###############################################################
-# Project created by Farazor Sharp 2020 Jul 15
+# Project created by Frazor Sharp 2020 Jul 15
 #
-# Sanbox for C / C++ Version 0.1
+# Sandbox for C / C++ Version 0.1
 #
 # Contact email         : frazor.sharp@virginmedia.com
 # Website               : none

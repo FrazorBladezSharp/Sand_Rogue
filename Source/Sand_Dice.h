@@ -36,24 +36,24 @@ static int Dice_Roll(int num, int type) {
 
 // using a 3d6 system we have the following :
 
-static bool Dice_Critical_Success(int effectiveSkill, int diceRoll) {
-    bool ret = false;
-    int crit = 4;
-    if (effectiveSkill > 20) effectiveSkill = 20;
-    if (effectiveSkill > 14) crit += (effectiveSkill - 14);
-    if (diceRoll <= crit) ret = true;
-    return ret;
-}
-
-static bool Dice_Critical_Failure(int effectiveSkill, int diceRoll) {
-    bool ret = false;
-    if (effectiveSkill > 20) effectiveSkill = 20;
-    if (effectiveSkill < 3) effectiveSkill = 3;
-    if (diceRoll == 18) ret = true;
-    else if ((diceRoll == 17) && (effectiveSkill < 16)) ret = true;
-    else if (diceRoll >= effectiveSkill + 10) ret = true;
-    return ret;
-}
+//static bool Dice_Critical_Success(int effectiveSkill, int diceRoll) {
+//    bool ret = false;
+//    int crit = 4;
+//    if (effectiveSkill > 20) effectiveSkill = 20;
+//    if (effectiveSkill > 14) crit += (effectiveSkill - 14);
+//    if (diceRoll <= crit) ret = true;
+//    return ret;
+//}
+//
+//static bool Dice_Critical_Failure(int effectiveSkill, int diceRoll) {
+//    bool ret = false;
+//    if (effectiveSkill > 20) effectiveSkill = 20;
+//    if (effectiveSkill < 3) effectiveSkill = 3;
+//    if (diceRoll == 18) ret = true;
+//    else if ((diceRoll == 17) && (effectiveSkill < 16)) ret = true;
+//    else if (diceRoll >= effectiveSkill + 10) ret = true;
+//    return ret;
+//}
 
 
 #endif // SAND_DICE_H
