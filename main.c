@@ -436,6 +436,13 @@ main() {
     GLint view_matrix_loc = glGetUniformLocation(shader, "view_matrix");
     GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
 
+    GLint light_position_loc = glGetUniformLocation(shader, "light_position");
+    GLint light_color_loc = glGetUniformLocation(shader, " light_color");
+    GLint shine_damper_loc = glGetUniformLocation(shader, "shine_damper");
+    GLint reflectivity_loc = glGetUniformLocation(shader, "reflectivity");
+    GLint sky_color_loc = glGetUniformLocation(shader, " sky_color");
+    GLint camera_position_loc = glGetUniformLocation(shader, "camera_position");
+
     /////////////////////////////////////////////////////////////
 
     // camera
@@ -655,6 +662,62 @@ main() {
         GL_FALSE,
         (float *) camera.view_matrix
     );
+
+    vec3 light_position;
+
+    light_position[0] = player_position->position[0] + 0.5f;
+    light_position[1] = player_position->position[1] + 1.5f;
+    light_position[2] = player_position->position[2] + 0.5f;
+
+    glUniform3fv(
+        light_position_loc,
+        1,
+        (float *)light_position
+        );
+
+    vec3 light_color;
+
+    light_color[0] = 0.8f;
+    light_color[1] = 0.8f;
+    light_color[2] = 0.8f;
+
+        glUniform3fv(
+            light_color_loc,
+            1,
+            (float *)light_color
+        );
+
+        float shine_damper = 0.5f;
+
+        glUniform1f(
+            shine_damper_loc,
+            shine_damper
+        );                          // roughness of surface low = rough
+
+        float reflectivity = 4.0f; // cloth = low// metal = med to high // water glass high //
+
+        glUniform1f(
+            reflectivity_loc,
+            reflectivity
+        );
+
+        vec3 sky_color;
+
+        sky_color[0] = 0.05f;
+        sky_color[1] = 0.02f;
+        sky_color[2] = 0.01f;
+
+        glUniform3fv(
+            sky_color_loc,
+            1,
+            (float *)sky_color
+        );
+
+        glUniform3fv(
+            camera_position_loc,
+            1,
+            (float *)camera.position
+        );
 
     //////////////////////// Render Dungeon Map //////////////////////////
 
