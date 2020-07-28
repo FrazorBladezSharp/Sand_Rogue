@@ -23,14 +23,14 @@
 
 GLuint Load_Shader() {
     const char *vertex_shader_source = Read_A_Text_File(
-        "Resource/GLSL/ColorShader.vs"
+        "Resource/GLSL/Color_Vertex.shader"
     );
 
     if (vertex_shader_source == NULL){
         printf("Shader failed to load.\n");
     }
     const char *fragment_shader_source = Read_A_Text_File(
-        "Resource/GLSL/ColorShader.fs"
+        "Resource/GLSL/Color_Fragment.shader"
     );
 
     GLuint shader_program = glCreateProgram();

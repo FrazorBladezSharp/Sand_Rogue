@@ -122,7 +122,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         0,
         3,
         GL_FLOAT,
-        false,
+        GL_FALSE,
         0,
         (void*)0
     );
@@ -181,13 +181,52 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         1,
         4,
         GL_FLOAT,
-        false,
+        GL_FALSE,
         0,
         (void*)0
     );
 
     glEnableVertexAttribArray(
         1
+    );
+
+    ///////// Xfer Normals ///////
+
+    uint normal_buffer;
+
+    glGenBuffers(
+        1,
+        &normal_buffer
+    );
+
+    Vector_append(
+        vbo_storage,
+        normal_buffer
+    );
+
+    glBindBuffer(
+        GL_ARRAY_BUFFER,
+        normal_buffer
+    );
+
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        sizeof(float) * 3 * mesh->mNumVertices,
+        mesh->mNormals,
+        GL_STATIC_DRAW
+    );
+
+    glVertexAttribPointer(
+        2,
+        3,
+        GL_FLOAT,
+        GL_TRUE,
+        0,
+        (void*)0
+    );
+
+    glEnableVertexAttribArray(
+        2
     );
 
     //////////////////////////////

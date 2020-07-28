@@ -129,9 +129,9 @@ main() {
     );
 
     glClearColor(                                    // the window background color
-        0.10f,
-        0.07f,
-        0.04f,
+        0.05f,
+        0.02f,
+        0.01f,
         1.0f
     );
 
@@ -141,6 +141,11 @@ main() {
 
     //////////////////// create a Square /////////////////////////
     // floor tile - start with a triangle and build up from there
+    Vector vao_storage;
+    Vector vbo_storage;
+
+    Vector_init(&vao_storage);
+    Vector_init(&vbo_storage);
 
     GLfloat vertex_array[] = {
         -0.5f, 0.0f, -0.5f, // v0 far left
@@ -156,6 +161,13 @@ main() {
         0.4f, 0.4f, 0.4f, 1.0f
     };
 
+    GLfloat normal_array[] = {
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f
+    };
+
     GLuint index_array[] = {
         0, 1, 2,             // triangle 0
         0, 2, 3              // triangle 1
@@ -166,6 +178,11 @@ main() {
     glCreateVertexArrays(
         1,
         &vaoID
+    );
+
+    Vector_append(
+        &vao_storage,
+        vaoID
     );
 
     glBindVertexArray(                          // bind the VAO to record what we do
@@ -179,6 +196,11 @@ main() {
     glGenBuffers(
         1,
         &iboID
+    );
+
+    Vector_append(
+        &vbo_storage,
+        iboID
     );
 
     glBindBuffer(
@@ -201,6 +223,11 @@ main() {
     glGenBuffers(
         1,
         &vboID
+    );
+
+    Vector_append(
+        &vbo_storage,
+        vboID
     );
 
     glBindBuffer(
@@ -237,6 +264,11 @@ main() {
         &color_buffer
     );
 
+    Vector_append(
+        &vbo_storage,
+        color_buffer
+    );
+
     glBindBuffer(
         GL_ARRAY_BUFFER,
         color_buffer
@@ -260,6 +292,45 @@ main() {
 
     glEnableVertexAttribArray(
         1
+    );
+
+    /////////////////////////// Normals Buffer /////////////////////////////////////////
+
+    GLuint nboID;                                  // Vertex Buffer Object for the vertices
+
+    glGenBuffers(
+        1,
+        &nboID
+    );
+
+    Vector_append(
+        &vbo_storage,
+        nboID
+    );
+
+    glBindBuffer(
+        GL_ARRAY_BUFFER,
+        nboID
+    );
+
+    glBufferData(                               // send our data to the gfx card
+        GL_ARRAY_BUFFER,
+        sizeof(normal_array),
+        &normal_array[0],
+        GL_STATIC_DRAW
+    );
+
+    glVertexAttribPointer(
+        2,                  // attribute must match the layout in the shader.
+        3,                  // size
+        GL_FLOAT,           // type
+        GL_TRUE,           // normalized
+        0,                  // stride
+        (void *) 0            // array buffer offset
+    );
+
+    glEnableVertexAttribArray(
+        2
     );
 
     //////////////////// create the floor Model //////////////////////////
@@ -311,12 +382,6 @@ main() {
     player_color[1] = 0.5f;
     player_color[2] = 0.1f;
     player_color[3] = 1.0f;
-
-    Vector vao_storage;
-    Vector vbo_storage;
-
-    Vector_init(&vao_storage);
-    Vector_init(&vbo_storage);
 
     Game_Model *player_model;
     player_model = (Game_Model *) malloc(sizeof(Game_Model));
@@ -488,10 +553,14 @@ main() {
     // with community permission increase to 8 way.
 
 
-        if (((mouseX > WINDOW_WIDTH / 2 + 20) &&
+
+        if ((((mouseX > WINDOW_WIDTH / 2 + 20) &&
             (mouseY < WINDOW_HEIGHT / 2 - 5) &&
             player_moves) ||
-            currentKeyStates[SDL_SCANCODE_W]) {
+            currentKeyStates[SDL_SCANCODE_W]) &&
+            dungeon_level_current->map_cells
+            [(int)player_position->position[0] + 1]
+            [(int)player_position->position[2]]) {
 
             // players x location increases by 1
             player_position->position[0] += 1;
@@ -502,10 +571,13 @@ main() {
             player_moves = false;
         }
 
-        if (((mouseX > WINDOW_WIDTH / 2 + 20) &&
+        if ((((mouseX > WINDOW_WIDTH / 2 + 20) &&
             (mouseY > WINDOW_HEIGHT / 2 + 5) &&
             player_moves) ||
-            currentKeyStates[SDL_SCANCODE_D]) {
+            currentKeyStates[SDL_SCANCODE_D]) &&
+            dungeon_level_current->map_cells
+            [(int)player_position->position[0]]
+            [(int)player_position->position[2] + 1]) {
 
             // player y location increases by 1
             player_position->position[2] += 1;
@@ -516,10 +588,13 @@ main() {
             player_moves = false;
         }
 
-        if (((mouseX < WINDOW_WIDTH / 2 + 20) &&
+        if ((((mouseX < WINDOW_WIDTH / 2 + 20) &&
             (mouseY > WINDOW_HEIGHT / 2 + 5) &&
             player_moves) ||
-            currentKeyStates[SDL_SCANCODE_S]) {
+            currentKeyStates[SDL_SCANCODE_S]) &&
+            dungeon_level_current->map_cells
+            [(int)player_position->position[0] - 1]
+            [(int)player_position->position[2]]) {
 
             // players x location decreases by 1
             player_position->position[0] -= 1;
@@ -530,10 +605,13 @@ main() {
             player_moves = false;
         }
 
-        if (((mouseX < WINDOW_WIDTH / 2 + 20) &&
+        if ((((mouseX < WINDOW_WIDTH / 2 + 20) &&
             (mouseY < WINDOW_HEIGHT / 2 - 5) &&
             player_moves) ||
-            currentKeyStates[SDL_SCANCODE_A]) {
+            currentKeyStates[SDL_SCANCODE_A]) &&
+            dungeon_level_current->map_cells
+            [(int)player_position->position[0]]
+            [(int)player_position->position[2] - 1]) {
 
             // player y location decreases by 1
             player_position->position[2] -= 1;
