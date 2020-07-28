@@ -139,6 +139,10 @@ main() {
         GL_DEPTH_TEST
     );
 
+    glEnable(
+        GL_LIGHT0
+    );
+
     //////////////////// create a Square /////////////////////////
     // floor tile - start with a triangle and build up from there
     Vector vao_storage;
@@ -437,10 +441,10 @@ main() {
     GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
 
     GLint light_position_loc = glGetUniformLocation(shader, "light_position");
-    GLint light_color_loc = glGetUniformLocation(shader, " light_color");
+    GLint light_color_loc = glGetUniformLocation(shader, "light_color");
     GLint shine_damper_loc = glGetUniformLocation(shader, "shine_damper");
     GLint reflectivity_loc = glGetUniformLocation(shader, "reflectivity");
-    GLint sky_color_loc = glGetUniformLocation(shader, " sky_color");
+    GLint sky_color_loc = glGetUniformLocation(shader, "sky_color");
     GLint camera_position_loc = glGetUniformLocation(shader, "camera_position");
 
     /////////////////////////////////////////////////////////////
@@ -669,10 +673,11 @@ main() {
     light_position[1] = player_position->position[1] + 1.5f;
     light_position[2] = player_position->position[2] + 0.5f;
 
-    glUniform3fv(
+    glUniform3f(
         light_position_loc,
-        1,
-        (float *)light_position
+        light_position[0],
+        light_position[1],
+        light_position[2]
         );
 
     vec3 light_color;
@@ -681,10 +686,11 @@ main() {
     light_color[1] = 0.8f;
     light_color[2] = 0.8f;
 
-        glUniform3fv(
+        glUniform3f(
             light_color_loc,
-            1,
-            (float *)light_color
+            light_color[0],
+            light_color[1],
+            light_color[2]
         );
 
         float shine_damper = 0.5f;
@@ -707,16 +713,18 @@ main() {
         sky_color[1] = 0.02f;
         sky_color[2] = 0.01f;
 
-        glUniform3fv(
+        glUniform3f(
             sky_color_loc,
-            1,
-            (float *)sky_color
+            sky_color[0],
+            sky_color[1],
+            sky_color[2]
         );
 
-        glUniform3fv(
+        glUniform3f(
             camera_position_loc,
-            1,
-            (float *)camera.position
+            camera.position[0],
+            camera.position[1],
+            camera.position[2]
         );
 
     //////////////////////// Render Dungeon Map //////////////////////////

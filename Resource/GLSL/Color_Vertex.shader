@@ -38,7 +38,7 @@ void main()
     /////////////////////////////// Lighting ///////////////////////////////
 
     vec3 unitNormal = normalize(
-        vec3(model_matrix * vec4(normal, 0.0f))
+        vec3(model_matrix * vec4(normal, 1.0f))
     );
 
 
@@ -88,7 +88,7 @@ void main()
     // Final Lighting
 
     vec4 lighting = vec4(
-        clamp(specularLight, 0.01f, 1.0f) +
+        //clamp(specularLight, 0.01f, 1.0f) +
         clamp(diffuseLight, 0.01f, 1.0f) +
         clamp(ambientLight, 0.01f, 1.0f),
         1.0f
