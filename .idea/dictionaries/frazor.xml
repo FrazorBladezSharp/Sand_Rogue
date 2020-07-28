@@ -3,13 +3,29 @@
     <words>
       <w>assimp</w>
       <w>bladez</w>
+      <w>btih</w>
       <w>cglm</w>
       <w>cimport</w>
       <w>doxyfile</w>
+      <w>dynsections</w>
       <w>frazor</w>
       <w>glew</w>
+      <w>headertitle</w>
       <w>martix</w>
+      <w>menudata</w>
+      <w>navpath</w>
+      <w>navtree</w>
+      <w>navtreedata</w>
       <w>opensourcelicence</w>
+      <w>projectalign</w>
+      <w>projectbrief</w>
+      <w>projectname</w>
+      <w>projectnumber</w>
+      <w>searchdata</w>
+      <w>splitbar</w>
+      <w>titlearea</w>
+      <w>treeview</w>
+      <w>undoc</w>
       <w>vao</w>
       <w>vbo</w>
       <w>vsync</w>

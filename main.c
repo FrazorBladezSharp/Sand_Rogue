@@ -1,5 +1,8 @@
 
-/*
+/** @file Main
+ * TODO: think about if statements as they can be taken out
+ * eg a * ( condition for a ) + b * ( condition for b ) + etc ...
+ *
 ###############################################################
 # Project created by Frazor Sharp 2020 Jul 22
 #
@@ -29,8 +32,9 @@ Game_Model g_model_component[MAX_ENTITIES];
 #include "Source/OpenGL/Load_Model_3D.h"
 
 int
-/// The run time entry point for Sand_Rogue
-/// \return 0 = all ok.
+/** The run time entry point for Sand_Rogue
+ * @return 0 = all ok.
+ */
 main() {
     printf(
         "Welcome to Sand_Rogue !\n\n"
@@ -67,7 +71,7 @@ main() {
 
     window = SDL_CreateWindow(
         WINDOW_TITLE,                                 // window title
-        1000,                                      // initial x position
+        100,                                       // initial x position
         250,                                       // initial y position
         WINDOW_WIDTH,                                 // width, in pixels
         WINDOW_HEIGHT,                                // height, in pixels
@@ -413,7 +417,7 @@ main() {
 
             if (event.type == SDL_MOUSEBUTTONDOWN) {
 
-                if(event.button.button == SDL_BUTTON_RIGHT) {
+                if (event.button.button == SDL_BUTTON_RIGHT) {
 
                     SDL_GetMouseState(
                         &mouseX,
@@ -426,66 +430,6 @@ main() {
 
         } // end of Poll event loop
 
-        // TODO: (Frazor) player movement with wall detection.
-
-        // Mouse R-click to move
-        // get xy location of mouse
-        // determine which of the 4 directions to move - 1 square
-        // with community permission increase to 8 way.
-        if(player_moves) {
-
-            if ((mouseX > WINDOW_WIDTH / 2 + 20) &&
-                (mouseY < WINDOW_HEIGHT / 2 - 5)){
-
-                // players x location increases by 1
-                player_position->position[0] += 1;
-
-                camera.position[0] =
-                    player_position->position[0] - 6.0f;
-
-                player_moves = false;
-            }
-
-            if ((mouseX > WINDOW_WIDTH / 2 + 20) &&
-                (mouseY > WINDOW_HEIGHT / 2 + 5)) {
-
-                // player y location increases by 1
-                player_position->position[2] += 1;
-
-                camera.position[2] =
-                    player_position->position[2] + 6.0f;
-
-                player_moves = false;
-            }
-
-            if ((mouseX < WINDOW_WIDTH / 2 + 20) &&
-                (mouseY > WINDOW_HEIGHT / 2 + 5)) {
-
-                // players x location decreases by 1
-                player_position->position[0] -= 1;
-
-                camera.position[0] =
-                    player_position->position[0] - 6.0f;
-
-                player_moves = false;
-            }
-
-            if ((mouseX < WINDOW_WIDTH / 2 + 20) &&
-                (mouseY < WINDOW_HEIGHT / 2 - 5)) {
-
-                // player y location decreases by 1
-                player_position->position[2] -= 1;
-
-                camera.position[2] =
-                    player_position->position[2] + 6.0f;
-
-                player_moves = false;
-            }
-
-            // update camera & view_matrix
-            camera = Calc_Camera_View_Matrix(camera);
-        }
-
         // (Frazor) camera movement for debug
         const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
 
@@ -493,239 +437,317 @@ main() {
             running = false;
         }
 
-        if(currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-            if (currentKeyStates[SDL_SCANCODE_W]) {
+        if (currentKeyStates[SDL_SCANCODE_W] &&
+            currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-                camera.position[2] =
-                    camera.position[2] - 0.1f;
-            }
-            else if (currentKeyStates[SDL_SCANCODE_S]) {
+            camera.position[2] =
+                camera.position[2] - 0.1f;
 
-                camera.position[2] =
-                    camera.position[2] + 0.1f;
-            }
+        } else if (currentKeyStates[SDL_SCANCODE_S] &&
+                   currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-            if (currentKeyStates[SDL_SCANCODE_A]) {
-
-                camera.position[0] =
-                    camera.position[0] - 0.1f;
-            }
-            else if (currentKeyStates[SDL_SCANCODE_D]) {
-
-                camera.position[0] =
-                    camera.position[0] + 0.1f;
-            }
-
-            if (currentKeyStates[SDL_SCANCODE_Q]) {
-
-                camera.position[1] =
-                    camera.position[1] - 0.1f;
-            }
-            else if (currentKeyStates[SDL_SCANCODE_E]) {
-
-                camera.position[1] =
-                    camera.position[1] + 0.1f;
-            }
-
-            camera = Calc_Camera_View_Matrix(camera);
+            camera.position[2] =
+                camera.position[2] + 0.1f;
         }
 
-        // TODO: rendering functionality
+        if (currentKeyStates[SDL_SCANCODE_A] &&
+            currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-        glClear(
-            GL_COLOR_BUFFER_BIT |
-            GL_DEPTH_BUFFER_BIT
-        );
+            camera.position[0] =
+                camera.position[0] - 0.1f;
 
-        ///////////////// Render ////////////////////////////////
+        } else if (currentKeyStates[SDL_SCANCODE_D] &&
+                   currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-        glUseProgram(
-            shader
-        );
+            camera.position[0] =
+                camera.position[0] + 0.1f;
+        }
 
-        glBindVertexArray(                          // set which VAO to draw
-            floor.vaoID
-        );
+        if (currentKeyStates[SDL_SCANCODE_Q] &&
+            currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-        glUniformMatrix4fv(
-            projection_matrix_loc,
-            1,
-            GL_FALSE,
-            (float *) projection_matrix
-        );
+            camera.position[1] =
+                camera.position[1] - 0.1f;
 
-        glUniformMatrix4fv(
-            view_matrix_loc,
-            1,
-            GL_FALSE,
-            (float *) camera.view_matrix
-        );
+        } else if (currentKeyStates[SDL_SCANCODE_E] &&
+                   currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
-        //////////////////////// Render Dungeon Map //////////////////////////
+            camera.position[1] =
+                camera.position[1] + 0.1f;
+        }
 
-        for (u8 x = 0; x <= MAP_WIDTH; x++) {
-            for (u8 z = 0; z <= MAP_HEIGHT; z++) {
-
-                if (dungeon_level_current->map_cells[x][z]) {
-
-                    vec3 floor_position = {(float) x, 0.0f, (float) z};
-                    vec3 scale = {1.0f, 1.0f, 1.0f};
-                    floor = Calc_Model_matrix(
-                        floor,
-                        floor_position,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        scale
-                    );
-
-                    glUniformMatrix4fv(
-                        model_matrix_loc,
-                        1,
-                        GL_FALSE,
-                        (float *) floor.model_matrix
-                    );
-
-                    glDrawElements(                               // draw using Triangles
-                        GL_TRIANGLES,
-                        sizeof(index_array),
-                        GL_UNSIGNED_INT,
-                        (void *) 0
-                    );
-                }
-            }
-        } // end of map render
-
-        glBindVertexArray(                          // set which VAO to draw
-            player_model->vaoID
-        );
-
-        glUniformMatrix4fv(
-            projection_matrix_loc,
-            1,
-            GL_FALSE,
-            (float *) projection_matrix
-        );
-
-        glUniformMatrix4fv(
-            view_matrix_loc,
-            1,
-            GL_FALSE,
-            (float *) camera.view_matrix
-        );
-
-        vec3 scale = {1.0f, 1.0f, 1.0f};
-
-        *player_model = Calc_Model_matrix(
-            *player_model,
-            player_position->position,
-            0.0f,
-            -45.0f,
-            0.0f,
-            scale
-        );
-
-        glUniformMatrix4fv(
-            model_matrix_loc,
-            1,
-            GL_FALSE,
-            (float *) player_model->model_matrix
-        );
-
-        glDrawElements(                               // draw using Triangles
-            GL_TRIANGLES,
-            player_model->num_indices,
-            GL_UNSIGNED_INT,
-            (void *) 0
-        );
-
-        /////////////////////////////////////////////////////////////////////
-
-        glBindVertexArray(                          // disable the used VAO
-            0
-        );
-
-        //////////////////////////////////////////////////////////
-        // swap buffers for OpenGL
-        SDL_GL_SwapWindow(
-            window
-        );
-
-        SDL_Delay(                                 // give the cpu a well earned break !
-            10
-        );
-
-    }// end of the main game loop
+        camera = Calc_Camera_View_Matrix(camera);
 
 
+    // TODO: (Frazor) player movement with wall detection.
 
-    //////////////////// Clean up and Exit //////////////////////////////
+    // Mouse R-click to move
+    // get xy location of mouse
+    // determine which of the 4 directions to move - 1 square
+    // with community permission increase to 8 way.
 
-    // free up resources
 
+        if (((mouseX > WINDOW_WIDTH / 2 + 20) &&
+            (mouseY < WINDOW_HEIGHT / 2 - 5) &&
+            player_moves) ||
+            currentKeyStates[SDL_SCANCODE_W]) {
 
-    // cleanup OpenGL - anything stored on the gfx card.
+            // players x location increases by 1
+            player_position->position[0] += 1;
 
-    glDeleteProgram(
+            camera.position[0] =
+                player_position->position[0] - 6.0f;
+
+            player_moves = false;
+        }
+
+        if (((mouseX > WINDOW_WIDTH / 2 + 20) &&
+            (mouseY > WINDOW_HEIGHT / 2 + 5) &&
+            player_moves) ||
+            currentKeyStates[SDL_SCANCODE_D]) {
+
+            // player y location increases by 1
+            player_position->position[2] += 1;
+
+            camera.position[2] =
+                player_position->position[2] + 6.0f;
+
+            player_moves = false;
+        }
+
+        if (((mouseX < WINDOW_WIDTH / 2 + 20) &&
+            (mouseY > WINDOW_HEIGHT / 2 + 5) &&
+            player_moves) ||
+            currentKeyStates[SDL_SCANCODE_S]) {
+
+            // players x location decreases by 1
+            player_position->position[0] -= 1;
+
+            camera.position[0] =
+                player_position->position[0] - 6.0f;
+
+            player_moves = false;
+        }
+
+        if (((mouseX < WINDOW_WIDTH / 2 + 20) &&
+            (mouseY < WINDOW_HEIGHT / 2 - 5) &&
+            player_moves) ||
+            currentKeyStates[SDL_SCANCODE_A]) {
+
+            // player y location decreases by 1
+            player_position->position[2] -= 1;
+
+            camera.position[2] =
+                player_position->position[2] + 6.0f;
+
+            player_moves = false;
+        }
+
+        // update camera & view_matrix
+        camera = Calc_Camera_View_Matrix(camera);
+
+    // TODO: rendering functionality
+
+    glClear(
+        GL_COLOR_BUFFER_BIT |
+        GL_DEPTH_BUFFER_BIT
+    );
+
+    ///////////////// Render ////////////////////////////////
+
+    glUseProgram(
         shader
     );
 
-    // delete all vao's that have been created
-    printf(
-        "Deleting VAO vectors: %d\n",
-        Vector_size(&vao_storage)
+    glBindVertexArray(                          // set which VAO to draw
+        floor.vaoID
     );
 
-    for (int index = 0; index < Vector_size(&vao_storage); index++) {
-        GLuint vao = Vector_get(
-            &vao_storage,
-            index
-        );
-
-        glDeleteVertexArrays(
-            1,
-            (GLuint *) &vao
-        );
-    }
-
-    Vector_free_memory(&vao_storage);
-
-    // delete all vbo's that were created.
-    printf(
-        "Deleting VBO vectors: %d\n",
-        Vector_size(&vbo_storage)
+    glUniformMatrix4fv(
+        projection_matrix_loc,
+        1,
+        GL_FALSE,
+        (float *) projection_matrix
     );
 
-    for (int index = 0; index < Vector_size(&vbo_storage); index++) {
-        GLuint vbo = Vector_get(&vbo_storage, index);
-        glDeleteBuffers(
-            1,
-            (GLuint *) &vbo
-        );
-    }
-
-    Vector_free_memory(&vbo_storage);
-
-    free(
-        dungeon_level_current
+    glUniformMatrix4fv(
+        view_matrix_loc,
+        1,
+        GL_FALSE,
+        (float *) camera.view_matrix
     );
 
+    //////////////////////// Render Dungeon Map //////////////////////////
 
-    // TODO: we should loop through all models (ie use the ecs)
-    free(
-        player.component[COMP_POSITION]
+    for (u8 x = 0; x <= MAP_WIDTH; x++) {
+        for (u8 z = 0; z <= MAP_HEIGHT; z++) {
+
+            if (dungeon_level_current->map_cells[x][z]) {
+
+                vec3 floor_position = {(float) x, 0.0f, (float) z};
+                vec3 scale = {1.0f, 1.0f, 1.0f};
+                floor = Calc_Model_matrix(
+                    floor,
+                    floor_position,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    scale
+                );
+
+                glUniformMatrix4fv(
+                    model_matrix_loc,
+                    1,
+                    GL_FALSE,
+                    (float *) floor.model_matrix
+                );
+
+                glDrawElements(                               // draw using Triangles
+                    GL_TRIANGLES,
+                    sizeof(index_array),
+                    GL_UNSIGNED_INT,
+                    (void *) 0
+                );
+            }
+        }
+    } // end of map render
+
+    glBindVertexArray(                          // set which VAO to draw
+        player_model->vaoID
     );
 
-    free(
-        player.component[COMP_MODEL]
+    glUniformMatrix4fv(
+        projection_matrix_loc,
+        1,
+        GL_FALSE,
+        (float *) projection_matrix
     );
 
-    SDL_DestroyWindow(
+    glUniformMatrix4fv(
+        view_matrix_loc,
+        1,
+        GL_FALSE,
+        (float *) camera.view_matrix
+    );
+
+    vec3 scale = {1.0f, 1.0f, 1.0f};
+
+    *player_model = Calc_Model_matrix(
+        *player_model,
+        player_position->position,
+        0.0f,
+        -45.0f,
+        0.0f,
+        scale
+    );
+
+    glUniformMatrix4fv(
+        model_matrix_loc,
+        1,
+        GL_FALSE,
+        (float *) player_model->model_matrix
+    );
+
+    glDrawElements(                               // draw using Triangles
+        GL_TRIANGLES,
+        player_model->num_indices,
+        GL_UNSIGNED_INT,
+        (void *) 0
+    );
+
+    /////////////////////////////////////////////////////////////////////
+
+    glBindVertexArray(                          // disable the used VAO
+        0
+    );
+
+    //////////////////////////////////////////////////////////
+    // swap buffers for OpenGL
+    SDL_GL_SwapWindow(
         window
     );
 
-    SDL_Quit();
+    SDL_Delay(                                 // give the cpu a well earned break !
+        100
+    );
 
-    return 0;
+}// end of the main game loop
+
+
+
+//////////////////// Clean up and Exit //////////////////////////////
+
+// free up resources
+
+
+// cleanup OpenGL - anything stored on the gfx card.
+
+glDeleteProgram(
+shader
+);
+
+// delete all vao's that have been created
+printf(
+"Deleting VAO vectors: %d\n",
+Vector_size(&vao_storage)
+);
+
+for (
+int index = 0;
+index < Vector_size(&vao_storage); index++) {
+GLuint vao = Vector_get(
+    &vao_storage,
+    index
+);
+
+glDeleteVertexArrays(
+1,
+(GLuint *) &vao
+);
+}
+
+Vector_free_memory(&vao_storage);
+
+// delete all vbo's that were created.
+printf(
+"Deleting VBO vectors: %d\n",
+Vector_size(&vbo_storage)
+);
+
+for (
+int index = 0;
+index < Vector_size(&vbo_storage); index++) {
+GLuint vbo = Vector_get(&vbo_storage, index);
+glDeleteBuffers(
+1,
+(GLuint *) &vbo
+);
+}
+
+Vector_free_memory(&vbo_storage);
+
+free(
+    dungeon_level_current
+);
+
+
+// TODO: we should loop through all models (ie use the ecs)
+free(
+    player
+.component[COMP_POSITION]
+);
+
+free(
+    player
+.component[COMP_MODEL]
+);
+
+SDL_DestroyWindow(
+    window
+);
+
+SDL_Quit();
+
+return 0;
 }
