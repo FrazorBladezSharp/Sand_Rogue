@@ -15,8 +15,8 @@ uniform float reflectivity;     // cloth = low// metal = med to high // water gl
 uniform vec3 sky_color;
 uniform vec3 camera_position;
 
-const float density = 0.05f;
-const float gradient = 1.5f;
+const float density = 0.01f;
+const float gradient = 1.0f;
 
 out vec4 v_out_color;
 

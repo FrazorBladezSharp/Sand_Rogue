@@ -452,10 +452,10 @@ main() {
     // camera
     Main_Camera camera;
 
-    camera.position[0] = player_position->position[0] - 6.0f,
-        camera.position[1] = 8.5f;
-    camera.position[2] = player_position->position[2] + 6.0f;
-    camera.rotationX = 45.0f;
+    camera.position[0] = player_position->position[0] - 3.0f,
+        camera.position[1] = 6.6f;
+    camera.position[2] = player_position->position[2] + 3.0f;
+    camera.rotationX = 60.0f;
     camera.rotationY = 45.0f;
 
     camera = Calc_Camera_View_Matrix(camera);
@@ -577,7 +577,7 @@ main() {
             player_position->position[0] += 1;
 
             camera.position[0] =
-                player_position->position[0] - 6.0f;
+                player_position->position[0] - 3.0f;
 
             player_moves = false;
         }
@@ -594,7 +594,7 @@ main() {
             player_position->position[2] += 1;
 
             camera.position[2] =
-                player_position->position[2] + 6.0f;
+                player_position->position[2] + 3.0f;
 
             player_moves = false;
         }
@@ -611,7 +611,7 @@ main() {
             player_position->position[0] -= 1;
 
             camera.position[0] =
-                player_position->position[0] - 6.0f;
+                player_position->position[0] - 3.0f;
 
             player_moves = false;
         }
@@ -628,7 +628,7 @@ main() {
             player_position->position[2] -= 1;
 
             camera.position[2] =
-                player_position->position[2] + 6.0f;
+                player_position->position[2] + 3.0f;
 
             player_moves = false;
         }
@@ -669,9 +669,9 @@ main() {
 
     vec3 light_position;
 
-    light_position[0] = player_position->position[0] + 0.5f;
-    light_position[1] = player_position->position[1] + 1.5f;
-    light_position[2] = player_position->position[2] + 0.5f;
+    light_position[0] = player_position->position[0] + 7.5f;
+    light_position[1] = player_position->position[1] + 0.5f;
+    light_position[2] = player_position->position[2] + 2.5f;
 
     glUniform3f(
         light_position_loc,
@@ -693,14 +693,14 @@ main() {
             light_color[2]
         );
 
-        float shine_damper = 0.5f;
+        float shine_damper = 0.05f;
 
         glUniform1f(
             shine_damper_loc,
             shine_damper
         );                          // roughness of surface low = rough
 
-        float reflectivity = 4.0f; // cloth = low// metal = med to high // water glass high //
+        float reflectivity = 2.0f; // cloth = low// metal = med to high // water glass high //
 
         glUniform1f(
             reflectivity_loc,
@@ -730,6 +730,7 @@ main() {
     //////////////////////// Render Dungeon Map //////////////////////////
 
     for (u8 x = 0; x <= MAP_WIDTH; x++) {
+
         for (u8 z = 0; z <= MAP_HEIGHT; z++) {
 
             if (dungeon_level_current->map_cells[x][z]) {
@@ -805,14 +806,16 @@ main() {
         (void *) 0
     );
 
-    /////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
 
     glBindVertexArray(                          // disable the used VAO
         0
     );
 
     //////////////////////////////////////////////////////////
+
     // swap buffers for OpenGL
+
     SDL_GL_SwapWindow(
         window
     );
@@ -833,45 +836,44 @@ main() {
 // cleanup OpenGL - anything stored on the gfx card.
 
 glDeleteProgram(
-shader
+    shader
 );
 
 // delete all vao's that have been created
 printf(
-"Deleting VAO vectors: %d\n",
-Vector_size(&vao_storage)
+    "Deleting VAO vectors: %d\n",
+    Vector_size(&vao_storage)
 );
 
-for (
-int index = 0;
-index < Vector_size(&vao_storage); index++) {
-GLuint vao = Vector_get(
-    &vao_storage,
-    index
-);
+for (int index = 0; index < Vector_size(&vao_storage); index++) {
 
-glDeleteVertexArrays(
-1,
-(GLuint *) &vao
-);
+    GLuint vao = Vector_get(
+        &vao_storage,
+        index
+    );
+
+    glDeleteVertexArrays(
+        1,
+        (GLuint *) &vao
+    );
 }
 
 Vector_free_memory(&vao_storage);
 
 // delete all vbo's that were created.
+
 printf(
-"Deleting VBO vectors: %d\n",
-Vector_size(&vbo_storage)
+    "Deleting VBO vectors: %d\n",
+    Vector_size(&vbo_storage)
 );
 
-for (
-int index = 0;
-index < Vector_size(&vbo_storage); index++) {
-GLuint vbo = Vector_get(&vbo_storage, index);
-glDeleteBuffers(
-1,
-(GLuint *) &vbo
-);
+for (int index = 0; index < Vector_size(&vbo_storage); index++) {
+
+    GLuint vbo = Vector_get(&vbo_storage, index);
+    glDeleteBuffers(
+        1,
+        (GLuint *) &vbo
+    );
 }
 
 Vector_free_memory(&vbo_storage);
@@ -883,13 +885,11 @@ free(
 
 // TODO: we should loop through all models (ie use the ecs)
 free(
-    player
-.component[COMP_POSITION]
+    player.component[COMP_POSITION]
 );
 
 free(
-    player
-.component[COMP_MODEL]
+    player.component[COMP_MODEL]
 );
 
 SDL_DestroyWindow(
