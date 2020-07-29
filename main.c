@@ -19,48 +19,26 @@
 */
 
 #include "Source/Common.h"
-
-Position g_position_component[MAX_ENTITIES];
-Game_Model g_model_component[MAX_ENTITIES];
-
 #include "Source/Sand_Dice.h"
 #include "Source/Core/Text_File_Utils.h"
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
+#include "Source/Core/Game_Objects.h"
 #include "Source/Core/Map.h"
-#include "Source/Core/Sand_Vector.h"
-#include "Source/OpenGL/Load_Model_3D.h"
 
 int
 /** The run time entry point for Sand_Rogue
  * @return 0 = all ok.
  */
 main() {
+
     printf(
         "Welcome to Sand_Rogue !\n\n"
     );
 
-
-    Game_Entities game_entities;
-    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
-        game_entities.entity_id[index] = UNUSED;            // set all entities to unused
-    }
-
     Game_Object player;
 
-    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // find an unused entity slot
-        if (game_entities.entity_id[index] == UNUSED) {       // initialize player
-            game_entities.entity_id[index] = index;         // register player as an entity
-            player.object_id = index;                      // assign the player an entity id
-            break;
-        }
-    }
-
-
-    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize position component
-        g_position_component[index].object_id = UNUSED;
-        g_model_component[index].object_id = UNUSED;
-    }
+    Object_Initialize(player);
 
     //////////////////////////////////////////////////////////////////////////
     // window openGL - NOTE : must be done first to get the openGL context.
@@ -142,11 +120,6 @@ main() {
 
     //////////////////// create a Square /////////////////////////
     // floor tile - start with a triangle and build up from there
-    Vector vao_storage;
-    Vector vbo_storage;
-
-    Vector_init(&vao_storage);
-    Vector_init(&vbo_storage);
 
     GLfloat vertex_array[] = {
         -0.5f, 0.0f, -0.5f, // v0 far left
@@ -181,10 +154,7 @@ main() {
         &vaoID
     );
 
-    Vector_append(
-        &vao_storage,
-        vaoID
-    );
+    Object_Add_VAO(vaoID);
 
     glBindVertexArray(                          // bind the VAO to record what we do
         vaoID
@@ -199,10 +169,7 @@ main() {
         &iboID
     );
 
-    Vector_append(
-        &vbo_storage,
-        iboID
-    );
+    Object_Add_VBO(iboID);
 
     glBindBuffer(
         GL_ELEMENT_ARRAY_BUFFER,
@@ -216,7 +183,6 @@ main() {
         GL_STATIC_DRAW
     );
 
-
     /////////////////////////////// Vertex Buffer ///////////////////////////////////////////////
 
     GLuint vboID;                                  // Vertex Buffer Object for the vertices
@@ -226,10 +192,7 @@ main() {
         &vboID
     );
 
-    Vector_append(
-        &vbo_storage,
-        vboID
-    );
+    Object_Add_VBO(vboID);
 
     glBindBuffer(
         GL_ARRAY_BUFFER,
@@ -265,10 +228,7 @@ main() {
         &color_buffer
     );
 
-    Vector_append(
-        &vbo_storage,
-        color_buffer
-    );
+    Object_Add_VBO(color_buffer);
 
     glBindBuffer(
         GL_ARRAY_BUFFER,
@@ -304,10 +264,7 @@ main() {
         &nboID
     );
 
-    Vector_append(
-        &vbo_storage,
-        nboID
-    );
+    Object_Add_VBO(nboID);
 
     glBindBuffer(
         GL_ARRAY_BUFFER,
@@ -344,7 +301,6 @@ main() {
 
     /////////////////// Unbind the buffers ////////////////////
 
-
     glBindVertexArray(                      // disable our VAO
         0
     );
@@ -361,49 +317,15 @@ main() {
 
     ////////////////////////////////////// Create the Player ////////////////////////////
 
+    player = Object_Create();
+
     Position *player_position;
-
-    // NOTE: you must free the memory before game exit      *** NOTE ****
-
-    player_position = (Position *) malloc(
-        sizeof(Position)
-    );
-
-    player_position->object_id = player.object_id;         // set values for the player position.
-    player_position->position[0] = 0.0f;                   // initialize all to zero
-    player_position->position[1] = 0.5f;
-    player_position->position[2] = 0.0f;
-    player_position->rotationX = 0.0f;
-    player_position->rotationY = 45.0f;
-    player_position->rotationZ = 0.0f;
-    player_position->scale = 1.0f;
-
-    vec4 player_color;
-    player_color[0] = 0.1f;
-    player_color[1] = 0.5f;
-    player_color[2] = 0.1f;
-    player_color[3] = 1.0f;
-
+    player_position = (Position *) malloc(sizeof(Position));
     Game_Model *player_model;
     player_model = (Game_Model *) malloc(sizeof(Game_Model));
 
-    player_model = Load_Model_3D(
-        "Resource/Models/Player.obj",
-        player_color,
-        &vao_storage,
-        &vbo_storage,
-        player_model
-    );
-
-    player_model->object_id = player.object_id;
-
-    player.component[COMP_POSITION] = player_position;     // add position component to player
-    player.component[COMP_MODEL] = player_model;
-
-    g_position_component[player.object_id].object_id =     // keep track of all position components
-        player.object_id;
-    g_model_component[player.object_id].object_id =
-        player.object_id;
+    player_position = player.component[COMP_POSITION];
+    player_model = player.component[COMP_MODEL];
 
     //////////////////////////// Create a Dungeon Level///////////////////////////////
 
@@ -426,7 +348,7 @@ main() {
 
     dungeon_level_current = Map_Create_Dungeon_Level(
         dungeon_level_current,
-        player_position                     // we set player position as a side effect of the function
+        player.component[COMP_POSITION]                     // we set player position as a side effect of the function
     );
 
     //////////////////// Shader /////////////////////////////////
@@ -451,6 +373,10 @@ main() {
 
     // camera
     Main_Camera camera;
+
+
+
+
 
     camera.position[0] = player_position->position[0] - 3.0f,
         camera.position[1] = 6.6f;
@@ -732,172 +658,123 @@ main() {
 
     for (u8 x = 0; x <= MAP_WIDTH; x++) {
 
-        for (u8 z = 0; z <= MAP_HEIGHT; z++) {
+            for (u8 z = 0; z <= MAP_HEIGHT; z++) {
 
-            if (dungeon_level_current->map_cells[x][z]) {
+                if (dungeon_level_current->map_cells[x][z]) {
 
-                vec3 floor_position = {(float) x, 0.0f, (float) z};
-                vec3 scale = {1.0f, 1.0f, 1.0f};
-                floor = Calc_Model_matrix(
-                    floor,
-                    floor_position,
-                    0.0f,
-                    0.0f,
-                    0.0f,
-                    scale
-                );
+                    vec3 floor_position = {(float) x, 0.0f, (float) z};
+                    vec3 scale = {1.0f, 1.0f, 1.0f};
+                    floor = Calc_Model_matrix(
+                        floor,
+                        floor_position,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        scale
+                    );
 
-                glUniformMatrix4fv(
-                    model_matrix_loc,
-                    1,
-                    GL_FALSE,
-                    (float *) floor.model_matrix
-                );
+                    glUniformMatrix4fv(
+                        model_matrix_loc,
+                        1,
+                        GL_FALSE,
+                        (float *) floor.model_matrix
+                    );
 
-                glDrawElements(                               // draw using Triangles
-                    GL_TRIANGLES,
-                    sizeof(index_array),
-                    GL_UNSIGNED_INT,
-                    (void *) 0
-                );
+                    glDrawElements(                               // draw using Triangles
+                        GL_TRIANGLES,
+                        sizeof(index_array),
+                        GL_UNSIGNED_INT,
+                        (void *) 0
+                    );
+                }
             }
-        }
-    } // end of map render
+        } // end of map render
 
-    glBindVertexArray(                          // set which VAO to draw
-        player_model->vaoID
-    );
+        glBindVertexArray(                          // set which VAO to draw
+            player_model->vaoID
+        );
 
-    glUniformMatrix4fv(
-        projection_matrix_loc,
-        1,
-        GL_FALSE,
-        (float *) projection_matrix
-    );
+        glUniformMatrix4fv(
+            projection_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) projection_matrix
+        );
 
-    glUniformMatrix4fv(
-        view_matrix_loc,
-        1,
-        GL_FALSE,
-        (float *) camera.view_matrix
-    );
+        glUniformMatrix4fv(
+            view_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) camera.view_matrix
+        );
 
-    vec3 scale = {1.0f, 1.0f, 1.0f};
+        vec3 scale = {1.0f, 1.0f, 1.0f};
 
-    *player_model = Calc_Model_matrix(
-        *player_model,
-        player_position->position,
-        0.0f,
-        -45.0f,
-        0.0f,
-        scale
-    );
+        *player_model = Calc_Model_matrix(
+            *player_model,
+            player_position->position,
+            0.0f,
+            -45.0f,
+            0.0f,
+            scale
+        );
 
-    glUniformMatrix4fv(
-        model_matrix_loc,
-        1,
-        GL_FALSE,
-        (float *) player_model->model_matrix
-    );
+        glUniformMatrix4fv(
+            model_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) player_model->model_matrix
+        );
 
-    glDrawElements(                               // draw using Triangles
-        GL_TRIANGLES,
-        player_model->num_indices,
-        GL_UNSIGNED_INT,
-        (void *) 0
-    );
+        glDrawElements(                               // draw using Triangles
+            GL_TRIANGLES,
+            player_model->num_indices,
+            GL_UNSIGNED_INT,
+            (void *) 0
+        );
 
     ///////////////////////////////////////////////////////////
 
-    glBindVertexArray(                          // disable the used VAO
-        0
-    );
+        glBindVertexArray(                          // disable the used VAO
+            0
+        );
 
     //////////////////////////////////////////////////////////
 
-    // swap buffers for OpenGL
+        // swap buffers for OpenGL
 
-    SDL_GL_SwapWindow(
-        window
-    );
+        SDL_GL_SwapWindow(
+            window
+        );
 
-    SDL_Delay(                                 // give the cpu a well earned break !
-        100
-    );
+        SDL_Delay(                                 // give the cpu a well earned break !
+            100
+        );
 
-}// end of the main game loop
-
-
+    }   // end of the main game loop
 
 //////////////////// Clean up and Exit //////////////////////////////
 
-// free up resources
+    // free up resources
 
 
-// cleanup OpenGL - anything stored on the gfx card.
+    // cleanup OpenGL - anything stored on the gfx card.
 
-glDeleteProgram(
-    shader
-);
-
-// delete all vao's that have been created
-printf(
-    "Deleting VAO vectors: %d\n",
-    Vector_size(&vao_storage)
-);
-
-for (int index = 0; index < Vector_size(&vao_storage); index++) {
-
-    GLuint vao = Vector_get(
-        &vao_storage,
-        index
+    glDeleteProgram(
+        shader
     );
 
-    glDeleteVertexArrays(
-        1,
-        (GLuint *) &vao
+    free(
+        dungeon_level_current
     );
-}
 
-Vector_free_memory(&vao_storage);
+    Object_Cleanup(player);
 
-// delete all vbo's that were created.
-
-printf(
-    "Deleting VBO vectors: %d\n",
-    Vector_size(&vbo_storage)
-);
-
-for (int index = 0; index < Vector_size(&vbo_storage); index++) {
-
-    GLuint vbo = Vector_get(&vbo_storage, index);
-    glDeleteBuffers(
-        1,
-        (GLuint *) &vbo
+    SDL_DestroyWindow(
+        window
     );
-}
 
-Vector_free_memory(&vbo_storage);
+    SDL_Quit();
 
-free(
-    dungeon_level_current
-);
-
-
-// TODO: we should loop through all models (ie use the ecs)
-free(
-    player.component[COMP_POSITION]
-);
-
-free(
-    player.component[COMP_MODEL]
-);
-
-SDL_DestroyWindow(
-    window
-);
-
-SDL_Quit();
-
-return 0;
+    return 0;
 }

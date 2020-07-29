@@ -25,7 +25,7 @@ add_executable(
         Source/OpenGL/Load_Model_3D.h
         Source/Core/Sand_Vector.c
         Source/Core/Sand_Vector.h
-)
+        Source/Core/Game_Objects.c Source/Core/Game_Objects.h)
 
 target_link_libraries(
         Sand_Rogue SDL2 GLEW GL assimp m
