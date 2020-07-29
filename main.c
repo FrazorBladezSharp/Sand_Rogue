@@ -138,10 +138,7 @@ main() {
     glEnable(
         GL_DEPTH_TEST
     );
-
-    glEnable(
-        GL_LIGHT0
-    );
+        // TODO: (Frazor) enable Blending
 
     //////////////////// create a Square /////////////////////////
     // floor tile - start with a triangle and build up from there
@@ -427,7 +424,10 @@ main() {
         }
     }
 
-    dungeon_level_current = Map_Create_Dungeon_Level(dungeon_level_current, player_position);
+    dungeon_level_current = Map_Create_Dungeon_Level(
+        dungeon_level_current,
+        player_position                     // we set player position as a side effect of the function
+    );
 
     //////////////////// Shader /////////////////////////////////
 
@@ -469,6 +469,18 @@ main() {
         50.0f,
         projection_matrix
     );
+
+    vec3 light_position;
+
+    light_position[0] = 39.0f; //player_position->position[0] + 40.0f;
+    light_position[1] = 25.0f; //player_position->position[1] + 20.0f;
+    light_position[2] = 20.0f; //player_position->position[2] + 20.0f;
+
+    vec3 light_color;
+
+    light_color[0] = 0.8f;
+    light_color[1] = 0.8f;
+    light_color[2] = 0.8f;
 
     // main run time game loop
     bool running = true;
@@ -667,65 +679,54 @@ main() {
         (float *) camera.view_matrix
     );
 
-    vec3 light_position;
-
-    light_position[0] = player_position->position[0] + 7.5f;
-    light_position[1] = player_position->position[1] + 0.5f;
-    light_position[2] = player_position->position[2] + 2.5f;
-
     glUniform3f(
         light_position_loc,
         light_position[0],
         light_position[1],
         light_position[2]
-        );
+    );
 
-    vec3 light_color;
 
-    light_color[0] = 0.8f;
-    light_color[1] = 0.8f;
-    light_color[2] = 0.8f;
+    glUniform3f(
+        light_color_loc,
+        light_color[0],
+        light_color[1],
+        light_color[2]
+    );
 
-        glUniform3f(
-            light_color_loc,
-            light_color[0],
-            light_color[1],
-            light_color[2]
-        );
+    float shine_damper = 8.0f;
 
-        float shine_damper = 0.05f;
+    glUniform1f(
+        shine_damper_loc,
+        shine_damper
+    );                          // roughness of surface low = rough
 
-        glUniform1f(
-            shine_damper_loc,
-            shine_damper
-        );                          // roughness of surface low = rough
+    float reflectivity = 1.0f; // % cloth = low// metal = med to high // water glass high //
 
-        float reflectivity = 2.0f; // cloth = low// metal = med to high // water glass high //
+    glUniform1f(
+        reflectivity_loc,
+        reflectivity
+    );
 
-        glUniform1f(
-            reflectivity_loc,
-            reflectivity
-        );
+    vec3 sky_color;
 
-        vec3 sky_color;
+    sky_color[0] = 0.05f;
+    sky_color[1] = 0.02f;
+    sky_color[2] = 0.01f;
 
-        sky_color[0] = 0.05f;
-        sky_color[1] = 0.02f;
-        sky_color[2] = 0.01f;
+    glUniform3f(
+        sky_color_loc,
+        sky_color[0],
+        sky_color[1],
+        sky_color[2]
+    );
 
-        glUniform3f(
-            sky_color_loc,
-            sky_color[0],
-            sky_color[1],
-            sky_color[2]
-        );
-
-        glUniform3f(
-            camera_position_loc,
-            camera.position[0],
-            camera.position[1],
-            camera.position[2]
-        );
+    glUniform3f(
+       camera_position_loc,
+       camera.position[0],
+       camera.position[1],
+       camera.position[2]
+    );
 
     //////////////////////// Render Dungeon Map //////////////////////////
 

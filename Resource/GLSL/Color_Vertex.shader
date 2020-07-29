@@ -15,8 +15,8 @@ uniform float reflectivity;     // cloth = low// metal = med to high // water gl
 uniform vec3 sky_color;
 uniform vec3 camera_position;
 
-const float density = 0.01f;
-const float gradient = 1.0f;
+const float density = 0.05f;
+const float gradient = 1.5f;
 
 out vec4 v_out_color;
 
@@ -24,90 +24,106 @@ void main()
 {
 
 
-    vec3 model_position = vec3(
-        model_matrix * vec4(
+    vec4 model_position = model_matrix * vec4(
             position,
             1.0f
-        )
     );
 
-    vec4 delta_camera = view_matrix * vec4(model_position, 1.0f);
+    vec4 delta_camera = view_matrix * model_position;
 
     gl_Position =   projection_matrix * delta_camera;
 
     /////////////////////////////// Lighting ///////////////////////////////
 
-    vec3 unitNormal = normalize(
-        vec3(model_matrix * vec4(normal, 1.0f))
+    vec3 surface_normal =  vec3(model_matrix * vec4(normal, 0.0f));
+    vec3 to_light_vector = light_position - model_position.xyz;
+
+    vec3 unit_normal = normalize(
+        surface_normal
     );
 
 
-    vec3 unitLightVector = normalize(
-        light_position - model_position
+    vec3 unit_light_vector = normalize(
+        to_light_vector
     );
 
-    vec3 unitVectorToCamera = normalize(
-        vec3(
-            inverse(view_matrix) * vec4(0.0f, 0.0f, 0.0f, 1.0f)
-        ) - model_position
+    vec3 to_camera_position =
+        (inverse(view_matrix) *
+        vec4(0.0f, 0.0f, 0.0f, 1.0f)).xyz -
+        model_position.xyz;
+
+    vec3 unit_vector_to_camera = normalize(
+        to_camera_position
     );
+
+    vec3 light_direction = - unit_light_vector;
 
     // Phong Lighting Equations
     // Ambient lighting : background light
 
-    vec3 ambientLight = sky_color;
+    vec3 ambient_light = sky_color;
 
     // diffuse Light : direct light from a Source.
 
-    float lightIntensity = dot(
-        unitLightVector,
-        unitNormal
+    float light_intensity = dot(
+        unit_normal,
+        unit_light_vector
     );
 
-    vec3 diffuseLight = lightIntensity * light_color;
+    float brightness = max(
+        light_intensity,
+        0.0f
+    );
+
+    vec3 diffuse_light = brightness * light_color;
 
     // specular light : how much light is directly reflected to the camera.
 
-    vec3 reflectedLightDirection = reflect(
-        -unitLightVector,
-        unitNormal
+    vec3 reflected_light_direction = reflect(
+        light_direction,
+        unit_normal
     );
 
-    float specularFactor = dot(
-        reflectedLightDirection,
-        unitVectorToCamera
+    float specular_factor = dot(
+        reflected_light_direction,
+        unit_vector_to_camera
     );
 
-    float dampedFactor = pow(
-        specularFactor,
+    specular_factor = max(
+        specular_factor,
+        0.0f
+    );
+
+    float damped_factor = pow(
+        specular_factor,
         shine_damper
     );
 
-    vec3 specularLight = dampedFactor * reflectivity * light_color;
+    vec3 specular_light = damped_factor * reflectivity * light_color;
 
     // Final Lighting
 
     vec4 lighting = vec4(
-        //clamp(specularLight, 0.01f, 1.0f) +
-        clamp(diffuseLight, 0.01f, 1.0f) +
-        clamp(ambientLight, 0.01f, 1.0f),
+        clamp(specular_light, 0.01f, 1.0f) +
+        clamp(diffuse_light, 0.01f, 1.0f) +
+        clamp(ambient_light, 0.01f, 1.0f),
         1.0f
     );
 
     // Fog
-    float distanceToCamera = length(
+    float distance_to_camera = length(
         delta_camera.xyz
     );
 
-    float v_Visibility = exp(
+    float visibility = exp(
         -pow(
-            distanceToCamera * density,
+            distance_to_camera * density,
             gradient
         )
     );
 
-    v_Visibility = clamp(
-        v_Visibility,
+    visibility = clamp(
+        visibility,
         0.0f,
         1.0f
     );
@@ -121,6 +137,6 @@ void main()
     v_out_color = mix(
         vec4(sky_color, 1.0f),
         lighting * color,
-        v_Visibility
+        visibility
     );
 }
