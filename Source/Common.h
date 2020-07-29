@@ -88,7 +88,7 @@ typedef enum {
 //    COMP_SOLID_BODY,
 //    COMP_MOVEMENT,
 
-//    COMP_COUNT                                  // keep a count on how many components we have
+    COMP_COUNT                                  // keep a count on how many components we have
 
 } Game_Component;
 

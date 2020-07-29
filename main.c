@@ -36,9 +36,7 @@ main() {
         "Welcome to Sand_Rogue !\n\n"
     );
 
-    Game_Object player;
-
-    Object_Initialize(player);
+    Object_Initialize();
 
     //////////////////////////////////////////////////////////////////////////
     // window openGL - NOTE : must be done first to get the openGL context.
@@ -117,6 +115,9 @@ main() {
         GL_DEPTH_TEST
     );
         // TODO: (Frazor) enable Blending
+
+    Game_Object player;
+    player = Object_Create();
 
     //////////////////// create a Square /////////////////////////
     // floor tile - start with a triangle and build up from there
@@ -315,14 +316,14 @@ main() {
         0
     );
 
-    ////////////////////////////////////// Create the Player ////////////////////////////
+    ////////////////////////////////////// define the Player ////////////////////////////
 
-    player = Object_Create();
+
 
     Position *player_position;
-    player_position = (Position *) malloc(sizeof(Position));
+    //player_position = (Position *) malloc(sizeof(Position));
     Game_Model *player_model;
-    player_model = (Game_Model *) malloc(sizeof(Game_Model));
+    //player_model = (Game_Model *) malloc(sizeof(Game_Model));
 
     player_position = player.component[COMP_POSITION];
     player_model = player.component[COMP_MODEL];
@@ -768,7 +769,7 @@ main() {
         dungeon_level_current
     );
 
-    Object_Cleanup(player);
+    Object_Cleanup();
 
     SDL_DestroyWindow(
         window

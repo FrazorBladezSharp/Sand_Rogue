@@ -22,21 +22,21 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
 
     //////////////// Setup VAO /////////////////////////////
 
-    GLuint vaoID;
+    GLuint vao_buffer = GL_FALSE;
 
     glGenVertexArrays(
         1,
-        &vaoID
+        &vao_buffer
     );
 
 
     Vector_append(
         vao_storage,
-        vaoID
+        vao_buffer
     );
 
     glBindVertexArray(
-        vaoID
+        vao_buffer
     );
 
     /////////////////// Xfer indices /////////////////////////////////
@@ -231,7 +231,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
 
     //////////////////////////////
 
-    loaded_asset->vaoID = vaoID;
+    loaded_asset->vaoID = vao_buffer;
     loaded_asset->num_indices = face_index;
 
     // 	/* cleanup - calling 'aiReleaseImport' is important, as the library
