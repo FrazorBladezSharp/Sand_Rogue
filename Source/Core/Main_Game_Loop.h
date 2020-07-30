@@ -12,9 +12,11 @@
 void Main_Game_Loop(
     GLint shader,
     Position* player_position,
+    Position* monster_position,
     Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
-    Game_Model *player_model,
+    Game_Model* player_model,
+    Game_Model* monster_model,
     SDL_Window* window
 );
 

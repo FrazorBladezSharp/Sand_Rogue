@@ -7,10 +7,12 @@
 
 void Main_Game_Loop(
     GLint shader,
-    Position * player_position,
+    Position* player_position,
+    Position* monster_position,
     Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
-    Game_Model *player_model,
+    Game_Model* player_model,
+    Game_Model* monster_model,
     SDL_Window* window)
 {
     // our main game loop Starts Here
@@ -37,8 +39,8 @@ void Main_Game_Loop(
     // camera
     Main_Camera camera;
 
-    camera.position[0] = player_position->position[0] - 3.0f,
-        camera.position[1] = 6.6f;
+    camera.position[0] = player_position->position[0] - 3.0f;
+    camera.position[1] = 6.6f;
     camera.position[2] = player_position->position[2] + 3.0f;
     camera.rotationX = 60.0f;
     camera.rotationY = 45.0f;
@@ -125,6 +127,8 @@ void Main_Game_Loop(
                 mouseY,
                 dungeon_level_current
             );
+
+            // TODO: Update the Monster
 
             player_moves = false;
         }
@@ -292,7 +296,42 @@ void Main_Game_Loop(
 
         //////////////////// Render Monster ///////////////////////
 
+        glBindVertexArray(                          // set which VAO to draw
+            monster_model->vaoID                    // TODO: use ecs
+        );
 
+        glUniformMatrix4fv(
+            projection_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) projection_matrix
+        );
+
+        glUniformMatrix4fv(
+            view_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) current_game_state.main_camera.view_matrix
+        );
+
+        *monster_model = Calc_Model_matrix( // TODO: fix this to use ecs
+            *monster_model,
+            monster_position
+        );
+
+        glUniformMatrix4fv(
+            model_matrix_loc,
+            1,
+            GL_FALSE,
+            (float *) monster_model->model_matrix
+        );
+
+        glDrawElements(                               // draw using Triangles
+            GL_TRIANGLES,
+            monster_model->num_indices,
+            GL_UNSIGNED_INT,
+            (void *) 0
+        );
 
         ///////////////////////////////////////////////////////////
 

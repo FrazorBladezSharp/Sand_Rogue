@@ -27,7 +27,7 @@ void Object_Initialize()
     }
 }
 
-Game_Object Object_Create()
+Game_Object Object_Create(const char* file_path)
 {
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // find an unused entity slot
         if (game_entities->entity_id[index] == UNUSED) {       // initialize object
@@ -69,7 +69,7 @@ Game_Object Object_Create()
 
     object_model = (Game_Model *) malloc(sizeof(Game_Model));
     object_model = Load_Model_3D(
-        "Resource/Models/Player.obj",
+        file_path,
         object_color,
         &vao_storage,
         &vbo_storage,

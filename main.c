@@ -46,17 +46,23 @@ main() {
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
 
-    Game_Object player = Object_Create();
+    Game_Object player = Object_Create("Resource/Models/Player.obj");
+    Game_Object monster = Object_Create("Resource/Models/Monster.obj");
 
     Game_Model floor = Sand_Floor_Tile_3D_Create();
 
     ////////////////////////////////////// define the Player ////////////////////////////
 
     Position *player_position;
+    Position *monster_position;
+
     Game_Model *player_model;
+    Game_Model *monster_model;
 
     player_position = player.component[COMP_POSITION];
+    monster_position = monster.component[COMP_POSITION];
     player_model = player.component[COMP_MODEL];
+    monster_model = monster.component[COMP_MODEL];
 
     //////////////////////////// Create a Dungeon Level///////////////////////////////
 
@@ -82,6 +88,9 @@ main() {
         player.component[COMP_POSITION]                     // we set player position as a side effect of the function
     );
 
+    monster_position->position[0] += player_position->position[0] + 1.0f;
+    monster_position->position[2] += player_position->position[2] + 1.0f;
+
     //////////////////// Shader /////////////////////////////////
 
     GLint shader = Load_Shader();
@@ -91,9 +100,11 @@ main() {
     Main_Game_Loop(
         shader,
         player_position,
+        monster_position,
         dungeon_level_current,
         floor,
         player_model,
+        monster_model,
         window
     );
 
