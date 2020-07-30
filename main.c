@@ -45,9 +45,23 @@ main() {
 
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
+    vec4 object_color;              // TODO : move to function definition.
+    object_color[0] = 0.1f;
+    object_color[1] = 0.5f;
+    object_color[2] = 0.1f;
+    object_color[3] = 1.0f;
+    vec4 color_green = {0.1f, 0.5f, 0.1f, 1.0f};
+    vec4 color_red = {0.5f, 0.1f, 0.1f, 1.0f};
 
-    Game_Object player = Object_Create("Resource/Models/Player.obj");
-    Game_Object monster = Object_Create("Resource/Models/Monster.obj");
+    Game_Object player = Object_Create(
+        color_green,
+        "Resource/Models/Player.obj"
+    );
+
+    Game_Object monster = Object_Create(
+        color_red,
+        "Resource/Models/Monster.obj"
+    );
 
     Game_Model floor = Sand_Floor_Tile_3D_Create();
 

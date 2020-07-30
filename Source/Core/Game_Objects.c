@@ -27,7 +27,9 @@ void Object_Initialize()
     }
 }
 
-Game_Object Object_Create(const char* file_path)
+Game_Object Object_Create(
+    vec4 color,
+    const char* file_path)
 {
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // find an unused entity slot
         if (game_entities->entity_id[index] == UNUSED) {       // initialize object
@@ -60,17 +62,13 @@ Game_Object Object_Create(const char* file_path)
     object_position->rotationZ = 0.0f;
     object_position->scale = 1.0f;
 
-    vec4 object_color;              // TODO : move to function definition.
-    object_color[0] = 0.1f;
-    object_color[1] = 0.5f;
-    object_color[2] = 0.1f;
-    object_color[3] = 1.0f;
+
 
 
     object_model = (Game_Model *) malloc(sizeof(Game_Model));
     object_model = Load_Model_3D(
         file_path,
-        object_color,
+        color,
         &vao_storage,
         &vbo_storage,
         object_model

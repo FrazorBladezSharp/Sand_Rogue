@@ -14,7 +14,10 @@ static Game_Model g_model_component[MAX_ENTITIES];
 
 void Object_Initialize();
 
-Game_Object Object_Create(const char* file_path);
+Game_Object Object_Create(
+    vec4 color,
+    const char* file_path
+);
 
 void Object_Add_VAO(GLint data);
 void Object_Add_VBO(GLint data);
