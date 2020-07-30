@@ -28,11 +28,7 @@
 Main_Camera Calc_Camera_View_Matrix(Main_Camera camera);
 
 Game_Model Calc_Model_matrix(Game_Model model,
-                             vec3 position,
-                             float rotationX,
-                             float rotationY,
-                             float rotationZ,
-                             vec3 scale
+                             Position* current_position
 );
 
 

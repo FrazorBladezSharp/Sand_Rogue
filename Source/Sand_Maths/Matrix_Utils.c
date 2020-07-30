@@ -64,11 +64,7 @@ Main_Camera Calc_Camera_View_Matrix(Main_Camera camera) {
 }
 
 Game_Model Calc_Model_matrix(Game_Model model,
-                             vec3 position,
-                             float rotationX,
-                             float rotationY,
-                             float rotationZ,
-                             vec3 scale) {
+                             Position* current_position) {
 
     glm_mat4_identity(
         model.model_matrix
@@ -76,36 +72,44 @@ Game_Model Calc_Model_matrix(Game_Model model,
 
     glm_translate_x(
         model.model_matrix,
-        position[0]
+        current_position->position[0]
     );
 
     glm_translate_y(
         model.model_matrix,
-        position[1]
+        current_position->position[1]
     );
 
     glm_translate_z(
         model.model_matrix,
-        position[2]
+        current_position->position[2]
     );
 
     glm_rotate_x(
         model.model_matrix,
-        glm_rad(rotationX),
+        glm_rad(current_position->rotationX),
         model.model_matrix
     );
 
     glm_rotate_y(
         model.model_matrix,
-        glm_rad(rotationY),
+        glm_rad(current_position->rotationY),
         model.model_matrix
     );
 
     glm_rotate_z(
         model.model_matrix,
-        glm_rad(rotationZ),
+        glm_rad(current_position->rotationZ),
         model.model_matrix
     );
+
+    vec3 scale = {
+
+        current_position->scale,
+        current_position->scale,
+        current_position->scale
+
+    };
 
     glm_scale(
         model.model_matrix,

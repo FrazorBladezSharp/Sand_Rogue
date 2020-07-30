@@ -55,20 +55,26 @@ typedef int32_t     i32;
 ///////////////////////////// Structs ////////////////////////////////
 
 typedef struct {
+
     i32 size;
     i32 capacity;
     i32 *data;
+
 } Vector;
 
 typedef struct {
+
     u8 x;
     u8 y;
     u8 z;
+
 } Point_3D;
 
 typedef struct {
+
     i8 dungeon_level;
     bool map_cells[MAP_WIDTH + 1][MAP_HEIGHT + 1];
+
 } Dungeon_Level_Current;
 
 typedef struct {
@@ -116,8 +122,20 @@ typedef struct
     GLuint vaoID;
     GLuint num_indices;
     mat4 model_matrix;
+
 } Game_Model;
 
-/////////////////////////////////////////////////////////////////////
+///////////////////// Game State ///////////////////////////////
+
+typedef  struct {
+
+    // running
+    bool game_is_running;
+    // camera
+    Main_Camera main_camera;
+    // player_position
+    Position* players_current_position;
+
+} Current_Game_State;
 
 #endif //SAND_ROGUE_COMMON_H

@@ -4,11 +4,12 @@
 
 #include "Main_Game_Loop.h"
 
+
 void Main_Game_Loop(
     GLint shader,
     Position * player_position,
     Dungeon_Level_Current* dungeon_level_current,
-    Game_Model floor,
+    Game_Model floor_model,
     Game_Model *player_model,
     SDL_Window* window)
 {
@@ -67,14 +68,20 @@ void Main_Game_Loop(
     light_color[2] = 0.8f;
 
     // main run time game loop
-    bool running = true;
-    bool player_moves;
+    Current_Game_State current_game_state = {
+
+        .game_is_running = true,
+        .main_camera = camera,
+        .players_current_position = player_position
+    };
+
+    bool player_moves = false;
 
     SDL_Event event;
     i32 mouseX;
     i32 mouseY;
 
-    while (running) {
+    while (current_game_state.game_is_running) {
 
         mouseX = 0;
         mouseY = 0;
@@ -83,7 +90,7 @@ void Main_Game_Loop(
 
             if (event.type == SDL_QUIT) {
 
-                running = false;
+                current_game_state.game_is_running = false;
 
             }
 
@@ -100,131 +107,29 @@ void Main_Game_Loop(
                 }
             }
 
+            if(event.type == SDL_KEYDOWN){
+
+                player_moves = true;
+            }
+
         } // end of Poll event loop
 
-        // (Frazor) camera movement for debug
-        const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
+        ///////////////// Game Update //////////////////////////
 
-        if (currentKeyStates[SDL_SCANCODE_ESCAPE]) {
-            running = false;
-        }
+        if(player_moves){
 
-        if (currentKeyStates[SDL_SCANCODE_W] &&
-            currentKeyStates[SDL_SCANCODE_LSHIFT]) {
-
-            camera.position[2] =
-                camera.position[2] - 0.1f;
-
-        } else if (currentKeyStates[SDL_SCANCODE_S] &&
-                   currentKeyStates[SDL_SCANCODE_LSHIFT]) {
-
-            camera.position[2] =
-                camera.position[2] + 0.1f;
-        }
-
-        if (currentKeyStates[SDL_SCANCODE_A] &&
-            currentKeyStates[SDL_SCANCODE_LSHIFT]) {
-
-            camera.position[0] =
-                camera.position[0] - 0.1f;
-
-        } else if (currentKeyStates[SDL_SCANCODE_D] &&
-                   currentKeyStates[SDL_SCANCODE_LSHIFT]) {
-
-            camera.position[0] =
-                camera.position[0] + 0.1f;
-        }
-
-        if (currentKeyStates[SDL_SCANCODE_Q] &&
-            currentKeyStates[SDL_SCANCODE_LSHIFT]) {
-
-            camera.position[1] =
-                camera.position[1] - 0.1f;
-
-        } else if (currentKeyStates[SDL_SCANCODE_E] &&
-                   currentKeyStates[SDL_SCANCODE_LSHIFT]) {
-
-            camera.position[1] =
-                camera.position[1] + 0.1f;
-        }
-
-        camera = Calc_Camera_View_Matrix(camera);
-
-        // Mouse R-click to move
-        // get xy location of mouse
-        // determine which of the 4 directions to move - 1 square
-        // with community permission increase to 8 way.
-
-        if ((((mouseX > WINDOW_WIDTH / 2 + 20) &&
-              (mouseY < WINDOW_HEIGHT / 2 - 5) &&
-              player_moves) ||
-             currentKeyStates[SDL_SCANCODE_W]) &&
-            dungeon_level_current->map_cells
-            [(int)player_position->position[0] + 1]
-            [(int)player_position->position[2]]) {
-
-            // players x location increases by 1
-            player_position->position[0] += 1;
-
-            camera.position[0] =
-                player_position->position[0] - 3.0f;
+            // we update the whole system
+            current_game_state =  User_Input(
+                current_game_state,
+                mouseX,
+                mouseY,
+                dungeon_level_current
+            );
 
             player_moves = false;
         }
 
-        if ((((mouseX > WINDOW_WIDTH / 2 + 20) &&
-              (mouseY > WINDOW_HEIGHT / 2 + 5) &&
-              player_moves) ||
-             currentKeyStates[SDL_SCANCODE_D]) &&
-            dungeon_level_current->map_cells
-            [(int)player_position->position[0]]
-            [(int)player_position->position[2] + 1]) {
-
-            // player y location increases by 1
-            player_position->position[2] += 1;
-
-            camera.position[2] =
-                player_position->position[2] + 3.0f;
-
-            player_moves = false;
-        }
-
-        if ((((mouseX < WINDOW_WIDTH / 2 + 20) &&
-              (mouseY > WINDOW_HEIGHT / 2 + 5) &&
-              player_moves) ||
-             currentKeyStates[SDL_SCANCODE_S]) &&
-            dungeon_level_current->map_cells
-            [(int)player_position->position[0] - 1]
-            [(int)player_position->position[2]]) {
-
-            // players x location decreases by 1
-            player_position->position[0] -= 1;
-
-            camera.position[0] =
-                player_position->position[0] - 3.0f;
-
-            player_moves = false;
-        }
-
-        if ((((mouseX < WINDOW_WIDTH / 2 + 20) &&
-              (mouseY < WINDOW_HEIGHT / 2 - 5) &&
-              player_moves) ||
-             currentKeyStates[SDL_SCANCODE_A]) &&
-            dungeon_level_current->map_cells
-            [(int)player_position->position[0]]
-            [(int)player_position->position[2] - 1]) {
-
-            // player y location decreases by 1
-            player_position->position[2] -= 1;
-
-            camera.position[2] =
-                player_position->position[2] + 3.0f;
-
-            player_moves = false;
-        }
-
-        // update camera & view_matrix
-        camera = Calc_Camera_View_Matrix(camera);
+        ///////////////// Render ////////////////////////////////
 
         // TODO: rendering functionality
 
@@ -233,14 +138,12 @@ void Main_Game_Loop(
             GL_DEPTH_BUFFER_BIT
         );
 
-        ///////////////// Render ////////////////////////////////
-
         glUseProgram(
             shader
         );
 
         glBindVertexArray(                          // set which VAO to draw
-            floor.vaoID
+            floor_model.vaoID
         );
 
         glUniformMatrix4fv(
@@ -254,7 +157,7 @@ void Main_Game_Loop(
             view_matrix_loc,
             1,
             GL_FALSE,
-            (float *) camera.view_matrix
+            (float *) current_game_state.main_camera.view_matrix
         );
 
         glUniform3f(
@@ -300,9 +203,9 @@ void Main_Game_Loop(
 
         glUniform3f(
             camera_position_loc,
-            camera.position[0],
-            camera.position[1],
-            camera.position[2]
+            current_game_state.main_camera.position[0],
+            current_game_state.main_camera.position[1],
+            current_game_state.main_camera.position[2]
         );
 
         //////////////////////// Render Dungeon Map //////////////////////////
@@ -314,26 +217,33 @@ void Main_Game_Loop(
                 if (dungeon_level_current->map_cells[x][z]) {
 
                     vec3 floor_position = {(float) x, 0.0f, (float) z};
-                    vec3 scale = {1.0f, 1.0f, 1.0f};
-                    floor = Calc_Model_matrix(
-                        floor,
-                        floor_position,
+
+                    Position current_floor_position = {
+                        0,
+                        floor_position[0],
+                        floor_position[1],
+                        floor_position[2],
                         0.0f,
                         0.0f,
                         0.0f,
-                        scale
-                    );
+                        1.0f
+                    };
+
+                    floor_model = Calc_Model_matrix(
+                        floor_model,
+                        &current_floor_position
+                  );
 
                     glUniformMatrix4fv(
                         model_matrix_loc,
                         1,
                         GL_FALSE,
-                        (float *) floor.model_matrix
+                        (float *) floor_model.model_matrix
                     );
 
                     glDrawElements(                               // draw using Triangles
                         GL_TRIANGLES,
-                        floor.num_indices,
+                        floor_model.num_indices,
                         GL_UNSIGNED_INT,
                         (void *) 0
                     );
@@ -358,18 +268,12 @@ void Main_Game_Loop(
             view_matrix_loc,
             1,
             GL_FALSE,
-            (float *) camera.view_matrix
+            (float *) current_game_state.main_camera.view_matrix
         );
-
-        vec3 scale = {1.0f, 1.0f, 1.0f};
 
         *player_model = Calc_Model_matrix( // TODO: fix this to use ecs
             *player_model,
-            player_position->position,
-            0.0f,
-            -45.0f,
-            0.0f,
-            scale
+            current_game_state.players_current_position
         );
 
         glUniformMatrix4fv(
@@ -405,7 +309,7 @@ void Main_Game_Loop(
         );
 
         SDL_Delay(                                 // give the cpu a well earned break !
-            100
+            100                                // high value due to keyboard input
         );
 
     }   // end of the main game loop
