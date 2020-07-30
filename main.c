@@ -38,7 +38,8 @@ main() {
 
     Object_Initialize();
 
-    //////////////////////////////////////////////////////////////////////////
+    /////////////////////// Window OpenGL /////////////////////////////////
+
     // window openGL - NOTE : must be done first to get the openGL context.
 
     SDL_Window *window;                                   // Declare a pointer
@@ -318,12 +319,8 @@ main() {
 
     ////////////////////////////////////// define the Player ////////////////////////////
 
-
-
     Position *player_position;
-    //player_position = (Position *) malloc(sizeof(Position));
     Game_Model *player_model;
-    //player_model = (Game_Model *) malloc(sizeof(Game_Model));
 
     player_position = player.component[COMP_POSITION];
     player_model = player.component[COMP_MODEL];
@@ -375,12 +372,8 @@ main() {
     // camera
     Main_Camera camera;
 
-
-
-
-
     camera.position[0] = player_position->position[0] - 3.0f,
-        camera.position[1] = 6.6f;
+    camera.position[1] = 6.6f;
     camera.position[2] = player_position->position[2] + 3.0f;
     camera.rotationX = 60.0f;
     camera.rotationY = 45.0f;
@@ -452,7 +445,6 @@ main() {
             running = false;
         }
 
-
         if (currentKeyStates[SDL_SCANCODE_W] &&
             currentKeyStates[SDL_SCANCODE_LSHIFT]) {
 
@@ -494,15 +486,10 @@ main() {
 
         camera = Calc_Camera_View_Matrix(camera);
 
-
-    // TODO: (Frazor) player movement with wall detection.
-
-    // Mouse R-click to move
-    // get xy location of mouse
-    // determine which of the 4 directions to move - 1 square
-    // with community permission increase to 8 way.
-
-
+        // Mouse R-click to move
+        // get xy location of mouse
+        // determine which of the 4 directions to move - 1 square
+        // with community permission increase to 8 way.
 
         if ((((mouseX > WINDOW_WIDTH / 2 + 20) &&
             (mouseY < WINDOW_HEIGHT / 2 - 5) &&
@@ -613,7 +600,6 @@ main() {
         light_position[2]
     );
 
-
     glUniform3f(
         light_color_loc,
         light_color[0],
@@ -691,8 +677,10 @@ main() {
             }
         } // end of map render
 
+        ////////////////////////////////// render Player ////////////////////////////////////////
+
         glBindVertexArray(                          // set which VAO to draw
-            player_model->vaoID
+            player_model->vaoID             // TODO: use ecs
         );
 
         glUniformMatrix4fv(
@@ -711,7 +699,7 @@ main() {
 
         vec3 scale = {1.0f, 1.0f, 1.0f};
 
-        *player_model = Calc_Model_matrix(
+        *player_model = Calc_Model_matrix( // TODO: fix this to use ecs
             *player_model,
             player_position->position,
             0.0f,
@@ -734,13 +722,17 @@ main() {
             (void *) 0
         );
 
-    ///////////////////////////////////////////////////////////
+        //////////////////// Render Monster ///////////////////////
+
+
+
+        ///////////////////////////////////////////////////////////
 
         glBindVertexArray(                          // disable the used VAO
             0
         );
 
-    //////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////
 
         // swap buffers for OpenGL
 
@@ -754,10 +746,7 @@ main() {
 
     }   // end of the main game loop
 
-//////////////////// Clean up and Exit //////////////////////////////
-
-    // free up resources
-
+    //////////////////// Clean up and Exit ////////////////////////////
 
     // cleanup OpenGL - anything stored on the gfx card.
 
