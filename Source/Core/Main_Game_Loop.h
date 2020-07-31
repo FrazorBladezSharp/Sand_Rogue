@@ -8,6 +8,7 @@
 #include "Source/Common.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
 #include "Source/Graphical_User_Interface/User_Input.h"
+#include "Source/GURPS/Sand_Combat.h"
 
 void Main_Game_Loop(
     GLint shader,

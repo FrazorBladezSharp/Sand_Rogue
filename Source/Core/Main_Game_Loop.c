@@ -128,6 +128,10 @@ void Main_Game_Loop(
                 dungeon_level_current
             );
 
+            // TODO: if we move into a solid Monster = Attack
+            i32 attack_result = Sand_Attack_Roll();
+            printf("You punch for %d Damage\n", attack_result);
+
             // TODO: Update the Monster
 
             player_moves = false;

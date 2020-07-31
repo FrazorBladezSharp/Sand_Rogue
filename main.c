@@ -1,5 +1,5 @@
 
-/** @file Main
+/** @file Main This is Prototype Code
  * TODO: think about if statements as they can be taken out
  * eg a * ( condition for a ) + b * ( condition for b ) + etc ...
  *
