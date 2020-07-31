@@ -74,7 +74,8 @@ void Main_Game_Loop(
 
         .game_is_running = true,
         .main_camera = camera,
-        .players_current_position = player_position
+        .players_current_position = player_position,
+        .players_current_action = ACTION_NONE
     };
 
     bool player_moves = false;
@@ -125,13 +126,26 @@ void Main_Game_Loop(
                 current_game_state,
                 mouseX,
                 mouseY,
-                dungeon_level_current
+                dungeon_level_current,
+                monster_position
             );
 
             // TODO: if we move into a solid Monster = Attack
-            i32 attack_result = Sand_Attack_Roll();
-            printf("You punch for %d Damage\n", attack_result);
+            if(current_game_state.players_current_action ==
+                ACTION_ATTACK){
 
+                i32 attack_result = Sand_Attack_Roll();
+                i32 monster_attack_result = Sand_Attack_Roll();
+
+                printf(
+                    "You punch for %d Damage : the Monster does %d damage\n",
+                    attack_result,
+                    monster_attack_result
+                );
+
+                current_game_state.players_current_action =
+                    ACTION_NONE;
+            }
             // TODO: Update the Monster
 
             player_moves = false;

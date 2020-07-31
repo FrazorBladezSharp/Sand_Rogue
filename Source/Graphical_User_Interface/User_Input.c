@@ -8,7 +8,8 @@ Current_Game_State User_Input(
     Current_Game_State current_game_state,
     i32 mouseX,
     i32 mouseY,
-    Dungeon_Level_Current* dungeon_level_current)
+    Dungeon_Level_Current* dungeon_level_current,
+    Position* monster_position)
 {
     // (Frazor) camera movement for debug
     const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
@@ -61,6 +62,16 @@ Current_Game_State User_Input(
     // determine which of the 4 directions to move - 1 square
     // with community permission increase to 8 way.
 
+    Position players_old_position = {
+
+            current_game_state.players_current_position->object_id,
+            current_game_state.players_current_position->position[0],
+            current_game_state.players_current_position->position[1],
+            current_game_state.players_current_position->position[2],
+    };
+
+
+        current_game_state.players_current_position;
 
     if ((((mouseX < WINDOW_WIDTH / 2 + 20) &&
                 (mouseY > WINDOW_HEIGHT / 2 + 5))
@@ -127,6 +138,17 @@ Current_Game_State User_Input(
     current_game_state.main_camera = Calc_Camera_View_Matrix(
             current_game_state.main_camera
     );
+
+    if((current_game_state.players_current_position->position[0] == monster_position->position[0])
+        &&
+        (current_game_state.players_current_position->position[2] == monster_position->position[2])){
+
+        current_game_state.players_current_action = ACTION_ATTACK;
+
+        // revert player back to their players_old_position
+        current_game_state.players_current_position->position[0] = players_old_position.position[0];
+        current_game_state.players_current_position->position[2] = players_old_position.position[2];
+    }
 
     return current_game_state;
 }

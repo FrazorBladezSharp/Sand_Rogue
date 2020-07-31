@@ -90,9 +90,9 @@ typedef struct {
 typedef enum {
     COMP_POSITION = 0,
     COMP_MODEL,
-//    COMP_VISIBILITY,
-//    COMP_SOLID_BODY,
-//    COMP_MOVEMENT,
+    COMP_PRIMARY_CHARACTERISTICS,
+    COMP_SECONDARY_CHARACTERISTICS,
+    COMP_COMBAT_STATS,
 
     COMP_COUNT                                  // keep a count on how many components we have
 
@@ -125,7 +125,52 @@ typedef struct
 
 } Game_Model;
 
+typedef struct{
+
+    i32 strength;
+    i32 strength_cost;
+    i32 dexterity;
+    i32 dexterity_cost;
+    i32 intelligence;
+    i32 intelligence_cost;
+    i32 health;
+    i32 health_cost;
+
+} Primary_Stats;
+
+//COMP_SECONDARY_STATS,
+typedef struct{
+
+    i32 hit_points;
+    i32 will;
+    i32 perception;
+    i32 fatigue_points;
+    i32 basic_speed;
+    i32 basic_move;
+
+} Secondary_Stats;
+
+// combat stats
+typedef struct{
+
+    i32 damage_resistance;
+    i32 dodge;
+    i32 parry;
+    i32 block;
+
+} Combat_Stats;
+
 ///////////////////// Game State ///////////////////////////////
+
+typedef enum{
+
+    ACTION_NONE,
+    ACTION_MOVE,
+    ACTION_ATTACK,
+
+    ACTION_COUNT
+
+} Action;
 
 typedef  struct {
 
@@ -135,6 +180,7 @@ typedef  struct {
     Main_Camera main_camera;
     // player_position
     Position* players_current_position;
+    Action players_current_action;
 
 } Current_Game_State;
 
