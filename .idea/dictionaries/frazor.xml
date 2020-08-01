@@ -10,6 +10,7 @@
       <w>dynsections</w>
       <w>frazor</w>
       <w>glew</w>
+      <w>gurps</w>
       <w>headertitle</w>
       <w>martix</w>
       <w>menudata</w>
@@ -21,6 +22,7 @@
       <w>projectbrief</w>
       <w>projectname</w>
       <w>projectnumber</w>
+      <w>scancode</w>
       <w>searchdata</w>
       <w>splitbar</w>
       <w>titlearea</w>

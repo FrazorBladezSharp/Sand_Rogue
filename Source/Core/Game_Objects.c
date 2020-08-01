@@ -54,21 +54,21 @@ Position* Object_Initialize()
     // found the code to detect component :
     //          if(object[object_id].component[for loop index] != (void*)UNUSED)
     ///////////////////////////
-    for(i32 index = 0; index < MAX_ENTITIES; index++){
-
-        if(object[index].object_id != UNUSED){
-
-            printf("Object does exist %d !\n", object[index].object_id);
-        }
-    }
-
-    for(i32 object_index = 0; object_index < MAX_ENTITIES; object_index++){
-
-        if(game_entities->entity_id[object_index] != UNUSED){
-
-            printf("Entity %d exists !\n", object_index);
-        }
-    }
+//    for(i32 index = 0; index < MAX_ENTITIES; index++){
+//
+//        if(object[index].object_id != UNUSED){
+//
+//            printf("Object does exist %d !\n", object[index].object_id);
+//        }
+//    }
+//
+//    for(i32 object_index = 0; object_index < MAX_ENTITIES; object_index++){
+//
+//        if(game_entities->entity_id[object_index] != UNUSED){
+//
+//            printf("Entity %d exists !\n", object_index);
+//        }
+//    }
     ////////////////////////////
 
     return object[64].component[COMP_POSITION];

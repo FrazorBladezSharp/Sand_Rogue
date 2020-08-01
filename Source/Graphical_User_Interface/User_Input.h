@@ -8,10 +8,8 @@
 #include "Source/Common.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
 
-Current_Game_State User_Input(
+Current_Game_State User_Keyboard_Input(
     Current_Game_State current_game_state,
-    i32 mouseX,
-    i32 mouseY,
     Dungeon_Level_Current* dungeon_level_current,
     Position* monster_position
 );

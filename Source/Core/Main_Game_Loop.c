@@ -125,10 +125,8 @@ void Main_Game_Loop(
         if(player_moves){
 
             // we update the whole system
-            current_game_state =  User_Input(
+            current_game_state =  User_Keyboard_Input(
                 current_game_state,
-                mouseX,
-                mouseY,
                 dungeon_level_current,
                 monster_position
             );
