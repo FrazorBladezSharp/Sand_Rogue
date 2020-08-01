@@ -29,7 +29,7 @@
 #include "Source/OpenGL/Sand_Floor_Tile_3D.h"
 #include "Source/Core/Map.h"
 
-//#include  "Source/Core/Main_Game_Loop.h"
+#include  "Source/Core/Main_Game_Loop.h"
 
 int
 /** The run time entry point for Sand_Rogue
@@ -79,17 +79,14 @@ main() {
     GLint shader = Load_Shader();
 
     ///////////////// Main Game Loop ////////////////////////////
-/*
+
     Main_Game_Loop(
         shader,
-        player_position,
-//        dungeon_level_current,
+        dungeon_level_current,
         floor,
-//        player_model,  no
-//        monster_model, no
         window
     );
-*/
+
     //////////////////// Clean up and Exit ////////////////////////////
 
     // cleanup OpenGL - anything stored on the gfx card.
@@ -98,9 +95,9 @@ main() {
         shader
     );
 
-//    free(
-//        dungeon_level_current
-//    );
+    free(
+        dungeon_level_current
+    );
 
     Object_Cleanup();
 

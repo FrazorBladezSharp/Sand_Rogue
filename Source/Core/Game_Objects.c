@@ -173,10 +173,11 @@ void Object_Create(
     model_component[object->object_id].object_id = ascii_character;
     object[ascii_character].component[COMP_COMBAT_STATS] = object_model;
     ///////////////////////////////////////////////////////////////////////////////////
+}
 
-    for(int i = 0; i < COMP_COUNT; i++){
-        printf("Object (%c) : size of component (%d) = %lu\n",ascii_character, i, sizeof(object[ascii_character].component[i]));
-    }
+void* Object_Lookup_Component(u32 object_id, u8 component)
+{
+    return object[object_id].component[component];
 }
 
 void Object_Add_VAO(GLint data)  // TODO : these 2 functions should not exist !!!

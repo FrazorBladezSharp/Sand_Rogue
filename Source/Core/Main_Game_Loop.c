@@ -7,15 +7,18 @@
 
 void Main_Game_Loop(
     GLint shader,
-    Position* player_position,
-    Position* monster_position,
     Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
-    Game_Model* player_model,
-    Game_Model* monster_model,
     SDL_Window* window)
 {
     // our main game loop Starts Here
+
+    Position* player_position = (Position*)Object_Lookup_Component(64, COMP_POSITION);
+    Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);
+
+    Game_Model* player_model = (Game_Model*)Object_Lookup_Component(64, COMP_MODEL);
+    Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(77, COMP_MODEL);
+
 
     glUseProgram(shader);
 
