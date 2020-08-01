@@ -99,7 +99,7 @@ typedef enum {
 } Game_Component;
 
 typedef struct {
-    i32 entity_id[MAX_ENTITIES];
+    i32 entity_id[MAX_ENTITIES]; // TODO: this should be a bool
 } Game_Entities;
 
 typedef struct {

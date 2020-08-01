@@ -18,30 +18,68 @@ void Object_Initialize()
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
         game_entities->entity_id[index] = UNUSED;            // set all entities to unused
-        object->object_id = UNUSED;
+        object[index].object_id = UNUSED;
     }
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
         g_position_component[index].object_id = UNUSED;
         g_model_component[index].object_id = UNUSED;
     }
+
+    vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };
+    vec4 color_red =   { 0.5f, 0.1f, 0.1f, 1.0f };
+
+    Game_Object player = Object_Create(
+        color_green,
+        "Resource/Models/Player.obj"
+    );
+
+    printf("Player Created : %d\n", object[0].object_id);
+
+    Game_Object monster = Object_Create(
+        color_red,
+        "Resource/Models/Monster.obj"
+    );
+
+    printf("Monster Created : %d\n\n", object[1].object_id);
+
+    //////// Test code ////////
+
+    for(i32 index = 0; index < MAX_ENTITIES; index++){
+
+        if(object[index].object_id != UNUSED){
+
+            printf("Object does exist %d !\n", object[index].object_id);
+        }
+    }
+
+    for(i32 object_index = 0; object_index < MAX_ENTITIES; object_index++){
+
+        if(game_entities->entity_id[object_index] != UNUSED){
+
+            printf("Entity %d exists !\n", object_index);
+        }
+    }
+
+    ////////////////////////////
+
 }
 
 Game_Object Object_Create(
     vec4 color,
     const char* file_path)
 {
-    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // find an unused entity slot
-        if (game_entities->entity_id[index] == UNUSED) {       // initialize object
+    for (u32 index = 0; index < MAX_ENTITIES; index++) {     // find an unused entity slot
+        if (game_entities->entity_id[index] == UNUSED) {     // initialize object
             game_entities->entity_id[index] = index;         // register object as an entity
-            object[index].object_id = index;                      // assign the object an entity id
+            object[index].object_id = index;                 // assign the object an entity id
             break;
         }
     }
 
     Position *object_position;
     Game_Model *object_model;
-
+    // TODO : merge this for loop with the one above ?
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
         g_position_component[index].object_id = UNUSED;
         g_model_component[index].object_id = UNUSED;
