@@ -9,6 +9,11 @@ static Vector vbo_storage;
 
 static Game_Object object[MAX_ENTITIES];
 static Game_Entities game_entities[MAX_ENTITIES];
+static Position position_component[MAX_ENTITIES];
+static Game_Model model_component[MAX_ENTITIES];
+static Primary_Characteristics primary_characteristic_component[MAX_ENTITIES];
+static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES];
+static Combat_Stats combat_stats[MAX_ENTITIES];
 
 void Object_Initialize()
 {
@@ -22,8 +27,11 @@ void Object_Initialize()
     }
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
-        g_position_component[index].object_id = UNUSED;
-        g_model_component[index].object_id = UNUSED;
+        position_component[index].object_id = UNUSED;
+        model_component[index].object_id = UNUSED;
+        primary_characteristic_component[index].object_id = UNUSED;
+        secondary_characteristic_component[index].object_id= UNUSED;
+        combat_stats[index].object_id = UNUSED;
     }
 
     vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };
@@ -43,7 +51,9 @@ void Object_Initialize()
     //////// Test code ////////
     // this shows that we can detect if an entity exits and if its object exists
     // we tried a direct detection on Components with no result found yet.
-
+    // found the code to detect component :
+    //          if(object[object_id].component[for loop index] != (void*)UNUSED)
+    ///////////////////////////
     for(i32 index = 0; index < MAX_ENTITIES; index++){
 
         if(object[index].object_id != UNUSED){
@@ -71,21 +81,20 @@ void Object_Create(
     game_entities->entity_id[ascii_character] = ascii_character;         // register object as an entity
     object[ascii_character].object_id = ascii_character;                 // assign the object an entity id
 
-    Position *object_position;
-    Game_Model *object_model;
 
-    for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
-        g_position_component[index].object_id = UNUSED;
-        g_model_component[index].object_id = UNUSED;
-    }
 
     // NOTE: you must free the memory before game exit      *** NOTE ****
+
+    //////////////////////// Position Component //////////////////////////
+
+    Position *object_position;
 
     object_position = (Position *) malloc(
         sizeof(Position)
     );
 
     object_position->object_id = ascii_character;          // set values for the object position.
+
     object_position->position[0] = 0.0f;                   // initialize all to zero
     object_position->position[1] = 0.5f;
     object_position->position[2] = 0.0f;
@@ -94,24 +103,52 @@ void Object_Create(
     object_position->rotationZ = 0.0f;
     object_position->scale = 1.0f;
 
+    position_component[object->object_id].object_id = ascii_character;    // keep track of all position components
+    object->component[COMP_POSITION] = object_position;                     // add position component to object
 
+    ////////////////////////// Model Component ///////////////////////////
 
+    Game_Model *object_model;
 
-    object_model = (Game_Model *) malloc(sizeof(Game_Model));
+    //object_model = (Game_Model *) malloc(sizeof(Game_Model));
     object_model = Load_Model_3D(
         file_path,
         color,
         &vao_storage,
-        &vbo_storage,
-        object_model
+        &vbo_storage
     );
 
     object_model[ascii_character].object_id = ascii_character;
-    object->component[COMP_POSITION] = object_position;                     // add position component to object
+    model_component[object->object_id].object_id = ascii_character;
     object->component[COMP_MODEL] = object_model;
 
-    g_position_component[object->object_id].object_id = ascii_character;    // keep track of all position components
-    g_model_component[object->object_id].object_id = ascii_character;
+    ///////////////////// Primary Characteristics Component ///////////////////////////////
+
+    Primary_Characteristics* primary;
+    primary = (Primary_Characteristics *) malloc(sizeof(Primary_Characteristics));
+    primary[ascii_character].object_id = ascii_character;
+
+    model_component[object->object_id].object_id = ascii_character;
+    object->component[COMP_MODEL] = object_model;
+
+    //////////////////// Secondary Characteristics Component ////////////////////////////////
+
+    Secondary_Characteristics* secondary;
+    secondary = (Secondary_Characteristics *) malloc(sizeof(Secondary_Characteristics));
+    secondary[ascii_character].object_id = ascii_character;
+
+    model_component[object->object_id].object_id = ascii_character;
+    object->component[COMP_MODEL] = object_model;
+
+    //////////////////// Combat Stats Component ////////////////////////////////
+
+    Combat_Stats* combat;
+    combat = (Combat_Stats *) malloc(sizeof(Combat_Stats));
+    combat[ascii_character].object_id = ascii_character;
+
+    model_component[object->object_id].object_id = ascii_character;
+    object->component[COMP_MODEL] = object_model;
+    ///////////////////////////////////////////////////////////////////////////////////
 }
 
 void Object_Add_VAO(GLint data)  // TODO : these 2 functions should not exist !!!

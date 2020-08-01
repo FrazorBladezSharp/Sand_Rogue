@@ -108,16 +108,18 @@ typedef struct {
 } Game_Object;
 
 typedef struct {
+
     i32 object_id;
     vec3 position;
     float rotationX;
     float rotationY;
     float rotationZ;
     float scale;
+
 } Position;
 
-typedef struct
-{
+typedef struct{
+
     unsigned int object_id;
     GLuint vaoID;
     GLuint num_indices;
@@ -127,6 +129,7 @@ typedef struct
 
 typedef struct{
 
+    i32 object_id;
     i32 strength;
     i32 strength_cost;
     i32 dexterity;
@@ -136,11 +139,11 @@ typedef struct{
     i32 health;
     i32 health_cost;
 
-} Primary_Stats;
+} Primary_Characteristics;
 
-//COMP_SECONDARY_STATS,
 typedef struct{
 
+    i32 object_id;
     i32 hit_points;
     i32 will;
     i32 perception;
@@ -148,11 +151,11 @@ typedef struct{
     i32 basic_speed;
     i32 basic_move;
 
-} Secondary_Stats;
+} Secondary_Characteristics;
 
-// combat stats
 typedef struct{
 
+    i32 object_id;
     i32 damage_resistance;
     i32 dodge;
     i32 parry;

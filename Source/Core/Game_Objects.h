@@ -9,9 +9,6 @@
 #include "Source/Core/Sand_Vector.h"
 #include "Source/OpenGL/Load_Model_3D.h"
 
-static Position g_position_component[MAX_ENTITIES];
-static Game_Model g_model_component[MAX_ENTITIES];
-
 void Object_Initialize();
 
 void Object_Create(

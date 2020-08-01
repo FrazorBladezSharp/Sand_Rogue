@@ -46,7 +46,7 @@ main() {
 
     Object_Initialize();
 
-    Game_Model floor = Sand_Floor_Tile_3D_Create();
+    //Game_Model floor = Sand_Floor_Tile_3D_Create();
 
 //    ////////////////////////////////////// define the Player ////////////////////////////
 //
