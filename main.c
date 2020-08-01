@@ -26,8 +26,8 @@
 #include "Source/OpenGL/Shaders.h"
 
 #include "Source/Core/Game_Objects.h"
-//#include "Source/OpenGL/Sand_Floor_Tile_3D.h"
-//#include "Source/Core/Map.h"
+#include "Source/OpenGL/Sand_Floor_Tile_3D.h"
+#include "Source/Core/Map.h"
 
 //#include  "Source/Core/Main_Game_Loop.h"
 
@@ -44,22 +44,9 @@ main() {
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
 
-    Object_Initialize();
+    Position* player_position = Object_Initialize();
 
-    //Game_Model floor = Sand_Floor_Tile_3D_Create();
-
-//    ////////////////////////////////////// define the Player ////////////////////////////
-//
-//    Position *player_position;
-//    Position *monster_position;
-//
-//    Game_Model *player_model;
-//    Game_Model
-//
-//    player_position = player.component[COMP_POSITION];
-//    monster_position = monster.component[COMP_POSITION];
-//    player_model = player.component[COMP_MODEL];
-//    monster_model = monster.component[COMP_MODEL];
+    Game_Model floor = Sand_Floor_Tile_3D_Create();
 
     //////////////////////////// Create a Dungeon Level///////////////////////////////
 
@@ -80,31 +67,29 @@ main() {
         }
     }
 
-  //  dungeon_level_current = Map_Create_Dungeon_Level(
- //       dungeon_level_current,
- //       player.component[COMP_POSITION]                     // we set player position as a side effect of the function
- //   );
 
-//    monster_position->position[0] += player_position->position[0] + 1.0f;
-//    monster_position->position[2] += player_position->position[2] + 1.0f;
+    dungeon_level_current = Map_Create_Dungeon_Level(
+        dungeon_level_current,
+        player_position                    // we set player position as a side effect of the function
+    );
+
 
     //////////////////// Shader /////////////////////////////////
 
     GLint shader = Load_Shader();
 
     ///////////////// Main Game Loop ////////////////////////////
-
-//    Main_Game_Loop(
-//        shader,
-//        player_position,
-//        monster_position,
+/*
+    Main_Game_Loop(
+        shader,
+        player_position,
 //        dungeon_level_current,
-//        floor,
-//        player_model,
-//        monster_model,
-//        window
-//    );
-
+        floor,
+//        player_model,  no
+//        monster_model, no
+        window
+    );
+*/
     //////////////////// Clean up and Exit ////////////////////////////
 
     // cleanup OpenGL - anything stored on the gfx card.

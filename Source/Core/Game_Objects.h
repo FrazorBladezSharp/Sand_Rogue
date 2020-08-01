@@ -9,7 +9,7 @@
 #include "Source/Core/Sand_Vector.h"
 #include "Source/OpenGL/Load_Model_3D.h"
 
-void Object_Initialize();
+Position* Object_Initialize();
 
 void Object_Create(
     i32 ascii_character,

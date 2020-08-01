@@ -15,7 +15,7 @@ static Primary_Characteristics primary_characteristic_component[MAX_ENTITIES];
 static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES];
 static Combat_Stats combat_stats[MAX_ENTITIES];
 
-void Object_Initialize()
+Position* Object_Initialize()
 {
     Vector_init(&vao_storage);      // initialize OpenGL handle storage
     Vector_init(&vbo_storage);      // used to delete Gfx Card buffers
@@ -71,6 +71,7 @@ void Object_Initialize()
     }
     ////////////////////////////
 
+    return object[64].component[COMP_POSITION];
 }
 
 void Object_Create(
@@ -104,7 +105,7 @@ void Object_Create(
     object_position->scale = 1.0f;
 
     position_component[object->object_id].object_id = ascii_character;    // keep track of all position components
-    object->component[COMP_POSITION] = object_position;                   // add position component to object
+    object[ascii_character].component[COMP_POSITION] = object_position;   // add position component to object
 
     ////////////////////////// Model Component ///////////////////////////
 
@@ -119,7 +120,7 @@ void Object_Create(
 
     object_model[ascii_character].object_id = ascii_character;
     model_component[object->object_id].object_id = ascii_character;
-    object->component[COMP_MODEL] = object_model;
+    object[ascii_character].component[COMP_MODEL] = object_model;
 
     ///////////////////// Primary Characteristics Component ///////////////////////////////
 
@@ -137,7 +138,7 @@ void Object_Create(
     primary->health_cost = -10;
 
     model_component[object->object_id].object_id = ascii_character;
-    object->component[COMP_MODEL] = object_model;
+    object[ascii_character].component[COMP_PRIMARY_CHARACTERISTICS] = object_model;
 
     //////////////////// Secondary Characteristics Component ////////////////////////////////
 
@@ -152,7 +153,7 @@ void Object_Create(
     secondary->basic_move = 4;
 
     model_component[object->object_id].object_id = ascii_character;
-    object->component[COMP_MODEL] = object_model;
+    object[ascii_character].component[COMP_SECONDARY_CHARACTERISTICS] = object_model;
 
     //////////////////// Combat Stats Component ////////////////////////////////
 
@@ -170,8 +171,12 @@ void Object_Create(
     combat->block = 3;
 
     model_component[object->object_id].object_id = ascii_character;
-    object->component[COMP_MODEL] = object_model;
+    object[ascii_character].component[COMP_COMBAT_STATS] = object_model;
     ///////////////////////////////////////////////////////////////////////////////////
+
+    for(int i = 0; i < COMP_COUNT; i++){
+        printf("Object (%c) : size of component (%d) = %lu\n",ascii_character, i, sizeof(object[ascii_character].component[i]));
+    }
 }
 
 void Object_Add_VAO(GLint data)  // TODO : these 2 functions should not exist !!!
@@ -229,21 +234,4 @@ void Object_Cleanup()
     }
 
     Vector_free_memory(&vbo_storage);
-
-    for(u32 index = 0; index < MAX_ENTITIES; index++){
-
-        i32 object_id = game_entities->entity_id[index];
-
-
-        for(u32 jay = 0; jay < COMP_COUNT; jay++){
-
-            if(object[object_id].component[jay] != (void*)UNUSED &&
-                object_id != UNUSED){
-
-                free(
-                    object[object_id].component[jay]
-                );
-            }
-        }
-    }
 }
