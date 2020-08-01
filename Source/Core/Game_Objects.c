@@ -29,21 +29,20 @@ void Object_Initialize()
     vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };
     vec4 color_red =   { 0.5f, 0.1f, 0.1f, 1.0f };
 
-    Game_Object player = Object_Create(
+    Object_Create(
+        64,                             // ascii for @ character
         color_green,
         "Resource/Models/Player.obj"
     );
 
-    printf("Player Created : %d\n", object[0].object_id);
-
-    Game_Object monster = Object_Create(
+    Object_Create(
+        77,                             // ascii for M character
         color_red,
         "Resource/Models/Monster.obj"
     );
-
-    printf("Monster Created : %d\n\n", object[1].object_id);
-
     //////// Test code ////////
+    // this shows that we can detect if an entity exits and if its object exists
+    // we tried a direct detection on Components with no result found yet.
 
     for(i32 index = 0; index < MAX_ENTITIES; index++){
 
@@ -60,26 +59,21 @@ void Object_Initialize()
             printf("Entity %d exists !\n", object_index);
         }
     }
-
     ////////////////////////////
 
 }
 
-Game_Object Object_Create(
+void Object_Create(
+    i32 ascii_character,
     vec4 color,
     const char* file_path)
 {
-    for (u32 index = 0; index < MAX_ENTITIES; index++) {     // find an unused entity slot
-        if (game_entities->entity_id[index] == UNUSED) {     // initialize object
-            game_entities->entity_id[index] = index;         // register object as an entity
-            object[index].object_id = index;                 // assign the object an entity id
-            break;
-        }
-    }
+    game_entities->entity_id[ascii_character] = ascii_character;         // register object as an entity
+    object[ascii_character].object_id = ascii_character;                 // assign the object an entity id
 
     Position *object_position;
     Game_Model *object_model;
-    // TODO : merge this for loop with the one above ?
+
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
         g_position_component[index].object_id = UNUSED;
         g_model_component[index].object_id = UNUSED;
@@ -91,7 +85,7 @@ Game_Object Object_Create(
         sizeof(Position)
     );
 
-    object_position->object_id = object->object_id;         // set values for the object position.
+    object_position->object_id = ascii_character;          // set values for the object position.
     object_position->position[0] = 0.0f;                   // initialize all to zero
     object_position->position[1] = 0.5f;
     object_position->position[2] = 0.0f;
@@ -112,15 +106,12 @@ Game_Object Object_Create(
         object_model
     );
 
-    object->component[COMP_POSITION] = object_position;     // add position component to object
+    object_model[ascii_character].object_id = ascii_character;
+    object->component[COMP_POSITION] = object_position;                     // add position component to object
     object->component[COMP_MODEL] = object_model;
 
-    g_position_component[object->object_id].object_id =     // keep track of all position components
-        object->object_id;
-    g_model_component[object->object_id].object_id =
-        object->object_id;
-
-    return *object; // TODO: return the object id not a full copy !
+    g_position_component[object->object_id].object_id = ascii_character;    // keep track of all position components
+    g_model_component[object->object_id].object_id = ascii_character;
 }
 
 void Object_Add_VAO(GLint data)  // TODO : these 2 functions should not exist !!!

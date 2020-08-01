@@ -14,7 +14,8 @@ static Game_Model g_model_component[MAX_ENTITIES];
 
 void Object_Initialize();
 
-Game_Object Object_Create(
+void Object_Create(
+    i32 ascii_character,
     vec4 color,
     const char* file_path
 );
