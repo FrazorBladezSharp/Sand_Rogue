@@ -26,10 +26,10 @@
 #include "Source/OpenGL/Shaders.h"
 
 #include "Source/Core/Game_Objects.h"
-#include "Source/OpenGL/Sand_Floor_Tile_3D.h"
-#include "Source/Core/Map.h"
+//#include "Source/OpenGL/Sand_Floor_Tile_3D.h"
+//#include "Source/Core/Map.h"
 
-#include  "Source/Core/Main_Game_Loop.h"
+//#include  "Source/Core/Main_Game_Loop.h"
 
 int
 /** The run time entry point for Sand_Rogue

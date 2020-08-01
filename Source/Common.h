@@ -148,7 +148,6 @@ typedef struct{
     i32 will;
     i32 perception;
     i32 fatigue_points;
-    i32 basic_speed;
     i32 basic_move;
 
 } Secondary_Characteristics;
@@ -156,6 +155,10 @@ typedef struct{
 typedef struct{
 
     i32 object_id;
+    i32 thrust_damage;
+    i32 thrust_damage_modifier;
+    i32 swing_damage;
+    i32 swing_damage_modifier;
     i32 damage_resistance;
     i32 dodge;
     i32 parry;

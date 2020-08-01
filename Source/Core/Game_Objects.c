@@ -17,33 +17,33 @@ static Combat_Stats combat_stats[MAX_ENTITIES];
 
 void Object_Initialize()
 {
-    Vector_init(&vao_storage);
-    Vector_init(&vbo_storage);
+    Vector_init(&vao_storage);      // initialize OpenGL handle storage
+    Vector_init(&vbo_storage);      // used to delete Gfx Card buffers
 
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
         game_entities->entity_id[index] = UNUSED;            // set all entities to unused
-        object[index].object_id = UNUSED;
+        object[index].object_id = UNUSED;                    // set all objects to unused
     }
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
-        position_component[index].object_id = UNUSED;
+        position_component[index].object_id = UNUSED;       // clear all component id's
         model_component[index].object_id = UNUSED;
         primary_characteristic_component[index].object_id = UNUSED;
         secondary_characteristic_component[index].object_id= UNUSED;
         combat_stats[index].object_id = UNUSED;
     }
 
-    vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };
+    vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };  // test colors for our 2 3D Models
     vec4 color_red =   { 0.5f, 0.1f, 0.1f, 1.0f };
 
-    Object_Create(
+    Object_Create(                                  // create the player
         64,                             // ascii for @ character
         color_green,
         "Resource/Models/Player.obj"
     );
 
-    Object_Create(
+    Object_Create(                                  // create the monster
         77,                             // ascii for M character
         color_red,
         "Resource/Models/Monster.obj"
@@ -95,7 +95,7 @@ void Object_Create(
 
     object_position->object_id = ascii_character;          // set values for the object position.
 
-    object_position->position[0] = 0.0f;                   // initialize all to zero
+    object_position->position[0] = 0.0f;                   // initialize all to effective zero
     object_position->position[1] = 0.5f;
     object_position->position[2] = 0.0f;
     object_position->rotationX = 0.0f;
@@ -104,14 +104,13 @@ void Object_Create(
     object_position->scale = 1.0f;
 
     position_component[object->object_id].object_id = ascii_character;    // keep track of all position components
-    object->component[COMP_POSITION] = object_position;                     // add position component to object
+    object->component[COMP_POSITION] = object_position;                   // add position component to object
 
     ////////////////////////// Model Component ///////////////////////////
 
     Game_Model *object_model;
 
-    //object_model = (Game_Model *) malloc(sizeof(Game_Model));
-    object_model = Load_Model_3D(
+    object_model = Load_Model_3D(   // memory is allocated by the model loader.
         file_path,
         color,
         &vao_storage,
@@ -128,6 +127,15 @@ void Object_Create(
     primary = (Primary_Characteristics *) malloc(sizeof(Primary_Characteristics));
     primary[ascii_character].object_id = ascii_character;
 
+    primary->strength = 9;
+    primary->strength_cost = -10;
+    primary->dexterity = 9;
+    primary->dexterity_cost = -20;
+    primary->intelligence = 9;
+    primary->intelligence_cost = -20;
+    primary->health = 9;
+    primary->health_cost = -10;
+
     model_component[object->object_id].object_id = ascii_character;
     object->component[COMP_MODEL] = object_model;
 
@@ -137,6 +145,12 @@ void Object_Create(
     secondary = (Secondary_Characteristics *) malloc(sizeof(Secondary_Characteristics));
     secondary[ascii_character].object_id = ascii_character;
 
+    secondary->hit_points = 9;
+    secondary->will = 9;
+    secondary->perception = 9;
+    secondary->fatigue_points = 9;
+    secondary->basic_move = 4;
+
     model_component[object->object_id].object_id = ascii_character;
     object->component[COMP_MODEL] = object_model;
 
@@ -145,6 +159,15 @@ void Object_Create(
     Combat_Stats* combat;
     combat = (Combat_Stats *) malloc(sizeof(Combat_Stats));
     combat[ascii_character].object_id = ascii_character;
+
+    combat->thrust_damage = 1;
+    combat->thrust_damage_modifier = -2;
+    combat->swing_damage = 1;
+    combat->swing_damage_modifier = -1;
+    combat->damage_resistance = 1;
+    combat->dodge = 7;
+    combat->parry = 9;
+    combat->block = 3;
 
     model_component[object->object_id].object_id = ascii_character;
     object->component[COMP_MODEL] = object_model;
