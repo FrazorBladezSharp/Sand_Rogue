@@ -99,9 +99,9 @@ void Object_Create(
 
     object_position->object_id = ascii_character;          // set values for the object position.
 
-    object_position->position[0] = 0.0f;                   // initialize all to effective zero
+    object_position->position[0] = 40.0f;                   // initialize all to effective zero
     object_position->position[1] = 0.5f;
-    object_position->position[2] = 0.0f;
+    object_position->position[2] = 20.0f;
     object_position->rotationX = 0.0f;
     object_position->rotationY = -45.0f;
     object_position->rotationZ = 0.0f;
