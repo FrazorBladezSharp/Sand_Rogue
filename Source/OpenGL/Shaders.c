@@ -108,6 +108,9 @@ GLuint Load_Shader() {
         shader_program
     );
 
+    free((void*)vertex_shader_source);
+    free((void*)fragment_shader_source);
+
     return shader_program;
 }
 

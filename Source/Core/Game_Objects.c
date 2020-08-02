@@ -17,7 +17,10 @@ static Combat_Stats combat_stats[MAX_ENTITIES];
 
 Position* Object_Initialize()
 {
-    Vector_init(&vao_storage);      // initialize OpenGL handle storage
+    Vector_init(
+        &vao_storage                // initialize OpenGL handle storage
+    );
+
     Vector_init(&vbo_storage);      // used to delete Gfx Card buffers
 
 

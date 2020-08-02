@@ -58,7 +58,7 @@ char *Read_A_Text_File(const char *file) {
     );
 
     buffer = (char *) calloc(        // allocates memory
-        file_length,               // file_length amount
+        file_length + 1,               // file_length amount
         sizeof(char)               // in bytes
     );
 

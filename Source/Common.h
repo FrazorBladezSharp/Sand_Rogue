@@ -99,7 +99,7 @@ typedef enum {
 } Game_Component;
 
 typedef struct {
-    i32 entity_id[MAX_ENTITIES]; // TODO: this should be a bool
+    i32 entity_id[MAX_ENTITIES];
 } Game_Entities;
 
 typedef struct {
@@ -120,7 +120,7 @@ typedef struct {
 
 typedef struct{
 
-    unsigned int object_id;
+    i32 object_id;
     GLuint vaoID;
     GLuint num_indices;
     mat4 model_matrix;

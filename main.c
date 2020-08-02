@@ -73,6 +73,7 @@ main() {
         player_position                    // we set player position as a side effect of the function
     );
 
+    // TODO: Set the monsters position.
 
     //////////////////// Shader /////////////////////////////////
 

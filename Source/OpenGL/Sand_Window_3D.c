@@ -8,7 +8,11 @@ SDL_Window* Sand_Window_Create()
 {
     SDL_Window *window;                                   // Declare a pointer
 
-    SDL_Init(SDL_INIT_EVERYTHING);                   // Initialize SDL2
+    SDL_Init(
+        SDL_INIT_EVENTS |
+        SDL_INIT_TIMER |
+        SDL_INIT_VIDEO
+    );
 
     window = SDL_CreateWindow(
         WINDOW_TITLE,                                 // window title
@@ -48,6 +52,10 @@ SDL_Window* Sand_Window_Create()
             "OpenGL context could not be created!"
         );
 
+        Sand_Window_Destroy(
+            window
+        );
+
         assert(false);
     }
 
@@ -55,6 +63,10 @@ SDL_Window* Sand_Window_Create()
 
         printf(
             "failed to initialize openGL (GLEW)."
+        );
+
+        Sand_Window_Destroy(
+            window
         );
 
         assert(false);
