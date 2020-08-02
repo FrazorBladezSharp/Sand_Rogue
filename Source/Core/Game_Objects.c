@@ -51,27 +51,27 @@ Position* Object_Initialize()
         color_red,
         "Resource/Models/Monster.obj"
     );
-    //////// Test code ////////
+//    //////// Test code ////////
     // this shows that we can detect if an entity exits and if its object exists
-    // we tried a direct detection on Components with no result found yet.
-    // found the code to detect component :
-    //          if(object[object_id].component[for loop index] != (void*)UNUSED)
+    // Also Object_lookup_Component() will return an objects components.
     ///////////////////////////
-//    for(i32 index = 0; index < MAX_ENTITIES; index++){
-//
-//        if(object[index].object_id != UNUSED){
-//
-//            printf("Object does exist %d !\n", object[index].object_id);
-//        }
-//    }
-//
-//    for(i32 object_index = 0; object_index < MAX_ENTITIES; object_index++){
-//
-//        if(game_entities->entity_id[object_index] != UNUSED){
-//
-//            printf("Entity %d exists !\n", object_index);
-//        }
-//    }
+    for(i32 index = 0; index < MAX_ENTITIES; index++){
+
+        if(object[index].object_id != UNUSED){
+
+            Game_Model* current = (Game_Model*)Object_Lookup_Component(index, COMP_MODEL);
+            printf("Object does exist %d : ", object[index].object_id);
+            printf("With model number %d\n", current->object_id);
+        }
+    }
+
+    for(i32 object_index = 0; object_index < MAX_ENTITIES; object_index++){
+
+        if(game_entities->entity_id[object_index] != UNUSED){
+
+            printf("Entity %d exists !\n", object_index);
+        }
+    }
     ////////////////////////////
 
     return object[64].component[COMP_POSITION];
@@ -121,7 +121,7 @@ void Object_Create(
         &vbo_storage
     );
 
-    object_model[ascii_character].object_id = ascii_character;
+    object_model->object_id = ascii_character;
     model_component[object->object_id].object_id = ascii_character;
     object[ascii_character].component[COMP_MODEL] = object_model;
 
@@ -131,6 +131,7 @@ void Object_Create(
     primary = (Primary_Characteristics *) malloc(sizeof(Primary_Characteristics));
     primary[ascii_character].object_id = ascii_character;
 
+    primary->object_id = ascii_character;
     primary->strength = 9;
     primary->strength_cost = -10;
     primary->dexterity = 9;
@@ -149,6 +150,7 @@ void Object_Create(
     secondary = (Secondary_Characteristics *) malloc(sizeof(Secondary_Characteristics));
     secondary[ascii_character].object_id = ascii_character;
 
+    secondary->object_id = ascii_character;
     secondary->hit_points = 9;
     secondary->will = 9;
     secondary->perception = 9;
@@ -164,6 +166,7 @@ void Object_Create(
     combat = (Combat_Stats *) malloc(sizeof(Combat_Stats));
     combat[ascii_character].object_id = ascii_character;
 
+    combat->object_id = ascii_character;
     combat->thrust_damage = 1;
     combat->thrust_damage_modifier = -2;
     combat->swing_damage = 1;
