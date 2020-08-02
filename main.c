@@ -44,7 +44,7 @@ main() {
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
 
-    Position* player_position = Object_Initialize();
+    Object_Initialize();
 
     Game_Model floor = Sand_Floor_Tile_3D_Create();
 
@@ -69,8 +69,7 @@ main() {
 
 
     dungeon_level_current = Map_Create_Dungeon_Level(
-        dungeon_level_current,
-        player_position                    // we set player position as a side effect of the function
+        dungeon_level_current              // we set player position as a side effect of the function
     );
 
     // TODO: Set the monsters position.

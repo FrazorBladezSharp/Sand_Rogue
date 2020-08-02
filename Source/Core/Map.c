@@ -4,20 +4,19 @@
 
 #include "Map.h"
 
+
+Dungeon_Level_Rooms level_rooms[32];
+
 Dungeon_Level_Current *Map_Create_Dungeon_Level(
-    Dungeon_Level_Current *dungeon_level_current,
-    Position* player_position) {
+    Dungeon_Level_Current *dungeon_level_current) {
 
 
     bool rooms_generating = true;
     u8 fails = 0;
     u32 floor_tiles_used = 0;
     u32 room_count = 0;
-    u8 old_room_width = 0;
-    u8 old_room_height = 0;
 
     Point_3D room_location = {0.0f, 0.0f, 0.0f};
-    Point_3D old_room_location = {0.0f, 0.0f, 0.0f};
 
     while (rooms_generating) {
         // make a random room with a max size and width
@@ -26,7 +25,7 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
             MAX_ROOM_WIDTH
         ) + 3;
 
-        u8 room_height = Dice_Roll(
+        u8 room_breadth = Dice_Roll(
             1,
             MAX_ROOM_HEIGHT
         ) + 3;
@@ -39,7 +38,7 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
 
         room_location.z = Dice_Roll(
             1,
-            MAP_HEIGHT - room_height
+            MAP_HEIGHT - room_breadth
         );
 
         // attempt tp place room into map.
@@ -48,35 +47,27 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
             room_location.x,
             room_location.z,
             room_width,
-            room_height
+            room_breadth
         );
 
         if (success) {
-            floor_tiles_used += (room_width) * (room_height);
+            floor_tiles_used += (room_width) * (room_breadth);
+            level_rooms->dungeon_level = dungeon_level_current->dungeon_level;
+            level_rooms->locationX = room_location.x;
+            level_rooms->locationY = 0;
+            level_rooms->locationZ = room_location.z;
+            level_rooms->width = room_width;
+            level_rooms->breadth = room_breadth;
+            level_rooms->height = 1;
+            level_rooms->light = 1;
 
             if (room_count > 0) {
                 Map_Create_Corridor(
                     dungeon_level_current,
-                    room_location,
-                    room_width,
-                    room_height,
-                    old_room_location,
-                    old_room_width,
-                    old_room_height
+                    room_count
                 );
             }
-            else{
-                player_position->position[0] =
-                    room_location.x + Dice_Roll(1, room_width) -1;
-                player_position->position[2] =
-                    room_location.z + Dice_Roll(1, room_height) - 1;
-            }
 
-
-            old_room_location.x = room_location.x;
-            old_room_location.z = room_location.z;
-            old_room_width = room_width;
-            old_room_height = room_height;
             room_count += 1;
             fails = 0;
 
@@ -97,12 +88,7 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
 
 void Map_Create_Corridor(
     Dungeon_Level_Current *dungeon_level_current,
-    Point_3D room_location,
-    u8 room_width,
-    u8 room_height,
-    Point_3D old_room_location,
-    u8 old_room_width,
-    u8 old_room_height) {
+    u32 current_room) {
 
     // Generate corridors
     // every room has to be accessible by corridors.
@@ -112,8 +98,8 @@ void Map_Create_Corridor(
     // by carving a corridor.
 
     // set 2 random initial points in each room.
-    Point_3D from_point = Map_Random_Point_In_Room(old_room_location, old_room_width, old_room_height);
-    Point_3D to_end_point = Map_Random_Point_In_Room(room_location, room_width, room_height);
+    Point_3D from_point = Map_Random_Point_In_Room(current_room - 1);
+    Point_3D to_end_point = Map_Random_Point_In_Room(current_room);
 
     // TODO : (Frazor) walk along proposed corridor and create a segment list
     // TODO: (Frazor) from room to room, discard duplicate segments.
@@ -135,21 +121,19 @@ void Map_Create_Corridor(
 }
 
 Point_3D Map_Random_Point_In_Room(
-    Point_3D room_location,
-    u8 room_width,
-    u8 room_height) {
+    u32 current_room) {
 
     Point_3D location = {0.0f, 0.0f, 0.0f};
 
     location.x = (float) Dice_Roll(
         1,
-        room_width - 1
-    ) + room_location.x - 1;
+        level_rooms[current_room].width - 1
+    ) + level_rooms[current_room].locationX - 1;
 
     location.z = (float) Dice_Roll(
         1,
-        room_height - 1
-    ) + room_location.z - 1;
+        level_rooms[current_room].breadth - 1
+    ) + level_rooms[current_room].locationZ - 1;
 
     return location;
 }

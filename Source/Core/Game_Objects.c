@@ -15,7 +15,7 @@ static Primary_Characteristics primary_characteristic_component[MAX_ENTITIES];
 static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES];
 static Combat_Stats combat_stats[MAX_ENTITIES];
 
-Position* Object_Initialize()
+void Object_Initialize()
 {
     Vector_init(
         &vao_storage                // initialize OpenGL handle storage
@@ -73,8 +73,6 @@ Position* Object_Initialize()
         }
     }
     ////////////////////////////
-
-    return object[64].component[COMP_POSITION];
 }
 
 void Object_Create(

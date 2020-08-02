@@ -8,8 +8,9 @@
 #include "Source/Common.h"
 #include "Source/Core/Sand_Vector.h"
 #include "Source/OpenGL/Load_Model_3D.h"
+#include "Source/Core/Map.h"
 
-Position* Object_Initialize();
+void Object_Initialize();
 
 void Object_Create(
     i32 ascii_character,

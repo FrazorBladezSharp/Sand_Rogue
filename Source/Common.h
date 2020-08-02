@@ -78,6 +78,18 @@ typedef struct {
 } Dungeon_Level_Current;
 
 typedef struct {
+
+    i8 dungeon_level;
+    u8 locationX;
+    u8 locationY;
+    u8 locationZ;
+    u8 width;
+    u8 breadth;
+    u8 height;
+    u8 light;
+} Dungeon_Level_Rooms;
+
+typedef struct {
     vec3 position;
     float rotationX;
     float rotationY;
