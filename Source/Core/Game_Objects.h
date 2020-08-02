@@ -15,6 +15,7 @@ void Object_Initialize();
 void Object_Create(
     i32 ascii_character,
     vec4 color,
+    u32 starting_room,
     const char* file_path
 );
 

@@ -44,10 +44,6 @@ main() {
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
 
-    Object_Initialize();
-
-    Game_Model floor = Sand_Floor_Tile_3D_Create();
-
     //////////////////////////// Create a Dungeon Level///////////////////////////////
 
     Dice_Initialize();
@@ -73,6 +69,8 @@ main() {
     );
 
     // TODO: Set the monsters position.
+    Object_Initialize();
+    Game_Model floor = Sand_Floor_Tile_3D_Create();
 
     //////////////////// Shader /////////////////////////////////
 

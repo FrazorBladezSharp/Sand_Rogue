@@ -52,14 +52,14 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
 
         if (success) {
             floor_tiles_used += (room_width) * (room_breadth);
-            level_rooms->dungeon_level = dungeon_level_current->dungeon_level;
-            level_rooms->locationX = room_location.x;
-            level_rooms->locationY = 0;
-            level_rooms->locationZ = room_location.z;
-            level_rooms->width = room_width;
-            level_rooms->breadth = room_breadth;
-            level_rooms->height = 1;
-            level_rooms->light = 1;
+            level_rooms[room_count].dungeon_level = dungeon_level_current->dungeon_level;
+            level_rooms[room_count].locationX = room_location.x;
+            level_rooms[room_count].locationY = 0;
+            level_rooms[room_count].locationZ = room_location.z;
+            level_rooms[room_count].width = room_width;
+            level_rooms[room_count].breadth = room_breadth;
+            level_rooms[room_count].height = 1;
+            level_rooms[room_count].light = 1;
 
             if (room_count > 0) {
                 Map_Create_Corridor(

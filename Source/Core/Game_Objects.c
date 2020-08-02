@@ -1,6 +1,9 @@
 //
 // Created by frazor on 29/07/2020.
 //
+//! \brief the player is expected to earn 0-5 character points per level
+//  with a bonus for completing a set number of levels.
+//  so set 5 objectives per level
 
 #include "Game_Objects.h"
 
@@ -43,12 +46,14 @@ void Object_Initialize()
     Object_Create(                                  // create the player
         64,                             // ascii for @ character
         color_green,
+        0,
         "Resource/Models/Player.obj"
     );
 
     Object_Create(                                  // create the monster
         77,                             // ascii for M character
         color_red,
+        1,
         "Resource/Models/Monster.obj"
     );
 //    //////// Test code ////////
@@ -78,6 +83,7 @@ void Object_Initialize()
 void Object_Create(
     i32 ascii_character,
     vec4 color,
+    u32 starting_room,
     const char* file_path)
 {
     game_entities->entity_id[ascii_character] = ascii_character;         // register object as an entity
@@ -97,9 +103,10 @@ void Object_Create(
 
     object_position->object_id = ascii_character;          // set values for the object position.
 
-    object_position->position[0] = 40.0f;                   // initialize all to effective zero
+    Point_3D placement = Map_Random_Point_In_Room(starting_room);
+    object_position->position[0] = (float)placement.x;                   // initialize all to effective zero
     object_position->position[1] = 0.5f;
-    object_position->position[2] = 20.0f;
+    object_position->position[2] = (float)placement.z;
     object_position->rotationX = 0.0f;
     object_position->rotationY = -45.0f;
     object_position->rotationZ = 0.0f;
