@@ -1,12 +1,11 @@
 
 /** @file Main This is Prototype Code
- * TODO: think about if statements as they can be taken out
- * eg a * ( condition for a ) + b * ( condition for b ) + etc ...
+ *
  *
 ###############################################################
 # Project created by Frazor Sharp 2020 Jul 22
 #
-# Sand_Rogue for C / C++ Version 0.1
+# Sand_Rogue for C (11) Version 0.1
 #
 # Contact email         : frazor.sharp@virginmedia.com
 # Github                : https://github.com/FrazorBladezSharp/Sand_Rogue
@@ -68,7 +67,6 @@ main() {
         dungeon_level_current              // we set player position as a side effect of the function
     );
 
-    // TODO: Set the monsters position.
     Object_Initialize();
     Game_Model floor = Sand_Floor_Tile_3D_Create();
 

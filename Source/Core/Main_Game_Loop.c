@@ -1,7 +1,9 @@
 //
 // Created by frazor on 30/07/2020.
 //
-
+/* TODO: think about if statements as they can be taken out
+ * eg a * ( condition for a ) + b * ( condition for b ) + etc ...
+ */
 #include "Main_Game_Loop.h"
 
 
@@ -93,7 +95,11 @@ void Main_Game_Loop(
         mouseY = 0;
 
         while (SDL_PollEvent(&event) == SDL_TRUE) {
-
+        /*
+         * a * ( condition for a ) +
+         * current_game_state.game_is_running = false *(event.type == SDL_QUIT);
+         *
+         */
             if (event.type == SDL_QUIT) {
 
                 current_game_state.game_is_running = false;
@@ -255,7 +261,7 @@ void Main_Game_Loop(
                     floor_model = Calc_Model_matrix(
                         floor_model,
                         &current_floor_position
-                  );
+                    );
 
                     glUniformMatrix4fv(
                         model_matrix_loc,

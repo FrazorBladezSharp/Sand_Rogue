@@ -8,17 +8,7 @@
 #include "Source/Common.h"
 #include "Source/Sand_Dice.h"
 
-/*
-    Damage Type
-    burning
-    crushing
-    cutting
-    impaling
-    small piercing
-    piercing
-    large piercing
-    */
-
+// TODO: (Frazor) P.I.I.F. = Poison, Injury, Illness and Fatigue
 //typedef enum {
 //
 //    DAMAGE_SMALL_PIERCING = 0,
