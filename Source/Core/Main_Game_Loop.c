@@ -21,6 +21,15 @@ void Main_Game_Loop(
     Game_Model* player_model = (Game_Model*)Object_Lookup_Component(64, COMP_MODEL);
     Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(77, COMP_MODEL);
 
+    Primary_Characteristics* player_primary =
+        (Primary_Characteristics*)Object_Lookup_Component(64, COMP_PRIMARY_CHARACTERISTICS);
+    Primary_Characteristics* monster_primary =
+        (Primary_Characteristics*)Object_Lookup_Component(77, COMP_PRIMARY_CHARACTERISTICS);
+
+    Secondary_Characteristics* player_secondary =
+        (Secondary_Characteristics*)Object_Lookup_Component(64, COMP_SECONDARY_CHARACTERISTICS);
+    Secondary_Characteristics* monster_secondary =
+        (Secondary_Characteristics*)Object_Lookup_Component(77, COMP_SECONDARY_CHARACTERISTICS);
 
     glUseProgram(shader);
 
@@ -141,13 +150,21 @@ void Main_Game_Loop(
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
-                i32 attack_result = Sand_Attack_Roll();
-                i32 monster_attack_result = Sand_Attack_Roll();
+                i32 attack_result = Sand_Attack_Roll(64, 77);
+                i32 monster_attack_result = Sand_Attack_Roll(77, 64);
 
                 printf(
-                    "You punch for %d Damage : the Monster does %d damage\n",
+                    "(%d)You punch for %d Damage : Health Status = %d\n",
+                    player_secondary->hit_points_current,
                     attack_result,
-                    monster_attack_result
+                    player_primary->health_status
+                );
+
+                printf(
+                    "(%d)The Monster does %d damage : Health Status = %d\n",
+                    monster_secondary->hit_points_current,
+                    monster_attack_result,
+                    monster_primary->health_status
                 );
 
                 current_game_state.players_current_action =

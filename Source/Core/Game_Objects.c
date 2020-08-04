@@ -127,13 +127,18 @@ void Object_Create(
     );
 
     object_model->object_id = ascii_character;
+
     model_component[object->object_id].object_id = ascii_character;
     object[ascii_character].component[COMP_MODEL] = object_model;
 
     ///////////////////// Primary Characteristics Component ///////////////////////////////
 
     Primary_Characteristics* primary;
-    primary = (Primary_Characteristics *) malloc(sizeof(Primary_Characteristics));
+
+    primary = (Primary_Characteristics *) malloc(
+        sizeof(Primary_Characteristics)
+    );
+
     primary[ascii_character].object_id = ascii_character;
 
     primary->object_id = ascii_character;
@@ -145,9 +150,10 @@ void Object_Create(
     primary->intelligence_cost = -20;
     primary->health = 9;
     primary->health_cost = -10;
+    primary->health_status = HEALTH_STATUS_NONE;
 
     model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_PRIMARY_CHARACTERISTICS] = object_model;
+    object[ascii_character].component[COMP_PRIMARY_CHARACTERISTICS] = primary;
 
     //////////////////// Secondary Characteristics Component ////////////////////////////////
 
@@ -156,14 +162,16 @@ void Object_Create(
     secondary[ascii_character].object_id = ascii_character;
 
     secondary->object_id = ascii_character;
-    secondary->hit_points = 9;
+    secondary->hit_points_max = 9;
+    secondary->hit_points_cost = 0;
+    secondary->hit_points_current = 9;
     secondary->will = 9;
     secondary->perception = 9;
     secondary->fatigue_points = 9;
     secondary->basic_move = 4;
 
     model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_SECONDARY_CHARACTERISTICS] = object_model;
+    object[ascii_character].component[COMP_SECONDARY_CHARACTERISTICS] = secondary;
 
     //////////////////// Combat Stats Component ////////////////////////////////
 
@@ -180,13 +188,14 @@ void Object_Create(
     combat->dodge = 7;
     combat->parry = 9;
     combat->block = 3;
+    combat->shock = 0;
 
     model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_COMBAT_STATS] = object_model;
+    object[ascii_character].component[COMP_COMBAT_STATS] = combat;
     ///////////////////////////////////////////////////////////////////////////////////
 }
 
-void* Object_Lookup_Component(u32 object_id, u8 component)
+void* Object_Lookup_Component(i32 object_id, i32 component)
 {
     return object[object_id].component[component];
 }

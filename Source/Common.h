@@ -101,14 +101,27 @@ typedef struct {
 
 typedef enum {
     COMP_POSITION = 0,
-    COMP_MODEL,
-    COMP_PRIMARY_CHARACTERISTICS,
-    COMP_SECONDARY_CHARACTERISTICS,
-    COMP_COMBAT_STATS,
+    COMP_MODEL = 1,
+    COMP_PRIMARY_CHARACTERISTICS = 2,
+    COMP_SECONDARY_CHARACTERISTICS = 3,
+    COMP_COMBAT_STATS = 4,
 
     COMP_COUNT                                  // keep a count on how many components we have
 
 } Game_Component;
+
+typedef enum{
+
+    HEALTH_STATUS_NONE = 0,
+    HEALTH_STATUS_SHOCK,
+    HEALTH_STATUS_MAJOR_WOUNDS,
+    HEALTH_STATUS_KNOCKDOWN_AND_STUN,
+    HEALTH_STATUS_UNCONCIOUS,
+    HEALTH_STATUS_MORTAL_WOUNDS,
+    HEALTH_STATUS_DEATH,
+
+    HEALTH_STATUS_COUNT
+} Health_Status;
 
 typedef struct {
     i32 entity_id[MAX_ENTITIES];
@@ -150,13 +163,16 @@ typedef struct{
     i32 intelligence_cost;
     i32 health;
     i32 health_cost;
+    Health_Status health_status;
 
 } Primary_Characteristics;
 
 typedef struct{
 
     i32 object_id;
-    i32 hit_points;
+    i32 hit_points_max;
+    i32 hit_points_cost;
+    i32 hit_points_current;
     i32 will;
     i32 perception;
     i32 fatigue_points;
@@ -175,6 +191,7 @@ typedef struct{
     i32 dodge;
     i32 parry;
     i32 block;
+    i32 shock;
 
 } Combat_Stats;
 

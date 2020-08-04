@@ -1,0 +1,24 @@
+//
+// Created by frazor on 04/08/2020.
+//
+
+#ifndef SAND_ROGUE_SAND_DAMAGE_H
+#define SAND_ROGUE_SAND_DAMAGE_H
+
+#include "Source/Common.h"
+#include "Source/Core/Game_Objects.h"
+#include "Source/Sand_Dice.h"
+
+
+
+void Damage_Melee(
+    i32 object_id,
+    i32 damage
+);
+
+Health_Status Damage_Health_Roll(
+    i32 health,
+    Health_Status type
+);
+
+#endif //SAND_ROGUE_SAND_DAMAGE_H

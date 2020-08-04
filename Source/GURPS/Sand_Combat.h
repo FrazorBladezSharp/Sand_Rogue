@@ -7,8 +7,11 @@
 
 #include "Source/Common.h"
 #include "Source/Sand_Dice.h"
+#include "Source/Core/Game_Objects.h"
+#include "Source/GURPS/Sand_Damage.h"
 
-// TODO: (Frazor) P.I.I.F. = Poison, Injury, Illness and Fatigue
+
+
 //typedef enum {
 //
 //    DAMAGE_SMALL_PIERCING = 0,
@@ -22,7 +25,11 @@
 //
 //} Damage_Type;
 
-i32 Sand_Attack_Roll();
+i32 Sand_Attack_Roll(
+    i32 attacker,
+    i32 object_id
+);
+
 bool Defence_Roll();
 
 #endif //SAND_ROGUE_SAND_COMBAT_H

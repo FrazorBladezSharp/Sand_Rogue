@@ -37,7 +37,7 @@ add_executable(
         Source/Graphical_User_Interface/User_Input.h
         Source/GURPS/Sand_Combat.c
         Source/GURPS/Sand_Combat.h
-)
+        Source/GURPS/Sand_Damage.c Source/GURPS/Sand_Damage.h)
 
 target_link_libraries(
         Sand_Rogue SDL2 GLEW GL assimp m

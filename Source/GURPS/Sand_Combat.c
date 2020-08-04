@@ -17,7 +17,7 @@ ready melee weapon (including a natural
 weapon such as a kick, bite, or punch).
 You can use some weapons in more than
 one way; e.g., you can swing or thrust with
-a shortsword. Such weapons have multiple
+a short sword. Such weapons have multiple
 lines on the weapon tables (pp. 20-22).
 When you attack with a weapon like this,
 you must indicate how you are using it
@@ -38,14 +38,14 @@ before you roll.
    attack, you must take a Ready maneuver
    (p. 26).
    A natural weapon (punch, kick, etc.) is
-   always ready unless the body part in ques-
-   tion is occupied or restrained; e.g., you can’t
+   always ready unless the body part in question
+   is occupied or restrained; e.g., you can’t
    punch if you are holding a weapon with the
    same hand.
 */
 
 
-i32 Sand_Attack_Roll()
+i32 Sand_Attack_Roll(i32 attacker, i32 defender)
 {
     /*
     Your “attack roll” is a regular success
@@ -53,8 +53,18 @@ i32 Sand_Attack_Roll()
     plus or minus any appropriate modifiers)
     with the weapon you are using. */
 
-    i32 attack_base_skill = 9; // Brawling base skill 1 = dex
-    i32 attack_modifiers = 0;
+    Primary_Characteristics* primary = (Primary_Characteristics*)Object_Lookup_Component(
+        attacker,
+        COMP_PRIMARY_CHARACTERISTICS
+    );
+
+    Combat_Stats* combat = (Combat_Stats*)Object_Lookup_Component(
+        attacker,
+        COMP_COMBAT_STATS
+    );
+
+    i32 attack_base_skill = primary->dexterity;
+    i32 attack_modifiers = combat->shock;
 
     i32 attack_roll;
     i32 effective_skill = attack_base_skill + attack_modifiers;
@@ -80,8 +90,8 @@ i32 Sand_Attack_Roll()
     4 always hits, and is a critical hit. A roll of 5
     or 6 may be a critical hit, depending on
     your skill. If your effective skill is 15, then a
-    roll of 5 or less is a critical hit. If your effec-
-    tive skill is 16 or more, then a roll of 6 or
+    roll of 5 or less is a critical hit. If your effective
+    skill is 16 or more, then a roll of 6 or
     less is a critical hit.
     */
     bool critical_hit = false;
@@ -98,11 +108,11 @@ i32 Sand_Attack_Roll()
 
     /*
     on an attack roll of 3, you do
-    not roll for damage – your blow automati-
-    cally does the most damage it could do. For
+    not roll for damage – your blow automatically
+    does the most damage it could do. For
     instance, maximum damage for a 1d+2
-    blow would be 6+2, or 8 points. Other crit-
-    ical hits bypass the defense roll, but roll
+    blow would be 6+2, or 8 points. Other critical
+    hits bypass the defense roll, but roll
     normally for damage.
     */
     bool critical_max_damage = false;
@@ -170,16 +180,12 @@ i32 Sand_Attack_Roll()
         // cloth = Damage Resistance 1.
         damage -= damage_resistance;
 
-        if(damage < 1){
-            damage = 1;
-        }
-
         if(critical_max_damage){
             damage = 4;
         }
 
+        Damage_Melee(defender, damage);
     }
-
     return damage;
 }
 
