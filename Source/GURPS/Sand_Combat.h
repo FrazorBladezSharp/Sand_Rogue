@@ -8,9 +8,6 @@
 #include "Source/Common.h"
 #include "Source/Sand_Dice.h"
 #include "Source/Core/Game_Objects.h"
-#include "Source/GURPS/Sand_Damage.h"
-
-
 
 //typedef enum {
 //
@@ -26,8 +23,7 @@
 //} Damage_Type;
 
 i32 Sand_Attack_Roll(
-    i32 attacker,
-    i32 object_id
+    i32 attacker
 );
 
 bool Defence_Roll();

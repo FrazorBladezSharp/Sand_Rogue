@@ -146,12 +146,14 @@ void Main_Game_Loop(
                 monster_position
             );
 
-            // TODO: if we move into a solid Monster = Attack
+            i32 attack_result = 0;
+            i32 monster_attack_result = 0;
+
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
-                i32 attack_result = Sand_Attack_Roll(64, 77);
-                i32 monster_attack_result = Sand_Attack_Roll(77, 64);
+                attack_result = Sand_Attack_Roll(64);
+                monster_attack_result = Sand_Attack_Roll(77);
 
                 printf(
                     "(%d)You punch for %d Damage : Health Status = %d\n",
@@ -173,6 +175,8 @@ void Main_Game_Loop(
             // TODO: Update the Monster
 
             player_moves = false;
+            Damage_Melee(77, attack_result);
+            Damage_Melee(64, monster_attack_result);
         }
 
         ///////////////// Render ////////////////////////////////
@@ -390,7 +394,7 @@ void Main_Game_Loop(
         );
 
         SDL_Delay(                                 // give the cpu a well earned break !
-            100                                // high value due to keyboard input
+            50                                 // high value due to keyboard input
         );
 
     }   // end of the main game loop

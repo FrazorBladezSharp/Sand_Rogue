@@ -45,7 +45,7 @@ before you roll.
 */
 
 
-i32 Sand_Attack_Roll(i32 attacker, i32 defender)
+i32 Sand_Attack_Roll(i32 attacker)
 {
     /*
     Your “attack roll” is a regular success
@@ -171,20 +171,19 @@ i32 Sand_Attack_Roll(i32 attacker, i32 defender)
         // If this occurs, roll for damage.
 
         // 1D-2 for ST 9 Thrust for Punch
-        damage = Dice_Roll(1, 6) - 2;
+        damage = Dice_Roll(1, 6);
+        damage = damage - 2;
 
-        if(damage < 1){
+        if(damage <= 1){
             damage = 1;
         }
 
         // cloth = Damage Resistance 1.
-        damage -= damage_resistance;
+        damage = damage - damage_resistance;
 
         if(critical_max_damage){
             damage = 4;
         }
-
-        Damage_Melee(defender, damage);
     }
     return damage;
 }

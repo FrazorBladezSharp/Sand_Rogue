@@ -46,6 +46,10 @@ void Damage_Melee(i32 object_id, i32 damage)
         }
 
         return;
+
+    }else if(primary->health_status == HEALTH_STATUS_NONE){
+
+        primary->health_status = HEALTH_STATUS_SHOCK;
     }
 
     i32 health = primary->health;
@@ -66,8 +70,8 @@ void Damage_Melee(i32 object_id, i32 damage)
     you survive, you must roll again at -22
     HP, -33 HP, and so on . . .
      */
-    if((secondary->hit_points_current <= ((-1 - secondary->hit_points_current % health) * health) &&
-      ((secondary->hit_points_current > (-2 - secondary->hit_points_current % health)) * health))){
+    if((secondary->hit_points_current <= ((-1 - secondary->hit_points_current % health) * health)) &&
+      ((secondary->hit_points_current > ((-2 - secondary->hit_points_current % health) * health)))){
 
         primary->health_status = Damage_Health_Roll(
             health,
@@ -122,7 +126,6 @@ void Damage_Melee(i32 object_id, i32 damage)
     }
 
     combat->shock = shock_generated;
-    primary->health_status = HEALTH_STATUS_SHOCK;
     /*
     Major Wounds
     A “major wound” is any single injury of
@@ -130,7 +133,6 @@ void Damage_Melee(i32 object_id, i32 damage)
     requires a HT roll to avoid knockdown and
     stunning (see below).
     */
-
     if(damage > health / 2){
 
         primary->health_status = Damage_Health_Roll(

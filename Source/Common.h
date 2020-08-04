@@ -101,10 +101,10 @@ typedef struct {
 
 typedef enum {
     COMP_POSITION = 0,
-    COMP_MODEL = 1,
-    COMP_PRIMARY_CHARACTERISTICS = 2,
-    COMP_SECONDARY_CHARACTERISTICS = 3,
-    COMP_COMBAT_STATS = 4,
+    COMP_MODEL,
+    COMP_PRIMARY_CHARACTERISTICS,
+    COMP_SECONDARY_CHARACTERISTICS,
+    COMP_COMBAT_STATS,
 
     COMP_COUNT                                  // keep a count on how many components we have
 
