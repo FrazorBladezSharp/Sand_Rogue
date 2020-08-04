@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="frazor">
     <words>
+      <w>aquator</w>
       <w>assimp</w>
       <w>bladez</w>
       <w>btih</w>
@@ -12,6 +13,7 @@
       <w>glew</w>
       <w>gurps</w>
       <w>headertitle</w>
+      <w>jabberwock</w>
       <w>martix</w>
       <w>menudata</w>
       <w>navpath</w>
@@ -24,13 +26,16 @@
       <w>projectnumber</w>
       <w>scancode</w>
       <w>searchdata</w>
+      <w>shuriken</w>
       <w>splitbar</w>
       <w>titlearea</w>
       <w>treeview</w>
       <w>undoc</w>
+      <w>urvile</w>
       <w>vao</w>
       <w>vbo</w>
       <w>vsync</w>
+      <w>xeroc</w>
     </words>
   </dictionary>
 </component>
