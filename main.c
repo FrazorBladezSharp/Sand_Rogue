@@ -37,7 +37,8 @@ int
 main() {
 
     printf(
-        "Welcome to Sand_Rogue !\n\n"
+        "Startup = %d\nWelcome to Sand_Rogue !\n\n",
+        true
     );
 
     // window openGL - NOTE : must be done first to get the openGL context.
