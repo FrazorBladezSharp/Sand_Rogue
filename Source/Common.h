@@ -70,6 +70,12 @@ typedef struct {
 
 } Point_3D;
 
+typedef struct{
+
+    GLuint shader_program;
+    GLuint uniform_Locations[64];
+} Shader;
+
 typedef struct {
 
     i8 dungeon_level;

@@ -25,7 +25,7 @@
 #include "Source/Core/Text_File_Utils.h"
 
 
-GLuint Load_Shader();
+Shader Load_Shader();
 
 void check_shader_error(GLuint shader, GLuint flag,
                         bool isProgram, const char *errorMessage);

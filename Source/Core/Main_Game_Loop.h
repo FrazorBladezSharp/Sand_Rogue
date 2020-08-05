@@ -13,7 +13,7 @@
 #include "Source/GURPS/Sand_Damage.h"
 
 void Main_Game_Loop(
-    GLint shader,
+    Shader shader,
     Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
     SDL_Window* window

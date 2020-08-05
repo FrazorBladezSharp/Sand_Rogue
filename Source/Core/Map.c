@@ -101,8 +101,6 @@ void Map_Create_Corridor(
     Point_3D from_point = Map_Random_Point_In_Room(current_room - 1);
     Point_3D to_end_point = Map_Random_Point_In_Room(current_room);
 
-    // TODO : (Frazor) walk along proposed corridor and create a segment list
-    // TODO: (Frazor) from room to room, discard duplicate segments.
     Point_3D midpoint = {0.0f, 0.0f, 0.0f};
 
     if (Dice_Roll(1, 2) == 1) {

@@ -75,7 +75,7 @@ main() {
 
     //////////////////// Shader /////////////////////////////////
 
-    GLint shader = Load_Shader();
+    Shader shader = Load_Shader();
 
     ///////////////// Main Game Loop ////////////////////////////
 
@@ -91,7 +91,7 @@ main() {
     // cleanup OpenGL - anything stored on the gfx card.
 
     glDeleteProgram(
-        shader
+        shader.shader_program
     );
 
     free(

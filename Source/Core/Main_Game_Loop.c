@@ -7,7 +7,7 @@
 #include "Main_Game_Loop.h"
 
 void Main_Game_Loop(
-    GLint shader,
+    Shader shader,
     Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
     SDL_Window* window)
@@ -59,57 +59,12 @@ void Main_Game_Loop(
     );
 
     glUseProgram(
-        shader
+        shader.shader_program
     );
 
     /////////////////// Matrix locations in Shader ////////////////
 
-    // TODO : This should be part of the Shader code. yes - create a struct to hold all info
 
-    GLint model_matrix_loc = glGetUniformLocation(
-        shader,
-        "model_matrix"
-    );
-
-    GLint view_matrix_loc = glGetUniformLocation(
-        shader,
-        "view_matrix"
-    );
-
-    GLint projection_matrix_loc = glGetUniformLocation(
-        shader,
-        "projection_matrix"
-    );
-
-    GLint light_position_loc = glGetUniformLocation(
-        shader,
-        "light_position"
-    );
-
-    GLint light_color_loc = glGetUniformLocation(
-        shader,
-        "light_color"
-    );
-
-    GLint shine_damper_loc = glGetUniformLocation(
-        shader,
-        "shine_damper"
-    );
-
-    GLint reflectivity_loc = glGetUniformLocation(
-        shader,
-        "reflectivity"
-    );
-
-    GLint sky_color_loc = glGetUniformLocation(
-        shader,
-        "sky_color"
-    );
-
-    GLint camera_position_loc = glGetUniformLocation(
-        shader,
-        "camera_position"
-    );
 
     /////////////////////////////////////////////////////////////
 
@@ -270,36 +225,46 @@ void Main_Game_Loop(
         );
 
         glUseProgram(
-            shader
+            shader.shader_program
         );
 
         glBindVertexArray(                          // set which VAO to draw
             floor_model.vaoID
         );
-
+        /* this could be made into an enum and moved to common.h
+     * model_matrix_loc = 0
+     * view_matrix_loc = 1
+     * projection_matrix_loc = 2
+     * light_position_loc = 3
+     * light_color_loc = 4
+     * shine_damper_loc = 5
+     * reflectivity_loc = 6
+     * sky_color_loc = 7
+     * camera_position_loc = 8
+     */
         glUniformMatrix4fv(
-            projection_matrix_loc,
+            shader.uniform_Locations[2],
             1,
             GL_FALSE,
             (float *) projection_matrix
         );
 
         glUniformMatrix4fv(
-            view_matrix_loc,
+            shader.uniform_Locations[1],
             1,
             GL_FALSE,
             (float *) current_game_state.main_camera.view_matrix
         );
 
         glUniform3f(
-            light_position_loc,
+            shader.uniform_Locations[3],
             light_position[0],
             light_position[1],
             light_position[2]
         );
 
         glUniform3f(
-            light_color_loc,
+            shader.uniform_Locations[4],
             light_color[0],
             light_color[1],
             light_color[2]
@@ -308,14 +273,14 @@ void Main_Game_Loop(
         float shine_damper = 8.0f;
 
         glUniform1f(
-            shine_damper_loc,
+            shader.uniform_Locations[5],
             shine_damper
         );                          // roughness of surface low = rough
 
         float reflectivity = 1.0f; // % cloth = low// metal = med to high // water glass high //
 
         glUniform1f(
-            reflectivity_loc,
+            shader.uniform_Locations[6],
             reflectivity
         );
 
@@ -326,14 +291,14 @@ void Main_Game_Loop(
         sky_color[2] = 0.01f;
 
         glUniform3f(
-            sky_color_loc,
+            shader.uniform_Locations[7],
             sky_color[0],
             sky_color[1],
             sky_color[2]
         );
 
         glUniform3f(
-            camera_position_loc,
+            shader.uniform_Locations[8],
             current_game_state.main_camera.position[0],
             current_game_state.main_camera.position[1],
             current_game_state.main_camera.position[2]
@@ -366,7 +331,7 @@ void Main_Game_Loop(
                     );
 
                     glUniformMatrix4fv(
-                        model_matrix_loc,
+                        shader.uniform_Locations[0],
                         1,
                         GL_FALSE,
                         (float *) floor_model.model_matrix
@@ -389,14 +354,14 @@ void Main_Game_Loop(
         );
 
         glUniformMatrix4fv(
-            projection_matrix_loc,
+            shader.uniform_Locations[2],
             1,
             GL_FALSE,
             (float *) projection_matrix
         );
 
         glUniformMatrix4fv(
-            view_matrix_loc,
+            shader.uniform_Locations[1],
             1,
             GL_FALSE,
             (float *) current_game_state.main_camera.view_matrix
@@ -408,7 +373,7 @@ void Main_Game_Loop(
         );
 
         glUniformMatrix4fv(
-            model_matrix_loc,
+            shader.uniform_Locations[0],
             1,
             GL_FALSE,
             (float *) player_model->model_matrix
@@ -428,14 +393,14 @@ void Main_Game_Loop(
         );
 
         glUniformMatrix4fv(
-            projection_matrix_loc,
+            shader.uniform_Locations[2],
             1,
             GL_FALSE,
             (float *) projection_matrix
         );
 
         glUniformMatrix4fv(
-            view_matrix_loc,
+            shader.uniform_Locations[1],
             1,
             GL_FALSE,
             (float *) current_game_state.main_camera.view_matrix
@@ -447,7 +412,7 @@ void Main_Game_Loop(
         );
 
         glUniformMatrix4fv(
-            model_matrix_loc,
+            shader.uniform_Locations[0],
             1,
             GL_FALSE,
             (float *) monster_model->model_matrix
