@@ -105,6 +105,19 @@ typedef struct {
 
 ///////////////////////////// ECS /////////////////////////////////
 
+//typedef enum {
+//
+//    DAMAGE_SMALL_PIERCING = 0,
+//    DAMAGE_PIERCING,
+//    DAMAGE_LARGE_PIERCING,
+//    DAMAGE_IMPALING,
+//    DAMAGE_CUTTING,
+//    DAMAGE_CRUSHING,
+//
+//    DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
+//
+//} Damage_Type;
+
 typedef enum{
 
     ACTION_NONE,

@@ -64,7 +64,6 @@ main() {
         }
     }
 
-
     dungeon_level_current = Map_Create_Dungeon_Level(
         dungeon_level_current
     );

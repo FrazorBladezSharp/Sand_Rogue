@@ -9,19 +9,6 @@
 #include "Source/Sand_Dice.h"
 #include "Source/Core/Game_Objects.h"
 
-//typedef enum {
-//
-//    DAMAGE_SMALL_PIERCING = 0,
-//    DAMAGE_PIERCING,
-//    DAMAGE_LARGE_PIERCING,
-//    DAMAGE_IMPALING,
-//    DAMAGE_CUTTING,
-//    DAMAGE_CRUSHING,
-//
-//    DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
-//
-//} Damage_Type;
-
 i32 Sand_Attack_Roll(
     i32 attacker,
     i32 defender

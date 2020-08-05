@@ -4,14 +4,14 @@
 
 #include "Sand_Combat.h"
 
-/* TODO: (Frazor) move this rule to the main update loop ??
+/*
 Melee Attacks
 When you take a maneuver that lets you
 make a melee attack, you must specify who
 you are attacking, and with what weapon.
 */
-/* (Frazor) we can place an enum in the header file to cover this
- * TODO : (Frazor) does the enum go in Common.h  or in this header file.
+/* (Frazor) we can place an enum in common.h
+ *
 You can make a melee attack using any
 ready melee weapon (including a natural
 weapon such as a kick, bite, or punch).

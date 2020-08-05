@@ -136,19 +136,6 @@ void Main_Game_Loop(
                 current_game_state.game_is_running = false;
             }
 
-//            if (event.type == SDL_MOUSEBUTTONDOWN) {
-//
-//                if (event.button.button == SDL_BUTTON_RIGHT) {
-//
-//                    SDL_GetMouseState(
-//                        &mouseX,
-//                        &mouseY
-//                    );
-//
-//                    player_secondary->action_current = ACTION_MOVE; //
-//                }
-//            }
-
             if(event.type == SDL_KEYDOWN){
 
                 player_secondary->action_current = ACTION_MOVE;
@@ -350,7 +337,7 @@ void Main_Game_Loop(
         ////////////////////////////////// render Player ////////////////////////////////////////
 
         glBindVertexArray(                          // set which VAO to draw
-            player_model->vaoID             // TODO: use ecs
+            player_model->vaoID
         );
 
         glUniformMatrix4fv(
@@ -367,7 +354,7 @@ void Main_Game_Loop(
             (float *) current_game_state.main_camera.view_matrix
         );
 
-        *player_model = Calc_Model_matrix( // TODO: fix this to use ecs
+        *player_model = Calc_Model_matrix(
             *player_model,
             current_game_state.players_current_position
         );
@@ -389,7 +376,7 @@ void Main_Game_Loop(
         //////////////////// Render Monster ///////////////////////
 
         glBindVertexArray(                          // set which VAO to draw
-            monster_model->vaoID                    // TODO: use ecs
+            monster_model->vaoID
         );
 
         glUniformMatrix4fv(
@@ -406,7 +393,7 @@ void Main_Game_Loop(
             (float *) current_game_state.main_camera.view_matrix
         );
 
-        *monster_model = Calc_Model_matrix( // TODO: fix this to use ecs
+        *monster_model = Calc_Model_matrix(
             *monster_model,
             monster_position
         );
@@ -440,7 +427,7 @@ void Main_Game_Loop(
         );
 
         SDL_Delay(                                 // give the cpu a well earned break !
-            50                                 // high value due to keyboard input
+            10                                 // high value due to keyboard input
         );
 
     }   // end of the main game loop
