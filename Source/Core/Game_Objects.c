@@ -24,15 +24,18 @@ void Object_Initialize()
         &vao_storage                // initialize OpenGL handle storage
     );
 
-    Vector_init(&vbo_storage);      // used to delete Gfx Card buffers
-
+    Vector_init(
+        &vbo_storage                // used to delete Gfx Card buffers
+    );
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
+
         game_entities->entity_id[index] = UNUSED;            // set all entities to unused
         object[index].object_id = UNUSED;                    // set all objects to unused
     }
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize components
+
         position_component[index].object_id = UNUSED;       // clear all component id's
         model_component[index].object_id = UNUSED;
         primary_characteristic_component[index].object_id = UNUSED;
@@ -56,7 +59,7 @@ void Object_Initialize()
         1,
         "Resource/Models/Monster.obj"
     );
-//    //////// Test code ////////
+    //////// Test code ////////
     // this shows that we can detect if an entity exits and if its object exists
     // Also Object_lookup_Component() will return an objects components.
     ///////////////////////////
@@ -64,9 +67,20 @@ void Object_Initialize()
 
         if(object[index].object_id != UNUSED){
 
-            Game_Model* current = (Game_Model*)Object_Lookup_Component(index, COMP_MODEL);
-            printf("Object does exist %d : ", object[index].object_id);
-            printf("With model number %d\n", current->object_id);
+            Game_Model* current = (Game_Model*)Object_Lookup_Component(
+                index,
+                COMP_MODEL
+            );
+
+            printf(
+                "Object does exist %d : ",
+                object[index].object_id
+            );
+
+            printf(
+                "With model number %d\n",
+                current->object_id
+            );
         }
     }
 
@@ -74,10 +88,13 @@ void Object_Initialize()
 
         if(game_entities->entity_id[object_index] != UNUSED){
 
-            printf("Entity %d exists !\n", object_index);
+            printf(
+                "Entity %d exists !\n",
+                object_index
+            );
         }
     }
-    ////////////////////////////
+    //////////// End Tests ////////////////
 }
 
 void Object_Create(
@@ -89,10 +106,7 @@ void Object_Create(
     game_entities->entity_id[ascii_character] = ascii_character;         // register object as an entity
     object[ascii_character].object_id = ascii_character;                 // assign the object an entity id
 
-
-
     // NOTE: you must free the memory before game exit      *** NOTE ****
-
     //////////////////////// Position Component //////////////////////////
 
     Position *object_position;
@@ -103,7 +117,10 @@ void Object_Create(
 
     object_position->object_id = ascii_character;          // set values for the object position.
 
-    Point_3D placement = Map_Random_Point_In_Room(starting_room);
+    Point_3D placement = Map_Random_Point_In_Room(
+        starting_room
+    );
+
     object_position->position[0] = (float)placement.x;                   // initialize all to effective zero
     object_position->position[1] = 0.5f;
     object_position->position[2] = (float)placement.z;
@@ -158,7 +175,11 @@ void Object_Create(
     //////////////////// Secondary Characteristics Component ////////////////////////////////
 
     Secondary_Characteristics* secondary;
-    secondary = (Secondary_Characteristics *) malloc(sizeof(Secondary_Characteristics));
+
+    secondary = (Secondary_Characteristics *) malloc(
+        sizeof(Secondary_Characteristics)
+    );
+
     secondary[ascii_character].object_id = ascii_character;
 
     secondary->object_id = ascii_character;
@@ -176,7 +197,11 @@ void Object_Create(
     //////////////////// Combat Stats Component ////////////////////////////////
 
     Combat_Stats* combat;
-    combat = (Combat_Stats *) malloc(sizeof(Combat_Stats));
+
+    combat = (Combat_Stats *) malloc(
+        sizeof(Combat_Stats)
+    );
+
     combat[ascii_character].object_id = ascii_character;
 
     combat->object_id = ascii_character;
@@ -192,22 +217,25 @@ void Object_Create(
 
     model_component[object->object_id].object_id = ascii_character;
     object[ascii_character].component[COMP_COMBAT_STATS] = combat;
+
     ///////////////////////////////////////////////////////////////////////////////////
 }
 
-void* Object_Lookup_Component(i32 object_id, i32 component)
+void* Object_Lookup_Component(
+    i32 object_id,
+    i32 component)
 {
     return object[object_id].component[component];
 }
 
-void Object_Add_VAO(GLint data)  // TODO : these 2 functions should not exist !!!
+void Object_Add_VAO(GLint data)
 {
     Vector_append(
         &vao_storage,
         data
     );
 }
-void Object_Add_VBO(GLint data) // TODO: see above
+void Object_Add_VBO(GLint data)
 {
     Vector_append(
         &vbo_storage,
@@ -236,7 +264,9 @@ void Object_Cleanup()
         );
     }
 
-    Vector_free_memory(&vao_storage);
+    Vector_free_memory(
+        &vao_storage
+    );
 
 // delete all vbo's that were created.
 
@@ -247,7 +277,10 @@ void Object_Cleanup()
 
     for (int index = 0; index < Vector_size(&vbo_storage); index++) {
 
-        GLuint vbo = Vector_get(&vbo_storage, index);
+        GLuint vbo = Vector_get(
+            &vbo_storage, index
+        );
+
         glDeleteBuffers(
             1,
             (GLuint *) &vbo
