@@ -19,15 +19,12 @@
 
 #include "Source/Common.h"
 #include "Source/OpenGL/Sand_Window_3D.h"
-
 #include "Source/Sand_Dice.h"
 #include "Source/Core/Text_File_Utils.h"
 #include "Source/OpenGL/Shaders.h"
-
 #include "Source/Core/Game_Objects.h"
 #include "Source/OpenGL/Sand_Floor_Tile_3D.h"
 #include "Source/Core/Map.h"
-
 #include  "Source/Core/Main_Game_Loop.h"
 
 int
@@ -53,22 +50,27 @@ main() {
 
     Dungeon_Level_Current *dungeon_level_current;
 
-    dungeon_level_current = (Dungeon_Level_Current *) malloc(sizeof(Dungeon_Level_Current));
+    dungeon_level_current = (Dungeon_Level_Current *) malloc(
+        sizeof(Dungeon_Level_Current)
+    );
 
     dungeon_level_current->dungeon_level = dungeon_level;
     // set all locations to false.
     for (int x = 0; x <= MAP_WIDTH; x++) {
+
         for (int y = 0; y <= MAP_HEIGHT; y++) {
+
             dungeon_level_current->map_cells[x][y] = false;
         }
     }
 
 
     dungeon_level_current = Map_Create_Dungeon_Level(
-        dungeon_level_current              // we set player position as a side effect of the function
+        dungeon_level_current
     );
 
     Object_Initialize();
+
     Game_Model floor = Sand_Floor_Tile_3D_Create();
 
     //////////////////// Shader /////////////////////////////////
