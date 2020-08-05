@@ -6,7 +6,6 @@
  */
 #include "Main_Game_Loop.h"
 
-
 void Main_Game_Loop(
     GLint shader,
     Dungeon_Level_Current* dungeon_level_current,
@@ -15,43 +14,108 @@ void Main_Game_Loop(
 {
     // our main game loop Starts Here
 
-    Position* player_position = (Position*)Object_Lookup_Component(64, COMP_POSITION);
-    Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);
+    Position* player_position = (Position*)Object_Lookup_Component(
+        64,
+        COMP_POSITION
+    );
 
-    Game_Model* player_model = (Game_Model*)Object_Lookup_Component(64, COMP_MODEL);
-    Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(77, COMP_MODEL);
+    Position* monster_position = (Position*)Object_Lookup_Component(
+        77,
+        COMP_POSITION
+    );
+
+    Game_Model* player_model = (Game_Model*)Object_Lookup_Component(
+        64,
+        COMP_MODEL
+    );
+
+    Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(
+        77,
+        COMP_MODEL
+    );
 
     Primary_Characteristics* player_primary =
-        (Primary_Characteristics*)Object_Lookup_Component(64, COMP_PRIMARY_CHARACTERISTICS);
+        (Primary_Characteristics*)Object_Lookup_Component(
+            64,
+            COMP_PRIMARY_CHARACTERISTICS
+    );
+
     Primary_Characteristics* monster_primary =
-        (Primary_Characteristics*)Object_Lookup_Component(77, COMP_PRIMARY_CHARACTERISTICS);
+        (Primary_Characteristics*)Object_Lookup_Component(
+            77,
+            COMP_PRIMARY_CHARACTERISTICS
+    );
 
     Secondary_Characteristics* player_secondary =
-        (Secondary_Characteristics*)Object_Lookup_Component(64, COMP_SECONDARY_CHARACTERISTICS);
-    Secondary_Characteristics* monster_secondary =
-        (Secondary_Characteristics*)Object_Lookup_Component(77, COMP_SECONDARY_CHARACTERISTICS);
+        (Secondary_Characteristics*)Object_Lookup_Component(
+            64,
+            COMP_SECONDARY_CHARACTERISTICS
+    );
 
-    glUseProgram(shader);
+    Secondary_Characteristics* monster_secondary =
+        (Secondary_Characteristics*)Object_Lookup_Component(
+            77,
+            COMP_SECONDARY_CHARACTERISTICS
+    );
+
+    glUseProgram(
+        shader
+    );
 
     /////////////////// Matrix locations in Shader ////////////////
 
-    // TODO : This should be part of the Shader code.
+    // TODO : This should be part of the Shader code. yes - create a struct to hold all info
 
-    GLint model_matrix_loc = glGetUniformLocation(shader, "model_matrix");
-    GLint view_matrix_loc = glGetUniformLocation(shader, "view_matrix");
-    GLint projection_matrix_loc = glGetUniformLocation(shader, "projection_matrix");
+    GLint model_matrix_loc = glGetUniformLocation(
+        shader,
+        "model_matrix"
+    );
 
-    GLint light_position_loc = glGetUniformLocation(shader, "light_position");
-    GLint light_color_loc = glGetUniformLocation(shader, "light_color");
-    GLint shine_damper_loc = glGetUniformLocation(shader, "shine_damper");
-    GLint reflectivity_loc = glGetUniformLocation(shader, "reflectivity");
-    GLint sky_color_loc = glGetUniformLocation(shader, "sky_color");
-    GLint camera_position_loc = glGetUniformLocation(shader, "camera_position");
+    GLint view_matrix_loc = glGetUniformLocation(
+        shader,
+        "view_matrix"
+    );
+
+    GLint projection_matrix_loc = glGetUniformLocation(
+        shader,
+        "projection_matrix"
+    );
+
+    GLint light_position_loc = glGetUniformLocation(
+        shader,
+        "light_position"
+    );
+
+    GLint light_color_loc = glGetUniformLocation(
+        shader,
+        "light_color"
+    );
+
+    GLint shine_damper_loc = glGetUniformLocation(
+        shader,
+        "shine_damper"
+    );
+
+    GLint reflectivity_loc = glGetUniformLocation(
+        shader,
+        "reflectivity"
+    );
+
+    GLint sky_color_loc = glGetUniformLocation(
+        shader,
+        "sky_color"
+    );
+
+    GLint camera_position_loc = glGetUniformLocation(
+        shader,
+        "camera_position"
+    );
 
     /////////////////////////////////////////////////////////////
 
     // camera
     Main_Camera camera;
+    mat4 projection_matrix;
 
     camera.position[0] = player_position->position[0] - 3.0f;
     camera.position[1] = 6.6f;
@@ -59,9 +123,9 @@ void Main_Game_Loop(
     camera.rotationX = 60.0f;
     camera.rotationY = 45.0f;
 
-    camera = Calc_Camera_View_Matrix(camera);
-
-    mat4 projection_matrix;
+    camera = Calc_Camera_View_Matrix(
+        camera
+    );
 
     glm_perspective(
         45.0f,
@@ -112,7 +176,6 @@ void Main_Game_Loop(
             if (event.type == SDL_QUIT) {
 
                 current_game_state.game_is_running = false;
-
             }
 
             if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -124,7 +187,7 @@ void Main_Game_Loop(
                         &mouseY
                     );
 
-                    player_moves = true;
+                    player_moves = true; // TODO: we have an enum !
                 }
             }
 
@@ -152,8 +215,13 @@ void Main_Game_Loop(
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
-                attack_result = Sand_Attack_Roll(64);
-                monster_attack_result = Sand_Attack_Roll(77);
+                attack_result = Sand_Attack_Roll(
+                    64
+                );
+
+                monster_attack_result = Sand_Attack_Roll(
+                    77
+                );
 
                 printf(
                     "(%d)You punch for %d Damage : Health Status = %d\n",
@@ -175,8 +243,16 @@ void Main_Game_Loop(
             // TODO: Update the Monster
 
             player_moves = false;
-            Damage_Melee(77, attack_result);
-            Damage_Melee(64, monster_attack_result);
+
+            Damage_Melee(
+                64,
+                monster_attack_result
+            );
+
+            Damage_Melee(
+                77,
+                attack_result
+            );
         }
 
         ///////////////// Render ////////////////////////////////
