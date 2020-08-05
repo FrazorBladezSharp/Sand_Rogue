@@ -1,7 +1,7 @@
 //
 // Created by frazor on 30/07/2020.
 //
-/* TODO: think about if statements as they can be taken out
+/*
  * eg a * ( condition for a ) + b * ( condition for b ) + etc ...
  */
 #include "Main_Game_Loop.h"
