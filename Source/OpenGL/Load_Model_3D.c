@@ -246,7 +246,6 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
     //aiDetachAllLogStreams();
 
     free(face_array);
-    free(colors_array);
 
     return loaded_asset;
 }
