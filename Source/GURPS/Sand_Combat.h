@@ -23,9 +23,10 @@
 //} Damage_Type;
 
 i32 Sand_Attack_Roll(
-    i32 attacker
+    i32 attacker,
+    i32 defender
 );
 
-bool Defence_Roll();
+bool Defence_Roll(i32 object_id);
 
 #endif //SAND_ROGUE_SAND_COMBAT_H

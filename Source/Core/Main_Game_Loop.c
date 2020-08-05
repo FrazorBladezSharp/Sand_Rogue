@@ -156,16 +156,17 @@ void Main_Game_Loop(
         .players_current_action = ACTION_NONE
     };
 
-    bool player_moves = false;
-
     SDL_Event event;
-    i32 mouseX;
-    i32 mouseY;
+    //i32 mouseX;
+    //i32 mouseY;
 
     while (current_game_state.game_is_running) {
 
-        mouseX = 0;
-        mouseY = 0;
+        //mouseX = 0;
+        //mouseY = 0;
+        current_game_state.players_current_action = ACTION_NONE;
+        player_secondary->action_current = ACTION_NONE;
+        monster_secondary->action_current = ACTION_NONE;
 
         while (SDL_PollEvent(&event) == SDL_TRUE) {
         /*
@@ -173,34 +174,37 @@ void Main_Game_Loop(
          * current_game_state.game_is_running = false *(event.type == SDL_QUIT);
          *
          */
+
+
             if (event.type == SDL_QUIT) {
 
                 current_game_state.game_is_running = false;
             }
 
-            if (event.type == SDL_MOUSEBUTTONDOWN) {
-
-                if (event.button.button == SDL_BUTTON_RIGHT) {
-
-                    SDL_GetMouseState(
-                        &mouseX,
-                        &mouseY
-                    );
-
-                    player_moves = true; // TODO: we have an enum !
-                }
-            }
+//            if (event.type == SDL_MOUSEBUTTONDOWN) {
+//
+//                if (event.button.button == SDL_BUTTON_RIGHT) {
+//
+//                    SDL_GetMouseState(
+//                        &mouseX,
+//                        &mouseY
+//                    );
+//
+//                    player_secondary->action_current = ACTION_MOVE; //
+//                }
+//            }
 
             if(event.type == SDL_KEYDOWN){
 
-                player_moves = true;
+                player_secondary->action_current = ACTION_MOVE;
+                current_game_state.players_current_action = ACTION_MOVE;
             }
 
         } // end of Poll event loop
 
         ///////////////// Game Update //////////////////////////
 
-        if(player_moves){
+        if(current_game_state.players_current_action != ACTION_NONE){
 
             // we update the whole system
             current_game_state =  User_Keyboard_Input(
@@ -215,12 +219,17 @@ void Main_Game_Loop(
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
+                player_secondary->action_current = ACTION_ATTACK;
+                monster_secondary->action_current = ACTION_ATTACK;
+
                 attack_result = Sand_Attack_Roll(
-                    64
+                    64,
+                    77
                 );
 
                 monster_attack_result = Sand_Attack_Roll(
-                    77
+                    77,
+                    64
                 );
 
                 printf(
@@ -236,24 +245,20 @@ void Main_Game_Loop(
                     monster_attack_result,
                     monster_primary->health_status
                 );
-
-                current_game_state.players_current_action =
-                    ACTION_NONE;
             }
-            // TODO: Update the Monster
-
-            player_moves = false;
 
             Damage_Melee(
+                monster_secondary->action_current,
                 64,
                 monster_attack_result
             );
 
             Damage_Melee(
+                player_secondary->action_current,
                 77,
                 attack_result
             );
-        }
+        } // end of Game Update.
 
         ///////////////// Render ////////////////////////////////
 

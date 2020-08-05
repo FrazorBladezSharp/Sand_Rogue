@@ -12,12 +12,14 @@
 
 
 void Damage_Melee(
+    Action opponents_action,
     i32 object_id,
     i32 damage
 );
 
 Health_Status Damage_Health_Roll(
     i32 health,
+    i32 modifier,
     Health_Status type
 );
 

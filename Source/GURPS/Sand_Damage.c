@@ -5,8 +5,12 @@
 #include "Sand_Damage.h"
 
 
-void Damage_Melee(i32 object_id, i32 damage)
-{   // damage here is after DR has been applied.
+void Damage_Melee(
+    Action opponents_action,
+    i32 object_id,
+    i32 damage)
+{
+    // damage here is after DR has been applied.
     /*
     This is a multiplier that depends on
     damage type:
@@ -56,6 +60,51 @@ void Damage_Melee(i32 object_id, i32 damage)
 
     secondary->hit_points_current -= damage;
     /*
+     All effects are cumulative.
+     Less than 1/3 your HP left – You are reeling
+     from your wounds. Halve your Move
+     and Dodge (round up).
+     */
+    if(secondary->hit_points_current < secondary->hit_points_max / 3){
+
+        secondary->basic_move /= 2;
+        combat->dodge /= 2;
+    }
+    /*
+     0 HP or less – You are in immediate danger
+     of collapse. In addition to the above
+     effects, make a HT roll at the start of
+    your next turn, at -1 per full multiple of
+    HP below zero. Failure means you fall
+    unconscious (or simply stop working, if
+    you weren't truly alive or conscious in
+    the first place); see Recovering from
+    Unconsciousness (p. 30). Success means
+    you can act normally, but must roll
+    again every turn to continue functioning.
+    Exception: If you choose Do Nothing on
+    your turn, and do not attempt any
+    defense rolls, you can remain conscious
+    without rolling. Roll only on turns dur-
+    ing which you attempt a defense roll or
+    choose a maneuver other than Do
+    Nothing.
+    */
+    i32 multiple_negative_hp =
+        secondary->hit_points_current / health;
+
+    if(secondary->hit_points_current <=0 &&
+        opponents_action != ACTION_NONE){
+
+        printf("Object %d makes a health roll (Negative Hp)\n", object_id);
+
+        primary->health_status = Damage_Health_Roll(
+            health,
+            multiple_negative_hp,
+            HEALTH_STATUS_UNCONCIOUS
+        );
+    }
+    /*
     -1 * HP – In addition to the above effects,
     make an immediate HT roll or die. (If
     you fail by only 1 or 2, you’re dying, but
@@ -70,11 +119,13 @@ void Damage_Melee(i32 object_id, i32 damage)
     you survive, you must roll again at -22
     HP, -33 HP, and so on . . .
      */
-    if((secondary->hit_points_current <= ((-1 - secondary->hit_points_current % health) * health)) &&
-      ((secondary->hit_points_current > ((-2 - secondary->hit_points_current % health) * health)))){
+    if((secondary->hit_points_current <= ((-1 + multiple_negative_hp) * health)) &&
+      ((secondary->hit_points_current > ((-2 + multiple_negative_hp) * health)))){
 
+        printf("Object %d makes a health roll (Death)\n", object_id);
         primary->health_status = Damage_Health_Roll(
             health,
+            0,
             HEALTH_STATUS_DEATH
         );
 
@@ -85,7 +136,7 @@ void Damage_Melee(i32 object_id, i32 damage)
     You have lost a total of 6 times your HP! Nobody can
     survive that much injury.
      */
-    if(secondary->hit_points_current <=(-5 * health)){
+    if(secondary->hit_points_current <= (-5 * health)){
 
         primary->health_status = HEALTH_STATUS_DEATH;
 
@@ -135,24 +186,48 @@ void Damage_Melee(i32 object_id, i32 damage)
     */
     if(damage > health / 2){
 
+        printf("Object %d makes a health roll (Major Wounds)\n", object_id);
         primary->health_status = Damage_Health_Roll(
             health,
+            0,
             HEALTH_STATUS_MAJOR_WOUNDS
         );
     }
 
     if(primary->health_status == HEALTH_STATUS_MORTAL_WOUNDS){
 
+        printf("Object %d makes a health roll (Mortal Wounds)\n", object_id);
         primary->health_status = Damage_Health_Roll(
             health,
+            0,
             HEALTH_STATUS_MORTAL_WOUNDS
         );
     }
 }
 
-Health_Status Damage_Health_Roll(i32 health, Health_Status type)
+Health_Status Damage_Health_Roll(
+    i32 health,
+    i32 modifier,
+    Health_Status type)
 {
+    bool unconcious = false;
+
     int dice_roll = Dice_Roll(3, 6);
+
+    printf("\n dice roll %d : (Unconcious)\n", dice_roll);
+    if(type == HEALTH_STATUS_UNCONCIOUS){
+
+        printf("\t\t v unconcious = %d\n", dice_roll);
+
+        if(dice_roll > health + modifier){
+
+            unconcious = true;
+        }
+    }
+
+    dice_roll = Dice_Roll(3, 6);
+
+    printf("\n dice roll %d (Death plus others) \n", dice_roll);
 
     if(dice_roll > (health + 2)){
 
@@ -190,6 +265,10 @@ Health_Status Damage_Health_Roll(i32 health, Health_Status type)
         return HEALTH_STATUS_DEATH;
     }
 
+    if(unconcious){
+
+        return HEALTH_STATUS_UNCONCIOUS;
+    }
 
     return HEALTH_STATUS_NONE;
 }

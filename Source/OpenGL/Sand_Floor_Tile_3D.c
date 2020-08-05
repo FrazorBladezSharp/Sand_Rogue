@@ -4,8 +4,10 @@
 
 #include "Sand_Floor_Tile_3D.h"
 
-Game_Model Sand_Floor_Tile_3D_Create()
+Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
 {
+    SDL_GL_MakeCurrent(window, SDL_GL_GetCurrentContext());
+
     GLfloat vertex_array[] = {
         -0.5f, 0.0f, -0.5f, // v0 far left
         -0.5f, 0.0f, 0.5f, // v1 near left

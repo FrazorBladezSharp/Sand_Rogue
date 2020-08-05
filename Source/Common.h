@@ -99,6 +99,16 @@ typedef struct {
 
 ///////////////////////////// ECS /////////////////////////////////
 
+typedef enum{
+
+    ACTION_NONE,
+    ACTION_MOVE,
+    ACTION_ATTACK,
+
+    ACTION_COUNT
+
+} Action;
+
 typedef enum {
     COMP_POSITION = 0,
     COMP_MODEL,
@@ -177,6 +187,9 @@ typedef struct{
     i32 perception;
     i32 fatigue_points;
     i32 basic_move;
+    float base_speed;
+    Action action_current;
+
 
 } Secondary_Characteristics;
 
@@ -196,16 +209,6 @@ typedef struct{
 } Combat_Stats;
 
 ///////////////////// Game State ///////////////////////////////
-
-typedef enum{
-
-    ACTION_NONE,
-    ACTION_MOVE,
-    ACTION_ATTACK,
-
-    ACTION_COUNT
-
-} Action;
 
 typedef  struct {
 

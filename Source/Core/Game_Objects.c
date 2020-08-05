@@ -190,6 +190,8 @@ void Object_Create(
     secondary->perception = 9;
     secondary->fatigue_points = 9;
     secondary->basic_move = 4;
+    secondary->base_speed = 4.25;
+    secondary->action_current = ACTION_NONE;
 
     model_component[object->object_id].object_id = ascii_character;
     object[ascii_character].component[COMP_SECONDARY_CHARACTERISTICS] = secondary;

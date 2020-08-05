@@ -99,6 +99,8 @@ SDL_Window* Sand_Window_Create()
 
 void Sand_Window_Destroy(SDL_Window* window)
 {
+    SDL_GL_DeleteContext(SDL_GL_GetCurrentContext());
+
     SDL_DestroyWindow(
         window
     );

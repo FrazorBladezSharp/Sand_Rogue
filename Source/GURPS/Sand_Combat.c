@@ -45,7 +45,7 @@ before you roll.
 */
 
 
-i32 Sand_Attack_Roll(i32 attacker)
+i32 Sand_Attack_Roll(i32 attacker, i32 defender)
 {
     /*
     Your “attack roll” is a regular success
@@ -138,7 +138,7 @@ i32 Sand_Attack_Roll(i32 attacker)
     roll if you rolled a critical hit against him.
     */
     if(critical_hit == false) {
-        opponent_defends = Defence_Roll();
+        opponent_defends = Defence_Roll(defender);
     }
 
     if(opponent_defends){
@@ -190,7 +190,7 @@ i32 Sand_Attack_Roll(i32 attacker)
 
 
 
-bool Defence_Roll()
+bool Defence_Roll(i32 object_id)
 {
     /*
     Defense Roll
@@ -201,7 +201,12 @@ bool Defence_Roll()
     defense was ineffective and the attack struck
     home.
     */
-    i32 active_defence_score = 8; // basic dodge speed for stats @ 9
+    Combat_Stats* combat = Object_Lookup_Component(
+        object_id,
+        COMP_COMBAT_STATS
+    );
+
+    i32 active_defence_score = combat->dodge; // basic dodge speed for stats @ 9
     /*
     If you are stunned, any active defense is at -4.
 
