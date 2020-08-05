@@ -19,10 +19,18 @@ void Object_Create(
     const char* file_path
 );
 
-void* Object_Lookup_Component(i32 object_id, i32 component);
+void* Object_Lookup_Component(
+    i32 object_id,
+    i32 component
+);
 
-void Object_Add_VAO(GLint data);
-void Object_Add_VBO(GLint data);
+void Object_Add_VAO(
+    GLint data
+);
+
+void Object_Add_VBO(
+    GLint data
+);
 
 void Object_Cleanup();
 
