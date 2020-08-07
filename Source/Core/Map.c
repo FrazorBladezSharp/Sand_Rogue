@@ -4,6 +4,7 @@
 
 #include "Map.h"
 
+static u32 room_count;
 
 Dungeon_Level_Rooms level_rooms[32];
 
@@ -14,7 +15,7 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
     bool rooms_generating = true;
     u8 fails = 0;
     u32 floor_tiles_used = 0;
-    u32 room_count = 0;
+    room_count = 0;
 
     Point_3D room_location = {0.0f, 0.0f, 0.0f};
 
@@ -205,4 +206,9 @@ void Map_Carve_Corridor_Vertical(Dungeon_Level_Current *dungeon_level_current,
     for (u8 z = first; z <= last; z++) {
         dungeon_level_current->map_cells[x][z] = true;
     }
+}
+
+i32 Map_Number_Of_Rooms()
+{
+    return room_count;
 }

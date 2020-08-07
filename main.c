@@ -1,7 +1,13 @@
 
 /** @file Main This is Prototype Code
+ * TODO : finish current todo's
+ * TODO : renderer
+ * TODO : healing injuries
+ * TODO : spell mechanics & ranged attacks (Targeting) ???
  *
- *
+ * TODO : Line Of Sight and lighting
+ * TODO : stairs down and Victory Conditions
+ * TODO Graphical User Interface.
 ###############################################################
 # Project created by Frazor Sharp 2020 Jul 22
 #
@@ -69,6 +75,7 @@ main() {
     );
 
     Object_Initialize();
+    Game_Items_Initialize();
 
     Game_Model floor = Sand_Floor_Tile_3D_Create(window);
 
@@ -97,6 +104,7 @@ main() {
         dungeon_level_current
     );
 
+    Game_Items_Cleanup();
     Object_Cleanup();
 
     Sand_Window_Destroy(window);

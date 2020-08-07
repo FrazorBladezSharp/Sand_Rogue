@@ -31,4 +31,6 @@ void Map_Carve_Corridor_Horizontal(Dungeon_Level_Current* dungeon_level_current,
 void Map_Carve_Corridor_Vertical(Dungeon_Level_Current* dungeon_level_current,
                                     Point_3D from, Point_3D to);
 
+i32 Map_Number_Of_Rooms();
+
 #endif //SAND_ROGUE_MAP_H

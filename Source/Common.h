@@ -38,6 +38,7 @@
 #define MAX_ROOM_WIDTH 16
 #define MAX_ROOM_HEIGHT 12
 //#define MAX_ROOMS 126
+#define MAX_ROOM_CONTENTS 1024
 
 #define MAX_ENTITIES 1024
 
@@ -95,6 +96,12 @@ typedef struct {
     u8 light;
 } Dungeon_Level_Rooms;
 
+typedef struct{
+
+    i8 dungeon_level;
+    i32 contents[MAX_ROOM_CONTENTS];
+} Room_Contents;
+
 typedef struct {
     vec3 position;
     float rotationX;
@@ -105,18 +112,18 @@ typedef struct {
 
 ///////////////////////////// ECS /////////////////////////////////
 
-//typedef enum {
-//
-//    DAMAGE_SMALL_PIERCING = 0,
-//    DAMAGE_PIERCING,
-//    DAMAGE_LARGE_PIERCING,
-//    DAMAGE_IMPALING,
-//    DAMAGE_CUTTING,
-//    DAMAGE_CRUSHING,
-//
-//    DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
-//
-//} Damage_Type;
+typedef enum {
+
+    DAMAGE_SMALL_PIERCING = 0,
+    DAMAGE_PIERCING,
+    DAMAGE_LARGE_PIERCING,
+    DAMAGE_IMPALING,
+    DAMAGE_CUTTING,
+    DAMAGE_CRUSHING,
+
+    DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
+
+} Damage_Type;
 
 typedef enum{
 

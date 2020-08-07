@@ -32,6 +32,12 @@ void Object_Add_VBO(
     GLint data
 );
 
-void Object_Cleanup();
+void Object_Cleanup(); // TODO: complete this to free components.
+
+///////////////////////////// Items & Equipment /////////////////////////
+
+void Game_Items_Initialize();
+
+void Game_Items_Cleanup();
 
 #endif //SAND_ROGUE_GAME_OBJECTS_H
