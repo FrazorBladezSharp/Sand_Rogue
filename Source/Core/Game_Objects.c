@@ -591,7 +591,7 @@ Levitation	        6	Levitates for 29-32 turns
 
  //////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
- Rods 000 /
+ Rods 50 /
 Rods can either be wands or staffs. While there are differences between them, they are minor.
 
 Item	%chance	Description
@@ -612,10 +612,51 @@ Cancellation	5	Suppresses monster's special abilities.
 
 Staves normally appear with 3-7 charges.
 */
-    // TODO:(Frazor) add rods data
+    game_items[50] = "Light";
+    game_item_value[50] = 12;
+
+    game_items[51] = "Invisibility";
+    game_item_value[51] = 6;
+
+    game_items[52] = "Lightning";
+    game_item_value[52] = 3;
+
+    game_items[53] = "Fire";
+    game_item_value[53] = 3;
+
+    game_items[54] = "Cold";
+    game_item_value[54] = 3;
+
+    game_items[55] = "Polymorph";
+    game_item_value[55] = 15;
+
+    game_items[56] = "Magic Missile";
+    game_item_value[56] = 10;
+
+    game_items[57] = "Haste Monster";
+    game_item_value[57] = 10;
+
+    game_items[58] = "Slow Monster";
+    game_item_value[58] = 11;
+
+    game_items[59] = "Drain Life";
+    game_item_value[59] = 9;
+
+    game_items[60] = "Nothing";
+    game_item_value[60] = 1;
+
+    game_items[61] = "Teleport Away";
+    game_item_value[61] = 6;
+
+    game_items[62] = "Teleport To";
+    game_item_value[62] = 6;
+
+    game_items[63] = "Cancellation";
+    game_item_value[63] = 5;
+
  /////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
- Scrolls @ 000 ?
+ Scrolls @ 70 ?
 Item	                    %chance	Description
 Monster confusion	            7	Your hands begin to glow red. Next melee attack confuses a monster.
 Magic mapping	                4	Reveals the entire map; objects are still hidden
@@ -638,7 +679,59 @@ Protect armor	                2	Your armor is covered by a shimmering gold shiel
 
 Some scrolls require certain conditions to be met. If they aren't, you see the message "you feel a strange sense of loss".
 */
-    // TODO: (Frazor) add Scroll data
+    game_items[70] = "Monster Confusion";
+    game_item_value[70] = 7;
+
+    game_items[71] = "Magic Mapping";
+    game_item_value[71] = 4;
+
+    game_items[72] = "Hold Monster";
+    game_item_value[72] = 2;
+
+    game_items[73] = "Sleep";
+    game_item_value[73] = 3;
+
+    game_items[74] = "Enchant Armor";
+    game_item_value[74] = 7;
+
+    game_items[75] = "Identify Potion";
+    game_item_value[75] = 10;
+
+    game_items[76] = "Identify Scroll";
+    game_item_value[76] = 10;
+
+    game_items[77] = "Identify Weapon";
+    game_item_value[77] = 6;
+
+    game_items[78] = "Identify Armor";
+    game_item_value[78] = 7;
+
+    game_items[79] = "Identify Ring, Wand or Staff";
+    game_item_value[79] = 10;
+
+    game_items[80] = "Scare Monster";
+    game_item_value[80] = 3;
+
+    game_items[81] = "Food Detection";
+    game_item_value[81] = 2;
+
+    game_items[82] = "Teleportation";
+    game_item_value[82] = 5;
+
+    game_items[83] = "Enchant Weapon";
+    game_item_value[83] = 8;
+
+    game_items[84] = "Create Monster";
+    game_item_value[84] = 4;
+
+    game_items[81] = "Remove Curse";
+    game_item_value[81] = 7;
+
+    game_items[81] = "Aggravate Monsters";
+    game_item_value[81] = 3;
+
+    game_items[81] = "Protect Armor";
+    game_item_value[81] = 2;
 
  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
