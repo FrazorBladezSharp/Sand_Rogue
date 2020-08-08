@@ -105,17 +105,29 @@ void Object_Initialize()
 
     i32 number_of_dungeon_rooms = Map_Number_Of_Rooms();
 
-    // Room_Contents. room_contents[index]
+    // Room_Contents. room_contents[index] room = dark (rnd(10) < (level - 1))
+    // MAX CONTENTS PER LEVEL max things = num rooms  max objects = num_rooms
+    // things = stairs doors gold & objects
+    // objects = items 35% per max_object then pick random object
     // items & location
+    // TODO: use ecs we need to refactor Object_Create() into individual functions
 
-    // monster TODO: ecs with location
-    // armour TODO: use ecs we need to refactor Object_Create() into individual functions
-    // weapon TODO: as above
-    // rings TODO: as above
-    // potions TODO : as above
-    // rods & staves TODO: as above
-    // scrolls TODO: as above
+    // monster TODO: ecs with location  64 - 90   @ - Z     object rnd(number of rooms)???
+    // chance per room (rnd(100) < (gold value > 0 ? 80 : 25))
 
+    // armour TODO : as above location  93          ]       object cycle through objects to place them
+    // weapon TODO: as above location   41          )       object
+    // rings TODO: as above             92          \       object
+    // potions TODO : as above location 33          !       object
+    // rods & staves TODO: as above     47          /       object
+    // scrolls TODO: as above           63          ?       object
+
+    // food TODO: as above              58          :       object
+    // gold TODO: as above              42          *  #define GOLD_CALC (rnd(50 + 10 * level) + 2)
+    // chance per room ((rnd(3) == 3) && (! has not seen amulet || (level >= max_level))) thing = gold
+    // stairs down TODO: as above       62          >       thing
+    // stairs up TODO: as above         60          <       thing
+    // Trap TODO: as above              94          ^       thing
 
     // decide which monsters are available for this level.
     // we need to go through all eligible monsters and add then to the level
@@ -368,18 +380,18 @@ void Game_Items_Initialize() {
  * convert to G.U.R.P.S.
  * AC = AC - 2 first column works for our system
 Armor @ 0 ]
-Name	        AC (v5)	AC
-Leather	        3	    8
-Ring mail	    4	    7
-Studded leather	4	    7
-Scale mail	    5   	6
-Chain mail	    6   	5
-Splint mail	    7   	4
-Banded mail	    7   	4
-Plate mail	    8   	3
+Name	        AC (v5)	AC  %Drop
+Leather	        3	    8   20 = 20
+Ring mail	    4	    7   35 = 15
+Studded leather	4	    7   50 = 15
+Scale mail	    5   	6   63 = 13
+Chain mail	    6   	5   75 = 12
+Splint mail	    7   	4   85 = 10
+Banded mail	    7   	4   95 = 10
+Plate mail	    8   	3   100 = 5
 
 A higher AC gives a better chance to avoid damage.
-
+TODO : Armor drop chance.
 Older versions of Rogue used the decreasing AC to represent better armor (also shown in the table).
 */
     game_items[0] = "Light Leather Clothing";

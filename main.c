@@ -4,8 +4,9 @@
  * TODO : renderer
  * TODO : healing injuries
  * TODO : spell mechanics & ranged attacks (Targeting) ???
- *
+ * TODO : Traps
  * TODO : Line Of Sight and lighting
+ * TODO : MAX_LEVELS = 26
  * TODO : stairs down and Victory Conditions
  * TODO Graphical User Interface.
 ###############################################################
