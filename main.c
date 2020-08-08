@@ -31,7 +31,7 @@
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Core/Game_Objects.h"
 #include "Source/OpenGL/Sand_Floor_Tile_3D.h"
-#include "Source/Core/Map.h"
+#include "Source/Core/Dungeon_Level.h"
 #include  "Source/Core/Main_Game_Loop.h"
 
 int
@@ -48,35 +48,14 @@ main() {
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
 
-    //////////////////////////// Create a Dungeon Level///////////////////////////////
-
     Dice_Initialize();
-
-    // create Dungeon Level - can be done anytime before main game loop
-    i8 dungeon_level = 1;
-
-    Dungeon_Level_Current *dungeon_level_current;
-
-    dungeon_level_current = (Dungeon_Level_Current *) malloc(
-        sizeof(Dungeon_Level_Current)
-    );
-
-    dungeon_level_current->dungeon_level = dungeon_level;
-    // set all locations to false.
-    for (int x = 0; x <= MAP_WIDTH; x++) {
-
-        for (int y = 0; y <= MAP_HEIGHT; y++) {
-
-            dungeon_level_current->map_cells[x][y] = false;
-        }
-    }
-
-    dungeon_level_current = Map_Create_Dungeon_Level(
-        dungeon_level_current
-    );
 
     Object_Initialize();
     Game_Items_Initialize();
+    Dungeon_Level_Initialize();
+
+    Dungeon_Level_Current* dungeon_level_current =
+        Dungeon_Level_New(1);
 
     Game_Model floor = Sand_Floor_Tile_3D_Create(window);
 
@@ -101,10 +80,7 @@ main() {
         shader.shader_program
     );
 
-    free(
-        dungeon_level_current
-    );
-
+    Dungeon_Level_Cleanup();
     Game_Items_Cleanup();
     Object_Cleanup();
 

@@ -19,7 +19,6 @@ static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES
 static Combat_Stats combat_stats[MAX_ENTITIES];
 static Room_Contents room_contents[MAX_ROOM_CONTENTS];
 
-
 void Object_Initialize()
 {
     Vector_init(
@@ -45,22 +44,20 @@ void Object_Initialize()
         combat_stats[index].object_id = UNUSED;
     }
 
+    Monsters_Initialize_Models(
+        &vao_storage,
+        &vbo_storage,
+        &model_component[0],
+        &object[0]
+    );
     // Create the player
-    const char* file_path = "Resource/Models/Player.obj";
     u32 room = 0;
-    vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };
     i32 player_id;
     player_id = Object_Create(64, 64);
 
     Object_Add_Position(
         player_id,
         room
-    );
-
-    Object_Add_Model(
-        player_id,
-        color_green,
-        file_path
     );
 
     Object_Add_Primary_Characteristics(
@@ -76,23 +73,18 @@ void Object_Initialize()
     );
 
     // create the test monster
-    file_path = "Resource/Models/Monster.obj";
+    // file_path = "Resource/Models/Monster.obj";
     room = 1;
-    vec4 color_red =   { 0.5f, 0.1f, 0.1f, 1.0f };
     i32 monster_id;
     monster_id = Object_Create(77, 77);
 
+    // TODO: move the below monster stats to the Monster file
     Object_Add_Position(
         monster_id,
         room
     );
 
-    Object_Add_Model(
-        monster_id,
-        color_red,
-        file_path
-    );
-
+    // we need to enable different stats for each monster.
     Object_Add_Primary_Characteristics(
         monster_id
     );
@@ -155,9 +147,7 @@ void Object_Initialize()
     // things = stairs doors gold & objects
     // objects = items 35% per max_object then pick random object
     // items & location
-    // TODO: use ecs we need to refactor Object_Create() into individual functions
 
-    // monster TODO: ecs with location  64 - 90   @ - Z     object rnd(number of rooms)???
     // chance per room (rnd(100) < (gold value > 0 ? 80 : 25))
 
     // armour TODO : as above location  93          ]       object cycle through objects to place them
@@ -173,49 +163,6 @@ void Object_Initialize()
     // stairs down TODO: as above       62          >       thing
     // stairs up TODO: as above         60          <       thing
     // Trap TODO: as above              94          ^       thing
-
-    // decide which monsters are available for this level.
-    // we need to go through all eligible monsters and add then to the level
-    // TODO: (Frazor) NOTE : set a max number of monsters / items per level
-    // add monsters and items to random rooms (placement. - we already have a function in map)
-
-
-    //////// Test code ////////
-    // this shows that we can detect if an entity exits and if its object exists
-    // Also Object_lookup_Component() will return an objects components.
-    ///////////////////////////
-    for(i32 index = 0; index < MAX_ENTITIES; index++){
-
-        if(object[index].object_id != UNUSED){
-
-            Game_Model* current = (Game_Model*)Object_Lookup_Component(
-                index,
-                COMP_MODEL
-            );
-
-            printf(
-                "Object does exist %d : ",
-                object[index].object_id
-            );
-
-            printf(
-                "With model number %d\n",
-                current->object_id
-            );
-        }
-    }
-
-    for(i32 object_index = 0; object_index < MAX_ENTITIES; object_index++){
-
-        if(game_entities->entity_id[object_index] != UNUSED){
-
-            printf(
-                "Entity %d exists !\n",
-                object_index
-            );
-        }
-    }
-    //////////// End Tests ////////////////
 }
 
 i32 Object_Create(
@@ -257,6 +204,7 @@ void Object_Add_Position(
         object[object_id].component[COMP_POSITION] = object_position;   // add position component to object
     }
     ////////////////////////// Model Component ///////////////////////////
+    /*
 void Object_Add_Model(
         i32 object_id,
         vec4 color,
@@ -277,6 +225,7 @@ void Object_Add_Model(
         model_component[object->object_id].object_id = object_id;
         object[object_id].component[COMP_MODEL] = object_model;
     }
+     */
     ///////////////////// Primary Characteristics Component ///////////////////////////////
 void Object_Add_Primary_Characteristics(i32 object_id) {
 

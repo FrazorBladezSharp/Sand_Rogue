@@ -9,6 +9,7 @@
 #include "Source/Core/Sand_Vector.h"
 #include "Source/OpenGL/Load_Model_3D.h"
 #include "Source/Core/Map.h"
+#include "Source/GURPS/Monsters.h"
 
 void Object_Initialize();
 
