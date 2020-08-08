@@ -12,11 +12,32 @@
 
 void Object_Initialize();
 
-void Object_Create(
-    i32 ascii_character,
+i32 Object_Create(
+    i32 index,
+    i32 ascii_character
+);
+
+void Object_Add_Position(
+    i32 object_id,
+    u32 room
+);
+
+void Object_Add_Model(
+    i32 object_id,
     vec4 color,
-    u32 starting_room,
     const char* file_path
+);
+
+void Object_Add_Primary_Characteristics(
+    i32 object_id
+);
+
+void Object_Add_Secondary_Characteristics(
+    i32 object_id
+);
+
+void Object_Add_Combat_Stats(
+    i32 object_id
 );
 
 void* Object_Lookup_Component(

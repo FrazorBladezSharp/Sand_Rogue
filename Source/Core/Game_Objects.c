@@ -45,23 +45,68 @@ void Object_Initialize()
         combat_stats[index].object_id = UNUSED;
     }
 
-    vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };  // test colors for our 2 3D Models
-    vec4 color_red =   { 0.5f, 0.1f, 0.1f, 1.0f };
+    // Create the player
+    const char* file_path = "Resource/Models/Player.obj";
+    u32 room = 0;
+    vec4 color_green = { 0.1f, 0.5f, 0.1f, 1.0f };
+    i32 player_id;
+    player_id = Object_Create(64, 64);
 
-    Object_Create(                                  // create the player
-        64,                             // ascii for @ character
-        color_green,
-        0,
-        "Resource/Models/Player.obj"
+    Object_Add_Position(
+        player_id,
+        room
     );
 
-    Object_Create(                                  // create the monster
-        77,                             // ascii for M character
+    Object_Add_Model(
+        player_id,
+        color_green,
+        file_path
+    );
+
+    Object_Add_Primary_Characteristics(
+        player_id
+    );
+
+    Object_Add_Secondary_Characteristics(
+        player_id
+    );
+
+    Object_Add_Combat_Stats(
+        player_id
+    );
+
+    // create the test monster
+    file_path = "Resource/Models/Monster.obj";
+    room = 1;
+    vec4 color_red =   { 0.5f, 0.1f, 0.1f, 1.0f };
+    i32 monster_id;
+    monster_id = Object_Create(77, 77);
+
+    Object_Add_Position(
+        monster_id,
+        room
+    );
+
+    Object_Add_Model(
+        monster_id,
         color_red,
-        1,
-        "Resource/Models/Monster.obj"
+        file_path
+    );
+
+    Object_Add_Primary_Characteristics(
+        monster_id
+    );
+
+    Object_Add_Secondary_Characteristics(
+        monster_id
+    );
+
+    Object_Add_Combat_Stats(
+        monster_id
     );
     /*
+     TODO : initialize a new dungeon level
+
     Monsters
     List of Monsters (Original)
     Name	    Treasure	Flags	Exp	    HP	    AC	Damage	    Range	Notes
@@ -173,131 +218,143 @@ void Object_Initialize()
     //////////// End Tests ////////////////
 }
 
-void Object_Create(
-    i32 ascii_character,
-    vec4 color,
-    u32 starting_room,
-    const char* file_path)
-{
-    game_entities->entity_id[ascii_character] = ascii_character;         // register object as an entity
-    object[ascii_character].object_id = ascii_character;                 // assign the object an entity id
+i32 Object_Create(
+        i32 index,
+        i32 ascii_character) {
 
-    // NOTE: you must free the memory before game exit      *** NOTE ****
-    //////////////////////// Position Component //////////////////////////
+    game_entities->entity_id[index] = ascii_character;         // register object as an entity
+    object[index].object_id = ascii_character;                 // assign the object an entity id
 
-    Position *object_position;
-
-    object_position = (Position *) malloc(
-        sizeof(Position)
-    );
-
-    object_position->object_id = ascii_character;          // set values for the object position.
-
-    Point_3D placement = Map_Random_Point_In_Room(
-        starting_room
-    );
-
-    object_position->position[0] = (float)placement.x;                   // initialize all to effective zero
-    object_position->position[1] = 0.5f;
-    object_position->position[2] = (float)placement.z;
-    object_position->rotationX = 0.0f;
-    object_position->rotationY = -45.0f;
-    object_position->rotationZ = 0.0f;
-    object_position->scale = 1.0f;
-
-    position_component[object->object_id].object_id = ascii_character;    // keep track of all position components
-    object[ascii_character].component[COMP_POSITION] = object_position;   // add position component to object
-
-    ////////////////////////// Model Component ///////////////////////////
-
-    Game_Model *object_model;
-
-    object_model = Load_Model_3D(   // memory is allocated by the model loader.
-        file_path,
-        color,
-        &vao_storage,
-        &vbo_storage
-    );
-
-    object_model->object_id = ascii_character;
-
-    model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_MODEL] = object_model;
-
-    ///////////////////// Primary Characteristics Component ///////////////////////////////
-
-    Primary_Characteristics* primary;
-
-    primary = (Primary_Characteristics *) malloc(
-        sizeof(Primary_Characteristics)
-    );
-
-    primary[ascii_character].object_id = ascii_character;
-
-    primary->object_id = ascii_character;
-    primary->strength = 9;
-    primary->strength_cost = -10;
-    primary->dexterity = 9;
-    primary->dexterity_cost = -20;
-    primary->intelligence = 9;
-    primary->intelligence_cost = -20;
-    primary->health = 9;
-    primary->health_cost = -10;
-    primary->health_status = HEALTH_STATUS_NONE;
-
-    model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_PRIMARY_CHARACTERISTICS] = primary;
-
-    //////////////////// Secondary Characteristics Component ////////////////////////////////
-
-    Secondary_Characteristics* secondary;
-
-    secondary = (Secondary_Characteristics *) malloc(
-        sizeof(Secondary_Characteristics)
-    );
-
-    secondary[ascii_character].object_id = ascii_character;
-
-    secondary->object_id = ascii_character;
-    secondary->hit_points_max = 9;
-    secondary->hit_points_cost = 0;
-    secondary->hit_points_current = 9;
-    secondary->will = 9;
-    secondary->perception = 9;
-    secondary->fatigue_points = 9;
-    secondary->basic_move = 4;
-    secondary->base_speed = 4.25;
-    secondary->action_current = ACTION_NONE;
-
-    model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_SECONDARY_CHARACTERISTICS] = secondary;
-
-    //////////////////// Combat Stats Component ////////////////////////////////
-
-    Combat_Stats* combat;
-
-    combat = (Combat_Stats *) malloc(
-        sizeof(Combat_Stats)
-    );
-
-    combat[ascii_character].object_id = ascii_character;
-
-    combat->object_id = ascii_character;
-    combat->thrust_damage = 1;
-    combat->thrust_damage_modifier = -2;
-    combat->swing_damage = 1;
-    combat->swing_damage_modifier = -1;
-    combat->damage_resistance = 1;
-    combat->dodge = 7;
-    combat->parry = 9;
-    combat->block = 3;
-    combat->shock = 0;
-
-    model_component[object->object_id].object_id = ascii_character;
-    object[ascii_character].component[COMP_COMBAT_STATS] = combat;
-
-    ///////////////////////////////////////////////////////////////////////////////////
+    return index;
 }
+    //////////////////////// Position Component //////////////////////////
+void Object_Add_Position(
+    i32 object_id,
+    u32 room) {
+
+
+        Position *object_position;
+
+        object_position = (Position *) malloc(
+            sizeof(Position)
+        );
+
+        object_position->object_id = object_id;          // set values for the object position.
+
+        Point_3D placement = Map_Random_Point_In_Room(
+            room
+        );
+
+        object_position->position[0] = (float) placement.x;                   // initialize all to effective zero
+        object_position->position[1] = 0.5f;
+        object_position->position[2] = (float) placement.z;
+        object_position->rotationX = 0.0f;
+        object_position->rotationY = -45.0f;
+        object_position->rotationZ = 0.0f;
+        object_position->scale = 1.0f;
+
+        position_component[object->object_id].object_id = object_id;    // keep track of all position components
+        object[object_id].component[COMP_POSITION] = object_position;   // add position component to object
+    }
+    ////////////////////////// Model Component ///////////////////////////
+void Object_Add_Model(
+        i32 object_id,
+        vec4 color,
+        const char* file_path) {
+
+
+        Game_Model *object_model;
+
+        object_model = Load_Model_3D(   // memory is allocated by the model loader.
+            file_path,
+            color,
+            &vao_storage,
+            &vbo_storage
+        );
+
+        object_model->object_id = object_id;
+
+        model_component[object->object_id].object_id = object_id;
+        object[object_id].component[COMP_MODEL] = object_model;
+    }
+    ///////////////////// Primary Characteristics Component ///////////////////////////////
+void Object_Add_Primary_Characteristics(i32 object_id) {
+
+
+        Primary_Characteristics *primary;
+
+        primary = (Primary_Characteristics *) malloc(
+            sizeof(Primary_Characteristics)
+        );
+
+        primary[object_id].object_id = object_id;
+
+        primary->object_id = object_id;
+        primary->strength = 9;
+        primary->strength_cost = -10;
+        primary->dexterity = 9;
+        primary->dexterity_cost = -20;
+        primary->intelligence = 9;
+        primary->intelligence_cost = -20;
+        primary->health = 9;
+        primary->health_cost = -10;
+        primary->health_status = HEALTH_STATUS_NONE;
+
+        model_component[object->object_id].object_id = object_id;
+        object[object_id].component[COMP_PRIMARY_CHARACTERISTICS] = primary;
+    }
+    //////////////////// Secondary Characteristics Component ////////////////////////////////
+void Object_Add_Secondary_Characteristics(i32 object_id) {
+
+        Secondary_Characteristics *secondary;
+
+        secondary = (Secondary_Characteristics *) malloc(
+            sizeof(Secondary_Characteristics)
+        );
+
+        secondary[object_id].object_id = object_id;
+
+        secondary->object_id = object_id;
+        secondary->hit_points_max = 9;
+        secondary->hit_points_cost = 0;
+        secondary->hit_points_current = 9;
+        secondary->will = 9;
+        secondary->perception = 9;
+        secondary->fatigue_points = 9;
+        secondary->basic_move = 4;
+        secondary->base_speed = 4.25;
+        secondary->action_current = ACTION_NONE;
+
+        model_component[object->object_id].object_id = object_id;
+        object[object_id].component[COMP_SECONDARY_CHARACTERISTICS] = secondary;
+    }
+    //////////////////// Combat Stats Component ////////////////////////////////
+void Object_Add_Combat_Stats(i32 object_id) {
+
+        Combat_Stats *combat;
+
+        combat = (Combat_Stats *) malloc(
+            sizeof(Combat_Stats)
+        );
+
+        combat[object_id].object_id = object_id;
+
+        combat->object_id = object_id;
+        combat->thrust_damage = 1;
+        combat->thrust_damage_modifier = -2;
+        combat->swing_damage = 1;
+        combat->swing_damage_modifier = -1;
+        combat->damage_resistance = 1;
+        combat->dodge = 7;
+        combat->parry = 9;
+        combat->block = 3;
+        combat->shock = 0;
+
+        model_component[object->object_id].object_id = object_id;
+        object[object_id].component[COMP_COMBAT_STATS] = combat;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////
+
 
 void* Object_Lookup_Component(
     i32 object_id,
