@@ -227,7 +227,7 @@ void Monsters_Data_Initialize() {
 
 
 }
-?
+
 /*
     // create each monsters components and stats.
 
