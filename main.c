@@ -81,7 +81,6 @@ main() {
     );
 
     Dungeon_Level_Cleanup();
-    Game_Items_Cleanup();
     Object_Cleanup();
 
     Sand_Window_Destroy(window);

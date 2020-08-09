@@ -239,27 +239,25 @@ void Object_Add_Monster_Stats(i32 object_id) {
     );
 
     monster[object_id].object_id = object_id;
+    i32 monster_id = object_id - 64;
 
-
-    strcpy(monster->name, Monsters_Name(object_id));
-    monster->health_status = Monsters_Health_Status(object_id);
-    monster->treasure = Monsters_Treasure(object_id);
-    monster->AI_to_use = Monsters_AI_To_Use(object_id);
-    monster->will = Monsters_Will(object_id);
-    monster->base_speed = Monsters_Base_Speed(object_id);
-    monster->unit_xp = Monsters_Unit_Xp(object_id);
-    monster->hit_points_max = Monsters_Hit_Points_Max(object_id);
-    monster->hit_points_current = Monsters_Hit_Points_Current(object_id);
-    monster->damage_resistance = Monsters_Damage_Resistance(object_id);
-    monster->dodge = Monsters_Dodge(object_id);
-    monster->attack_skill = Monsters_Attack_Skill(object_id);
-    monster->special_attack = Monsters_Special_Attack(object_id);
-    monster->damage_type = Monsters_Damage_Type(object_id);
-    monster->damage_melee = Monsters_Damage_Melee(object_id);
-    monster->damage_ranged = Monsters_Damage_Ranged(object_id);
-    monster->shock = Monsters_Shock(object_id);
-
-
+    sprintf(monster->name,"%s", Monsters_Name(monster_id));
+    monster->health_status = Monsters_Health_Status(monster_id);
+    monster->treasure = Monsters_Treasure(monster_id);
+    monster->AI_to_use = Monsters_AI_To_Use(monster_id);
+    monster->will = Monsters_Will(monster_id);
+    monster->base_speed = Monsters_Base_Speed(monster_id);
+    monster->unit_xp = Monsters_Unit_Xp(monster_id);
+    monster->hit_points_max = Monsters_Hit_Points_Max(monster_id);
+    monster->hit_points_current = Monsters_Hit_Points_Current(monster_id);
+    monster->damage_resistance = Monsters_Damage_Resistance(monster_id);
+    monster->dodge = Monsters_Dodge(monster_id);
+    monster->attack_skill = Monsters_Attack_Skill(monster_id);
+    monster->special_attack = Monsters_Special_Attack(monster_id);
+    monster->damage_type = Monsters_Damage_Type(monster_id);
+    monster->damage_melee = Monsters_Damage_Melee(monster_id);
+    monster->damage_ranged = Monsters_Damage_Ranged(monster_id);
+    monster->shock = Monsters_Shock(monster_id);
 
     monster_stats_component[object->object_id].object_id = object_id;
     object[object_id].component[COMP_MONSTER_STATS] = monster;

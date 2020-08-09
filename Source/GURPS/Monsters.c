@@ -7,7 +7,7 @@
 static char* monster_levels =    "K BHISOR LCA NYTWFP GMXVJD ";
 static char* monster_wandering = "KEBHISORZ CAQ YTW PUGM VJ  ";
 
-static const char* monsters_name[27] = {
+const char* monsters_name[] = {
     "Player",
     "Aquator",
     "Bat",
@@ -34,7 +34,7 @@ static const char* monsters_name[27] = {
     "Wraith",
     "Xeroc",
     "Yeti",
-    "Zombie"
+    "Zombie",
 };
 static Health_Status health_status[27];
 static u8 treasure[27] = {
