@@ -114,12 +114,25 @@ typedef struct {
 
 typedef enum {
 
-    DAMAGE_SMALL_PIERCING = 0,
+    DAMAGE_NORMAL = 0,
+    DAMAGE_SMALL_PIERCING,
     DAMAGE_PIERCING,
     DAMAGE_LARGE_PIERCING,
     DAMAGE_IMPALING,
     DAMAGE_CUTTING,
     DAMAGE_CRUSHING,
+    DAMAGE_FIRE_BREATH,
+    DAMAGE_FREEZE,
+    DAMAGE_RUST_ARMOR,
+    DAMAGE_FLIES_RANDOMLY,
+    DAMAGE_IMMOBILIZE,
+    DAMAGE_CONFUSION,
+    DAMAGE_STEAL_GOLD,
+    DAMAGE_STEAL_MAGIC_ITEM,
+    DAMAGE_POISON_STRENGTH,
+    DAMAGE_DRAIN_MAX_HP,
+    DAMAGE_DRAIN_HP,
+    DAMAGE_MIMIC,
 
     DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
 
@@ -252,8 +265,8 @@ typedef struct {
     u8 attack_skill;
     Damage_Type special_attack;
     Damage_Type damage_type;
-    u8 damage_melee;
-    u8 damage_ranged;
+    i8 damage_melee;
+    i8 damage_ranged;
     i32 shock;
 
 } Monster_Stats;

@@ -43,6 +43,14 @@ static u8 treasure[27] = {
     0, 70, 0, 0, 40, 100, 15, 0, 0,
     0, 0, 50, 0, 20, 0, 30, 30, 0
 };
+typedef enum{
+
+    MONSTERS_AI_NORMAL = 0,
+
+    MONSTERS_AI_COUNT
+
+} Monsters_AI;
+
 static u32 AI_to_use[27] = {
     //TODO : use flags
     //bool ** AI_to_use ** = mean, flying, regen, greedy, invisible, normal (flag 16+8+4+2+1+0 = 31 = 0x1F)
@@ -59,32 +67,50 @@ static i32 will[27];
 static float base_speed[27];
 static i32 unit_xp[27] = {
 
-    0 // TODO: fill in data
+    0, 20, 1, 17, 5000, 2, 80, 2000, 3,
+    5, 3000, 1, 10, 200, 37, 5, 120, 15,
+    9, 2, 120, 190, 350, 55, 100, 50, 6
 };
 static i32 hit_points_max[27];
 static i32 hit_points_current[27];
 static i32 damage_resistance[27] = {
 
-    0 // TODO: fill in data
+    2, 6, 6, 4, 9, 2, 5, 6, 4,
+    0, 3, 2, 1, 6, 0, 3, 5, 5,
+    5, 4, 4, 10, 6, 4, 2, 3, 1
 };
 static i32 dodge[27];
 static u8 attack_skill[27];
 static Damage_Type special_attack[27] = {
 
-    0 // TODO: fill in data
+    DAMAGE_NORMAL,  DAMAGE_RUST_ARMOR, DAMAGE_FLIES_RANDOMLY,
+    DAMAGE_NORMAL, DAMAGE_FIRE_BREATH, DAMAGE_NORMAL,
+    DAMAGE_IMMOBILIZE, DAMAGE_NORMAL, DAMAGE_NORMAL,
+    DAMAGE_FREEZE, DAMAGE_NORMAL, DAMAGE_NORMAL,
+    DAMAGE_STEAL_GOLD, DAMAGE_CONFUSION, DAMAGE_STEAL_MAGIC_ITEM,
+    DAMAGE_NORMAL, DAMAGE_NORMAL, DAMAGE_NORMAL,
+    DAMAGE_POISON_STRENGTH, DAMAGE_NORMAL, DAMAGE_NORMAL,
+    DAMAGE_NORMAL, DAMAGE_DRAIN_MAX_HP, DAMAGE_DRAIN_HP,
+    DAMAGE_MIMIC, DAMAGE_NORMAL, DAMAGE_NORMAL
 };
 static Damage_Type damage_type[27] = {
 
-    0 // TODO: fill in data
+    DAMAGE_CRUSHING, DAMAGE_SMALL_PIERCING, DAMAGE_IMPALING,
+    DAMAGE_IMPALING, DAMAGE_LARGE_PIERCING, DAMAGE_CRUSHING,
+    DAMAGE_CRUSHING, DAMAGE_CRUSHING, DAMAGE_CRUSHING,
+    DAMAGE_CRUSHING, DAMAGE_PIERCING, DAMAGE_CRUSHING,
+    DAMAGE_CRUSHING, DAMAGE_CRUSHING, DAMAGE_CRUSHING,
+    DAMAGE_PIERCING, DAMAGE_PIERCING, DAMAGE_CRUSHING,
+    DAMAGE_CRUSHING, DAMAGE_PIERCING, DAMAGE_CRUSHING,
+    DAMAGE_CRUSHING, DAMAGE_CRUSHING, DAMAGE_CRUSHING
 };
-static u8 damage_melee[27] = {
+static i8 damage_melee[27] = {
 
-    -2 // TODO: fill in data
+    -2, -6, -4, +1, +7, -4, -6, +2, +2,
+    -6, +9, -2, -5, +5, -6, +2, +4, +2,
+    +0, -3, +5, +6, +4, +0, +2, +3, +2
 };
-static u8 damage_ranged[27] = {
-
-    0 // TODO: fill in data
-};
+static i8 damage_ranged[27];
 static i32 shock[27];
 
 
@@ -165,12 +191,13 @@ void Monsters_Data_Initialize() {
         hit_points_current[index] = hit_points_max[index];
         dodge[index] = will[index];
         attack_skill[index] = will[index];
+        damage_ranged[index] = level[index] - 6;
         //shock[index] = 0;
     }
 
 
 }
-
+?
 /*
     // create each monsters components and stats.
 

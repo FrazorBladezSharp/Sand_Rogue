@@ -18,7 +18,7 @@ static Primary_Characteristics primary_characteristic_component[MAX_ENTITIES];
 static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES];
 static Combat_Stats combat_stats_component[MAX_ENTITIES];
 static Monster_Stats monster_stats_component[MAX_ENTITIES];
-static Room_Contents room_contents[MAX_ROOM_CONTENTS];
+//static Room_Contents room_contents[MAX_ROOM_CONTENTS];
 
 void Object_Initialize()
 {
@@ -388,7 +388,7 @@ Older versions of Rogue used the decreasing AC to represent better armor (also s
 
  ///////////////////////////////////////////////////////////////////////////////////////////////////
 /*
- * @ 10 )
+ * @ 10 )           TODO: Drop %
 Weapon	            Damage  G.U.R.P.S.      Notes
 Mace	            2d4     swing + 3 cr
 Long sword	        3d4     swing + 1 cut
@@ -745,7 +745,7 @@ void Objects_Update( //              NOTE This can all be done in Game_Objects
     i8 current_dungeon_level){      // add and remove objects from line of sight
 
     //distribute monsters across the level. chance per room + wandering extra chance
-/* how many ? = how many have been seen
+* how many ? = how many have been seen
  * monsters_added = 0
  *
  * add a monster
