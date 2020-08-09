@@ -14,7 +14,7 @@ void Dungeon_Level_Initialize(){
     );
 }
 
-Dungeon_Level_Current* Dungeon_Level_New(i8 dungeon_level){
+void Dungeon_Level_New(i8 dungeon_level){
 
     dungeon_level_current->dungeon_level = dungeon_level;
     // set all locations to false.
@@ -29,8 +29,10 @@ Dungeon_Level_Current* Dungeon_Level_New(i8 dungeon_level){
     dungeon_level_current = Map_Create_Dungeon_Level(
         dungeon_level_current
     );
+}
 
-    return dungeon_level_current; // this should not be a return value.
+Dungeon_Level_Current* Dungeon_level(){
+    return dungeon_level_current;
 }
 
 void Dungeon_Level_Cleanup(){

@@ -9,7 +9,13 @@
 #include "Map.h"
 
 void Dungeon_Level_Initialize();
-Dungeon_Level_Current* Dungeon_Level_New(i8 dungeon_level);
+
+void Dungeon_Level_New(
+    i8 dungeon_level
+);
+
+Dungeon_Level_Current* Dungeon_level();
+
 void Dungeon_Level_Cleanup();
 
 #endif //SAND_ROGUE_DUNGEON_LEVEL_H

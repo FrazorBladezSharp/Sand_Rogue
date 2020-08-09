@@ -16,7 +16,8 @@ static Position position_component[MAX_ENTITIES];
 static Game_Model model_component[MAX_ENTITIES];
 static Primary_Characteristics primary_characteristic_component[MAX_ENTITIES];
 static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES];
-static Combat_Stats combat_stats[MAX_ENTITIES];
+static Combat_Stats combat_stats_component[MAX_ENTITIES];
+static Monster_Stats monster_stats_component[MAX_ENTITIES];
 static Room_Contents room_contents[MAX_ROOM_CONTENTS];
 
 void Object_Initialize()
@@ -41,7 +42,8 @@ void Object_Initialize()
         model_component[index].object_id = UNUSED;
         primary_characteristic_component[index].object_id = UNUSED;
         secondary_characteristic_component[index].object_id= UNUSED;
-        combat_stats[index].object_id = UNUSED;
+        combat_stats_component[index].object_id = UNUSED;
+        monster_stats_component[index].object_id = UNUSED;
     }
 
     Monsters_Initialize_Models(
@@ -50,6 +52,9 @@ void Object_Initialize()
         &model_component[0],
         &object[0]
     );
+
+    Monsters_Data_Initialize();
+
     // Create the player
     u32 room = 0;
     i32 player_id;
@@ -72,97 +77,18 @@ void Object_Initialize()
         player_id
     );
 
-    // create the test monster
-    // file_path = "Resource/Models/Monster.obj";
-    room = 1;
-    i32 monster_id;
-    monster_id = Object_Create(77, 77);
+    // create the monsters
+    for (u8 index = 64; index < 91; index++){
 
-    // TODO: move the below monster stats to the Monster file
-    Object_Add_Position(
-        monster_id,
-        room
-    );
+        Object_Add_Monster_Stats(
+            index
+        );
+    }
 
-    // we need to enable different stats for each monster.
-    Object_Add_Primary_Characteristics(
-        monster_id
-    );
 
-    Object_Add_Secondary_Characteristics(
-        monster_id
-    );
+    //i32 number_of_dungeon_rooms = Map_Number_Of_Rooms();
 
-    Object_Add_Combat_Stats(
-        monster_id
-    );
-    /*
-     TODO : initialize a new dungeon level
 
-    Monsters
-    List of Monsters (Original)
-    Name	    Treasure	Flags	Exp	    HP	    AC	Damage	    Range	Notes
-    Aquator	        0	    M	    20	    5d8	    2	0d0/0d0		        Rusts armor
-    Bat	            0	    F	    1	    1d8	    3	1d2		            Flies randomly
-    Centaur	        15		17	    4d8	    4	        1d2/1d5/1d5
-    Dragon	        100	    M	    5000    10d8	-1	1d8/1d8/3d10		Ranged 6d6 flame attack
-    Emu	            0	    M	    2	    1d8	    7	1d2
-    Venus Flytrap	0	    M	    80	    8d8	    3	special		        Traps player
-    Griffin	        20	    MFR	    2000	13d8	2	4d3/3d5
-    Hobgoblin	    0	    M	    3	    1d8	    5	1d8
-    Ice monster	    0		        5	    1d8	    9	0d0		            Freezes player
-    Jabberwock	    70		        3000	15d8	6	2d12/2d4
-    Kestrel	        0	    MF	    1	    1d8	    7	1d4
-    Leprechaun	    0		        10	    3d8	    8	1d1		            Steals gold
-    Medusa	        40	    M	    200	    8d8	    2	3d4/3d4/2d5		    Confuses Hero
-    Nymph	        100		        37	    3d8	    9	0d0		            Steals magic item
-    Orc	            15	    G	    5	    1d8	    6	1d8		            Greedy - runs toward gold
-    Phantom	        0	    I	    120	    8d8	    3	4d4		            Invisible
-    Quagga	        0	    M	    15	    3d8	    3	1d5/1d5
-    Rattlesnake	    0	    M	    9	    2d8	    3	1d6		            Reduces Strength
-    Snake	        0	    M	    2	    1d8	    5	1d3
-    Troll	        50	    RM	    120	    6d8	    4	1d8/1d8/2d6
-    Ur-vile	        0	    M	    190	    7d8	    -2	1d9/1d9/2d9
-    Vampire	        20	    RM	    350	    8d8	    1	1d10		        Drains Max HP
-    Wraith	        0		        55	    5d8	    4	1d6		            Drains exp
-    Xeroc	        30		        100	    7d8	    7	4d4		            Imitates an object
-    Yeti	        30		        50	    4d8	    6	1d6/1d6
-    Zombie	        0	    M	    6	    2d8	    8	1d8
-
-    Level is the level of Hit dice for the monster.
-        AC is the monster's armor class. A monster with lower AC is harder to hit.
-    Treasure is the percent chance that a monster will be carrying treasure.
-
-        M for "mean". Mean monsters may attack without provocation.
-        F for "flying". Flying monsters are more difficult to hit.
-        R for "regeneration". These monsters can regenerate health.
-        G for "greedy". Greedy monsters attempt to pick up gold when you enter a room.
-        I for "invisible".
-    */
-
-    i32 number_of_dungeon_rooms = Map_Number_Of_Rooms();
-
-    // Room_Contents. room_contents[index] room = dark (rnd(10) < (level - 1))
-    // MAX CONTENTS PER LEVEL max things = num rooms  max objects = num_rooms
-    // things = stairs doors gold & objects
-    // objects = items 35% per max_object then pick random object
-    // items & location
-
-    // chance per room (rnd(100) < (gold value > 0 ? 80 : 25))
-
-    // armour TODO : as above location  93          ]       object cycle through objects to place them
-    // weapon TODO: as above location   41          )       object
-    // rings TODO: as above             92          \       object
-    // potions TODO : as above location 33          !       object
-    // rods & staves TODO: as above     47          /       object
-    // scrolls TODO: as above           63          ?       object
-
-    // food TODO: as above              58          :       object
-    // gold TODO: as above              42          *  #define GOLD_CALC (rnd(50 + 10 * level) + 2)
-    // chance per room ((rnd(3) == 3) && (! has not seen amulet || (level >= max_level))) thing = gold
-    // stairs down TODO: as above       62          >       thing
-    // stairs up TODO: as above         60          <       thing
-    // Trap TODO: as above              94          ^       thing
 }
 
 i32 Object_Create(
@@ -249,7 +175,7 @@ void Object_Add_Primary_Characteristics(i32 object_id) {
         primary->health_cost = -10;
         primary->health_status = HEALTH_STATUS_NONE;
 
-        model_component[object->object_id].object_id = object_id;
+        primary_characteristic_component[object->object_id].object_id = object_id;
         object[object_id].component[COMP_PRIMARY_CHARACTERISTICS] = primary;
     }
     //////////////////// Secondary Characteristics Component ////////////////////////////////
@@ -274,7 +200,7 @@ void Object_Add_Secondary_Characteristics(i32 object_id) {
         secondary->base_speed = 4.25;
         secondary->action_current = ACTION_NONE;
 
-        model_component[object->object_id].object_id = object_id;
+        secondary_characteristic_component[object->object_id].object_id = object_id;
         object[object_id].component[COMP_SECONDARY_CHARACTERISTICS] = secondary;
     }
     //////////////////// Combat Stats Component ////////////////////////////////
@@ -299,11 +225,47 @@ void Object_Add_Combat_Stats(i32 object_id) {
         combat->block = 3;
         combat->shock = 0;
 
-        model_component[object->object_id].object_id = object_id;
+        combat_stats_component[object->object_id].object_id = object_id;
         object[object_id].component[COMP_COMBAT_STATS] = combat;
     }
-    ///////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////// Monster Stats /////////////////////////////////////
 
+void Object_Add_Monster_Stats(i32 object_id) {
+
+    Monster_Stats *monster;
+
+    monster = (Monster_Stats *) malloc(
+        sizeof(Monster_Stats)
+    );
+
+    monster[object_id].object_id = object_id;
+
+    // TODO : monster data with 0 = default player.
+    strcpy(monster->name, Monsters_Name(object_id));
+    monster->health_status = Monsters_Health_Status(object_id);
+    monster->treasure = Monsters_Treasure(object_id);
+    monster->AI_to_use = Monsters_AI_To_Use(object_id);
+    monster->will = Monsters_Will(object_id);
+    monster->base_speed = Monsters_Base_Speed(object_id);
+    monster->unit_xp = Monsters_Unit_Xp(object_id);
+    monster->hit_points_max = Monsters_Hit_Points_Max(object_id);
+    monster->hit_points_current = Monsters_Hit_Points_Current(object_id);
+    monster->damage_resistance = Monsters_Damage_Resistance(object_id);
+    monster->dodge = Monsters_Dodge(object_id);
+    monster->attack_skill = Monsters_Attack_Skill(object_id);
+    monster->special_attack = Monsters_Special_Attack(object_id);
+    monster->damage_type = Monsters_Damage_Type(object_id);
+    monster->damage_melee = Monsters_Damage_Melee(object_id);
+    monster->damage_ranged = Monsters_Damage_Ranged(object_id);
+    monster->shock = Monsters_Shock(object_id);
+
+
+
+    monster_stats_component[object->object_id].object_id = object_id;
+    object[object_id].component[COMP_MONSTER_STATS] = monster;
+}
+
+//////////////////////////////////////////////////////////////////////
 
 void* Object_Lookup_Component(
     i32 object_id,
@@ -485,7 +447,7 @@ Spear	            2d3	    thrust + 3 imp
 
  //////////////////////////////////////////////////////////////////////////////////////////////////
 /*
- Rings @ 20
+ Rings @ 61 '='
 Item	%chance	Description
 protection	        9	Adds to defense and magical saving throws
 Add strength	    9	Adds to strength
@@ -754,6 +716,45 @@ Some scrolls require certain conditions to be met. If they aren't, you see the m
  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
+
+// TODO: add room Contents when door is opened
+// Room_Contents. room_contents[index] room = dark (rnd(10) < (level - 1))
+// MAX CONTENTS PER LEVEL max things = num rooms  max objects = num_rooms
+// things = stairs doors gold & objects
+// objects = items 35% per max_object then pick random object
+// items & location
+
+// chance per room (rnd(100) < (gold value > 0 ? 80 : 25))
+
+// armour TODO : as above location  93          ]       object cycle through objects to place them
+// weapon TODO: as above location   41          )       object
+// rings TODO: as above             92          \       object
+// potions TODO : as above location 33          !       object
+// rods & staves TODO: as above     47          /       object
+// scrolls TODO: as above           63          ?       object
+
+// food TODO: as above              58          :       object
+// gold TODO: as above              42          *  #define GOLD_CALC (rnd(50 + 10 * level) + 2)
+// chance per room ((rnd(3) == 3) && (! has not seen amulet || (level >= max_level))) thing = gold
+// stairs down TODO: as above       62          >       thing
+// stairs up TODO: as above         60          <       thing
+// Trap TODO: as above              94          ^       thing
+
+/* TODO: Objects Update
+void Objects_Update( //              NOTE This can all be done in Game_Objects
+    i8 current_dungeon_level){      // add and remove objects from line of sight
+
+    //distribute monsters across the level. chance per room + wandering extra chance
+/* how many ? = how many have been seen
+ * monsters_added = 0
+ *
+ * add a monster
+ *
+ * copy its stats to the monster list for the level (101)
+     TODO : initialize a new dungeon level
+    */
+
+// generate a new monster as required
 
 void Game_Items_Cleanup()
 {

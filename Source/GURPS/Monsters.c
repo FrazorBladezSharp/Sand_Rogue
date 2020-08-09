@@ -4,22 +4,104 @@
 
 #include "Monsters.h"
 
-static char* monster_levels =    "K BHISOR LCA NYTWFP GMXVJD";
-static char* monster_wandering = "KEBHISORZ CAQ YTW PUGM VJ ";
+static char* monster_levels =    "K BHISOR LCA NYTWFP GMXVJD ";
+static char* monster_wandering = "KEBHISORZ CAQ YTW PUGM VJ  ";
+
+static const char* monsters_name[27] = {
+    "Player",
+    "Aquator",
+    "Bat",
+    "Centaur",
+    "Dragon",
+    "Emu",
+    "Venus Flytrap",
+    "Griffin",
+    "Hobgoblin",
+    "Ice Monster",
+    "Jabberwock",
+    "Kobold",
+    "Leprechaun",
+    "Medusa",
+    "Nymph",
+    "Orc",
+    "Phantom",
+    "Quagga",
+    "Rattlesnake",
+    "Snake",
+    "Troll",
+    "Ur-Vile",
+    "Vampire",
+    "Wraith",
+    "Xeroc",
+    "Yeti",
+    "Zombie"
+};
+static Health_Status health_status[27];
+static u8 treasure[27] = {
+
+    100, 0, 0 , 15, 100, 0, 0, 20, 0,     // percentage chance for monster to drop treasure
+    0, 70, 0, 0, 40, 100, 15, 0, 0,
+    0, 0, 50, 0, 20, 0, 30, 30, 0
+};
+static u32 AI_to_use[27] = {
+    //TODO : use flags
+    //bool ** AI_to_use ** = mean, flying, regen, greedy, invisible, normal (flag 16+8+4+2+1+0 = 31 = 0x1F)
+    // setup using an enum.
+};
+static u8 level[27] = {             // NOTE : only used for conversion from d&d.
+
+    6, 5, 1, 4, 10, 1, 8, 13, 1,
+    1, 15, 1, 3, 8, 3, 1, 8, 3,
+    2, 1, 6, 7, 8, 5, 7, 4, 2
+};
+
+static i32 will[27];
+static float base_speed[27];
+static i32 unit_xp[27] = {
+
+    0 // TODO: fill in data
+};
+static i32 hit_points_max[27];
+static i32 hit_points_current[27];
+static i32 damage_resistance[27] = {
+
+    0 // TODO: fill in data
+};
+static i32 dodge[27];
+static u8 attack_skill[27];
+static Damage_Type special_attack[27] = {
+
+    0 // TODO: fill in data
+};
+static Damage_Type damage_type[27] = {
+
+    0 // TODO: fill in data
+};
+static u8 damage_melee[27] = {
+
+    -2 // TODO: fill in data
+};
+static u8 damage_ranged[27] = {
+
+    0 // TODO: fill in data
+};
+static i32 shock[27];
+
+
 
 void Monsters_Initialize_Models(
         Vector *vao_storage,
         Vector *vbo_storage,
         Game_Model *model_component,
-        Game_Object *object){
+        Game_Object *object) {
 
     char buffer[126];
-    i32 index = 64;
-    vec4 color = { 0.1f, 0.5f, 0.1f, 1.0f };
 
-    for(index = 64; index < 91; index++) {      //  Z = 90
+    vec4 color = {0.1f, 0.5f, 0.1f, 1.0f};
 
-        if(index == 65){
+    for (u8 index = 64; index < 91; index++) {      //  Z = 90
+
+        if (index == 65) {
 
             color[0] = 0.5f;
             color[1] = 0.25f;
@@ -39,17 +121,65 @@ void Monsters_Initialize_Models(
             vbo_storage,
             model_component,
             object
-            );
+        );
     } // end of model loading.
+}
 
+
+void Monsters_Load_Monster_Model(
+    i32 object_id,
+    vec4 color,
+    const char* file_path,
+    Vector *vao_storage,
+    Vector *vbo_storage,
+    Game_Model *model_component,
+    Game_Object *object) {
+
+
+    Game_Model *object_model;
+
+    object_model = Load_Model_3D(   // memory is allocated by the model loader.
+        file_path,
+        color,
+        vao_storage,
+        vbo_storage
+    );
+
+    object_model->object_id = object_id;
+
+    model_component[object->object_id].object_id = object_id;
+    object[object_id].component[COMP_MODEL] = object_model;
+}
+
+void Monsters_Data_Initialize() {
+
+    memset (health_status,0,90);
+    memset (shock, 0, 90);
+
+    for(u8 index = 64; index < 91; index++){
+
+        //health_status[index] = HEALTH_STATUS_NONE;
+        will[index] = 3 + level[index];
+        base_speed[index] = 4.19 + (level[index] * 0.01); // may need to modify this
+        hit_points_max[index] = level[index];             // number of dice to roll
+        hit_points_current[index] = hit_points_max[index];
+        dodge[index] = will[index];
+        attack_skill[index] = will[index];
+        //shock[index] = 0;
+    }
+
+
+}
+
+/*
     // create each monsters components and stats.
-    /*
+
      * Monsters
     List of Monsters (Original)
     Name	    Treasure	Flags	Exp	    HP	    AC	Damage	    Range	Notes
     Aquator	        0	    M	    20	    5d8	    2	0d0/0d0		        Rusts armor
     Bat	            0	    F	    1	    1d8	    3	1d2		            Flies randomly
-    Centaur	        15		17	    4d8	    4	        1d2/1d5/1d5
+    Centaur	        15        		17	    4d8	    4	1d2/1d5/1d5
     Dragon	        100	    M	    5000    10d8	-1	1d8/1d8/3d10		Ranged 6d6 flame attack
     Emu	            0	    M	    2	    1d8	    7	1d2
     Venus Flytrap	0	    M	    80	    8d8	    3	special		        Traps player
@@ -84,68 +214,50 @@ void Monsters_Initialize_Models(
         G for "greedy". Greedy monsters attempt to pick up gold when you enter a room.
         I for "invisible".
 
-    Object_Add_Position(
-        monster_id,
-        room
-    );
+     add to ecs COMP_MONSTER_STATS [26]
+        Name[16]
+        health_status
+        u8 treasure
+        bool ** AI_to_use ** = mean, flying, regen, greedy, invisible, normal (flag 16+8+4+2+1+0 = 31 = 0x1F)
+        will
+        base_speed
+        XP
+        HP
+        damage_resistance
+        dodge
+        to-hit
+        special_attack
+        damage_type
+        Damage
+        Range
+        combat_shock
 
-    // we need to enable different stats for each monster.
-    Object_Add_Primary_Characteristics(
-        monster_id
-    );
 
-    Object_Add_Secondary_Characteristics(
-        monster_id
-    );
-
-    Object_Add_Combat_Stats(
-        monster_id
-    );
+        return component_data
     */
-}
 
-void Monsters_Load_Monster_Model(
-    i32 object_id,
-    vec4 color,
-    const char* file_path,
-    Vector *vao_storage,
-    Vector *vbo_storage,
-    Game_Model *model_component,
-    Game_Object *object) {
+char Monsters_Add_To_Room(
+    i8 dungeon_level){
 
+    i8 danger;
 
-    Game_Model *object_model;
+    do {
+        i8 randomness = Dice_Roll(1, 5) + Dice_Roll(1, 6);
+        danger = dungeon_level + (randomness - 5);
+        if (danger < 1) {
+            danger = Dice_Roll(1, 6);
+        }
+        if (danger > 26) {
+            danger = 22 + Dice_Roll(1,5);
+        }
+    } while(monster_levels[--danger] == ' ');
 
-    object_model = Load_Model_3D(   // memory is allocated by the model loader.
-        file_path,
-        color,
-        vao_storage,
-        vbo_storage
-    );
-
-    object_model->object_id = object_id;
-
-    model_component[object->object_id].object_id = object_id;
-    object[object_id].component[COMP_MODEL] = object_model;
-}
-
-void Monsters_For_New_Level(
-    i8 current_dungeon_level){
-
-    //distribute monsters across the level.
-/* how many ?
- * monsters_added = 0
- *
- * add a monster
- *
- * copy its stats to the monster list for the level (101)
-     TODO : initialize a new dungeon level
-    */
+    return monster_levels[danger];
 }
 
 char Monsters_Add_Wandering(i8 dungeon_level){
 
-    i8 danger = 0;
+    i8 danger;
 
     do {
         i8 randomness = Dice_Roll(1, 5) + Dice_Roll(1, 6);
@@ -159,4 +271,72 @@ char Monsters_Add_Wandering(i8 dungeon_level){
     } while(monster_wandering[--danger] == ' ');
 
     return monster_wandering[danger];
+}
+
+const char* Monsters_Name(i32 monster_id) {
+    return monsters_name[monster_id];
+}
+
+Health_Status Monsters_Health_Status(i32 monster_id) {
+    return health_status[monster_id];
+}
+
+u8 Monsters_Treasure(i32 monster_id) {
+    return treasure[monster_id];
+}
+
+u32 Monsters_AI_To_Use(i32 monster_id) {
+    return AI_to_use[monster_id];
+}
+
+i32 Monsters_Will(i32 monster_id) {
+    return will[monster_id];
+}
+
+float Monsters_Base_Speed(i32 monster_id) {
+    return base_speed[monster_id];
+}
+
+i32 Monsters_Unit_Xp(i32 monster_id) {
+    return unit_xp[monster_id];
+}
+
+i32 Monsters_Hit_Points_Max(i32 monster_id) {
+    return hit_points_max[monster_id];
+}
+
+i32 Monsters_Hit_Points_Current(i32 monster_id) {
+    return hit_points_current[monster_id];
+}
+
+i32 Monsters_Damage_Resistance(i32 monster_id) {
+    return damage_resistance[monster_id];
+}
+
+i32 Monsters_Dodge(i32 monster_id) {
+    return dodge[monster_id];
+}
+
+u8 Monsters_Attack_Skill(i32 monster_id) {
+    return attack_skill[monster_id];
+}
+
+Damage_Type Monsters_Special_Attack(i32 monster_id) {
+    return special_attack[monster_id];
+}
+
+Damage_Type Monsters_Damage_Type(i32 monster_id) {
+    return damage_type[monster_id];
+}
+
+u8 Monsters_Damage_Melee(i32 monster_id) {
+    return damage_melee[monster_id];
+}
+
+u8 Monsters_Damage_Ranged(i32 monster_id) {
+    return damage_ranged[monster_id];
+}
+
+i32 Monsters_Shock(i32 monster_id) {
+    return shock[monster_id];
 }

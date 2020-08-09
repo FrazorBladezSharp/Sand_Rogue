@@ -23,12 +23,14 @@ void Object_Add_Position(
     u32 room
 );
 
+
+/*
 void Object_Add_Model(
     i32 object_id,
     vec4 color,
     const char* file_path
 );
-
+*/
 void Object_Add_Primary_Characteristics(
     i32 object_id
 );
@@ -38,6 +40,10 @@ void Object_Add_Secondary_Characteristics(
 );
 
 void Object_Add_Combat_Stats(
+    i32 object_id
+);
+
+void Object_Add_Monster_Stats(
     i32 object_id
 );
 

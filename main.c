@@ -53,9 +53,7 @@ main() {
     Object_Initialize();
     Game_Items_Initialize();
     Dungeon_Level_Initialize();
-
-    Dungeon_Level_Current* dungeon_level_current =
-        Dungeon_Level_New(1);
+    Dungeon_Level_New(1);
 
     Game_Model floor = Sand_Floor_Tile_3D_Create(window);
 
@@ -67,7 +65,7 @@ main() {
 
     Main_Game_Loop(
         shader,
-        dungeon_level_current,
+        Dungeon_level(),
         floor,
         window
     );

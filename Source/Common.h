@@ -141,6 +141,7 @@ typedef enum {
     COMP_PRIMARY_CHARACTERISTICS,
     COMP_SECONDARY_CHARACTERISTICS,
     COMP_COMBAT_STATS,
+    COMP_MONSTER_STATS,
 
     COMP_COUNT                                  // keep a count on how many components we have
 
@@ -219,7 +220,7 @@ typedef struct{
 
 } Secondary_Characteristics;
 
-typedef struct{
+typedef struct {
 
     i32 object_id;
     i32 thrust_damage;
@@ -233,6 +234,29 @@ typedef struct{
     i32 shock;
 
 } Combat_Stats;
+
+typedef struct {
+
+    i32 object_id;
+    char name[16];
+    Health_Status health_status;
+    u8 treasure;
+    u32 AI_to_use;
+    i32 will;
+    float base_speed;
+    i32 unit_xp;
+    i32 hit_points_max;
+    i32 hit_points_current;
+    i32 damage_resistance;
+    i32 dodge;
+    u8 attack_skill;
+    Damage_Type special_attack;
+    Damage_Type damage_type;
+    u8 damage_melee;
+    u8 damage_ranged;
+    i32 shock;
+
+} Monster_Stats;
 
 ///////////////////// Game State ///////////////////////////////
 
