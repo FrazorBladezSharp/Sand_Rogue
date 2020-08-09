@@ -46,14 +46,44 @@ static u8 treasure[27] = {
 typedef enum{
 
     MONSTERS_AI_NORMAL = 0,
-
-    MONSTERS_AI_COUNT
+    MONSTERS_AI_MEAN = 1,
+    MONSTERS_AI_FLYING = 2,
+    MONSTERS_AI_REGEN = 4,
+    MONSTERS_AI_GREEDY = 8,
+    MONSTERS_AI_INVISIBLE = 16
 
 } Monsters_AI;
 
 static u32 AI_to_use[27] = {
-    //TODO : use flags
-    //bool ** AI_to_use ** = mean, flying, regen, greedy, invisible, normal (flag 16+8+4+2+1+0 = 31 = 0x1F)
+
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_FLYING,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_MEAN | MONSTERS_AI_FLYING | MONSTERS_AI_REGEN,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_MEAN | MONSTERS_AI_FLYING,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_GREEDY,
+    MONSTERS_AI_INVISIBLE,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_REGEN | MONSTERS_AI_MEAN,
+    MONSTERS_AI_MEAN,
+    MONSTERS_AI_REGEN | MONSTERS_AI_MEAN,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_NORMAL,
+    MONSTERS_AI_MEAN
+    //u32 ** AI_to_use ** = mean, flying, regen, greedy, invisible, normal (flag 16+8+4+2+1+0 = 31 = 0x1F)
     // setup using an enum.
 };
 static u8 level[27] = {             // NOTE : only used for conversion from d&d.

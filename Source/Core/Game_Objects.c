@@ -240,7 +240,7 @@ void Object_Add_Monster_Stats(i32 object_id) {
 
     monster[object_id].object_id = object_id;
 
-    // TODO : monster data with 0 = default player.
+
     strcpy(monster->name, Monsters_Name(object_id));
     monster->health_status = Monsters_Health_Status(object_id);
     monster->treasure = Monsters_Treasure(object_id);
@@ -388,7 +388,7 @@ Older versions of Rogue used the decreasing AC to represent better armor (also s
 
  ///////////////////////////////////////////////////////////////////////////////////////////////////
 /*
- * @ 10 )           TODO: Drop %
+ * @ 10 )           TODO: Drop 10% each
 Weapon	            Damage  G.U.R.P.S.      Notes
 Mace	            2d4     swing + 3 cr
 Long sword	        3d4     swing + 1 cut
@@ -755,8 +755,3 @@ void Objects_Update( //              NOTE This can all be done in Game_Objects
     */
 
 // generate a new monster as required
-
-void Game_Items_Cleanup()
-{
-    // TODO: (Frazor) ??? we already have a clean up function ???
-}

@@ -44,6 +44,8 @@ before you roll.
    same hand.
 */
 
+// TODO : monster data with 0 = default player.
+// requires a full re-working of variables used.
 
 i32 Sand_Attack_Roll(i32 attacker, i32 defender)
 {

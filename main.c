@@ -8,7 +8,9 @@
  * TODO : Line Of Sight and lighting
  * TODO : MAX_LEVELS = 26
  * TODO : stairs down and Victory Conditions
- * TODO Graphical User Interface.
+ * TODO : Graphical User Interface.
+ * TODO : Backpack / Equipment
+ * TODO : Missing features.
 ###############################################################
 # Project created by Frazor Sharp 2020 Jul 22
 #
