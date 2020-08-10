@@ -83,6 +83,7 @@ void Main_Game_Loop(
     camera.position[2] = player_position->position[2] + 3.0f;
     camera.rotationX = 60.0f;
     camera.rotationY = 45.0f;
+    glm_mat4_identity(camera.view_matrix);
 
     camera = Calc_Camera_View_Matrix(
         camera

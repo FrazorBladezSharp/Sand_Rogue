@@ -21,7 +21,7 @@ Current_Game_State User_Keyboard_Input(
 //            current_game_state.players_current_position->position[1],
 //            current_game_state.players_current_position->position[2],
 //    };
-
+    // TODO : cant use bool if player is at edge boundaries ( ie : location 0,0,0)
     bool back = dungeon_level_current->map_cells
         [(int)current_game_state.players_current_position->position[0] - 1]
         [(int)current_game_state.players_current_position->position[2]];

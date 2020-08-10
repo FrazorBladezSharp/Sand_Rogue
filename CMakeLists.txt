@@ -50,7 +50,7 @@ add_executable(
 )
 
 target_link_libraries(
-        Sand_Rogue SDL2 GLEW GL assimp m
+        Sand_Rogue SDL2 SDL2main GLEW GL assimp m
 )
 
 link_directories(

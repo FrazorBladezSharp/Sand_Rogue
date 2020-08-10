@@ -138,7 +138,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
 
     colors_array = (float*) malloc(
         sizeof(float) * mesh->mNumFaces * 3 * 4
-    );
+    );  // TODO : (Valgrind) Memory leak - this is never freed. x Num Models
 
     uint i = 0;
 

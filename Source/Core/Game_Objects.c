@@ -162,8 +162,6 @@ void Object_Add_Primary_Characteristics(i32 object_id) {
             sizeof(Primary_Characteristics)
         );
 
-        primary[object_id].object_id = object_id;
-
         primary->object_id = object_id;
         primary->strength = 9;
         primary->strength_cost = -10;
@@ -187,8 +185,6 @@ void Object_Add_Secondary_Characteristics(i32 object_id) {
             sizeof(Secondary_Characteristics)
         );
 
-        secondary[object_id].object_id = object_id;
-
         secondary->object_id = object_id;
         secondary->hit_points_max = 9;
         secondary->hit_points_cost = 0;
@@ -209,10 +205,8 @@ void Object_Add_Combat_Stats(i32 object_id) {
         Combat_Stats *combat;
 
         combat = (Combat_Stats *) malloc(
-            sizeof(Combat_Stats)
+            sizeof(Combat_Stats) + 4
         );
-
-        combat[object_id].object_id = object_id;
 
         combat->object_id = object_id;
         combat->thrust_damage = 1;
@@ -238,7 +232,6 @@ void Object_Add_Monster_Stats(i32 object_id) {
         sizeof(Monster_Stats)
     );
 
-    monster[object_id].object_id = object_id;
     i32 monster_id = object_id - 64;
 
     sprintf(monster->name,"%s", Monsters_Name(monster_id));
@@ -304,49 +297,50 @@ void Objects_Update( //              NOTE This can all be done in Game_Objects
 
 void Object_Cleanup()
 {
+    // delete all vbo's that have been created
+    printf(
+        "Deleting VBO vectors: %d\n",
+        Vector_size(&vbo_storage)
+    );
+
+    for (int index = 0; index < Vector_size(&vbo_storage); index++) {
+
+        GLuint vbo = Vector_get(
+            &vbo_storage,
+            index
+        );
+
+        glDeleteVertexArrays(
+            1,
+            (GLuint *) &vbo
+        );
+    }
     // delete all vao's that have been created
     printf(
         "Deleting VAO vectors: %d\n",
         Vector_size(&vao_storage)
     );
 
-//    for (int index = 0; index < Vector_size(&vao_storage); index++) {
-//
-//        GLuint vao = Vector_get(
-//            &vao_storage,
-//            index
-//        );
-//
-//        glDeleteVertexArrays(
-//            1,
-//            (GLuint *) &vao
-//        );
-//    }
+    for (int index = 0; index < Vector_size(&vao_storage); index++) {
+
+        GLuint vao = Vector_get(
+            &vao_storage,
+            index
+        );
+
+        glDeleteVertexArrays(
+            1,
+            (GLuint *) &vao
+        );
+    }
+
+    Vector_free_memory(
+        &vbo_storage
+    );
 
     Vector_free_memory(
         &vao_storage
     );
-
-// delete all vbo's that were created.
-
-    printf(
-        "Deleting VBO vectors: %d\n",
-        Vector_size(&vbo_storage)
-    );
-
-    for (int index = 0; index < Vector_size(&vbo_storage) - 1; index++) {
-
-        GLuint vbo = Vector_get(
-            &vbo_storage, index
-        );
-
-        glDeleteBuffers(
-            1,
-            (GLuint *) &vbo
-        );
-    }
-
-    Vector_free_memory(&vbo_storage);
 }
 
 #define MAX_ITEMS 1024
