@@ -273,9 +273,9 @@ void* Object_Lookup_Component(
 }
 
 void Object_Add_VAO(GLint data)
-{
-    Vector_append(
-        &vao_storage,
+{                                   // TODO : (Frazor) sort this out
+    Vector_append(                  // this only exists as we use out original Hello World OpenGL
+        &vao_storage,               // as the floor tile and we didn't pass these args in
         data
     );
 }
@@ -286,6 +286,21 @@ void Object_Add_VBO(GLint data)
         data
     );
 }
+
+/* TODO: Objects Update
+void Objects_Update( //              NOTE This can all be done in Game_Objects
+    i8 current_dungeon_level){      // add and remove objects from line of sight
+
+    //distribute monsters across the level. chance per room + wandering extra chance
+* how many ? = how many have been seen
+ * monsters_added = 0
+ *
+ * add a monster
+ *
+ * copy its stats to the monster list for the level (101)
+    */
+
+// generate a new monster as required
 
 void Object_Cleanup()
 {
@@ -338,6 +353,8 @@ void Object_Cleanup()
 
 static const char* game_items[MAX_ITEMS];
 static i32 game_item_value[MAX_ITEMS];
+static i32 game_armor_rating[9];
+static i32 game_weapon_damage_modifier[9];
 static bool game_weapon_damage[9];
 static Damage_Type game_weapon_damage_type[9];
 
@@ -347,6 +364,7 @@ void Game_Items_Initialize() {
  * AC = AC - 2 first column works for our system
 Armor @ 0 ]
 Name	        AC (v5)	AC  %Drop
+None            0       10  0
 Leather	        3	    8   20 = 20
 Ring mail	    4	    7   35 = 15
 Studded leather	4	    7   50 = 15
@@ -357,36 +375,47 @@ Banded mail	    7   	4   95 = 10
 Plate mail	    8   	3   100 = 5
 
 A higher AC gives a better chance to avoid damage.
-TODO : Armor drop chance.
 Older versions of Rogue used the decreasing AC to represent better armor (also shown in the table).
 */
-    game_items[0] = "Light Leather Clothing";
-    game_item_value[0] = 1;
+    game_items[0] = "None";
+    game_item_value[0] = 0;
+    game_armor_rating[0] = 0;
 
-    game_items[1] = "Ring Mail Armour";
-    game_item_value[1] = 2;
+    game_items[1] = "Light Leather Clothing";
+    game_item_value[1] = 20;
+    game_armor_rating[1] = 1;
 
-    game_items[2] = "Studded Leather Armour";
-    game_item_value[2] = 2;
+    game_items[2] = "Ring Mail Armour";
+    game_item_value[2] = 15;
+    game_armor_rating[2] = 2;
 
-    game_items[3] = "Scale Mail Armour";
-    game_item_value[3] = 3;
+    game_items[3] = "Studded Leather Armour";
+    game_item_value[3] = 15;
+    game_armor_rating[3] = 2;
 
-    game_items[4] = "Chain Mail Armour";
-    game_item_value[4] = 4;
+    game_items[4] = "Scale Mail Armour";
+    game_item_value[4] = 13;
+    game_armor_rating[4] = 3;
 
-    game_items[5] = "Splint Mail Armour";
-    game_item_value[5] = 5;
+    game_items[5] = "Chain Mail Armour";
+    game_item_value[5] = 12;
+    game_armor_rating[5] = 4;
 
-    game_items[6] = "Banded Mail Armour";
-    game_item_value[6] = 5;
+    game_items[6] = "Splint Mail Armour";
+    game_item_value[6] = 10;
+    game_armor_rating[6] = 5;
 
-    game_items[7] = "Plate Mail Armour";
-    game_item_value[7] = 6;
+    game_items[7] = "Banded Mail Armour";
+    game_item_value[7] = 10;
+    game_armor_rating[7] = 5;
 
- ///////////////////////////////////////////////////////////////////////////////////////////////////
+    game_items[8] = "Plate Mail Armour";
+    game_item_value[8] = 5;
+    game_armor_rating[8] = 6;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 /*
- * @ 10 )           TODO: Drop 10% each
+ * @ 10 )
 Weapon	            Damage  G.U.R.P.S.      Notes
 Mace	            2d4     swing + 3 cr
 Long sword	        3d4     swing + 1 cut
@@ -399,51 +428,60 @@ Shuriken	        2d4     thrust + 2 imp
 Spear	            2d3	    thrust + 3 imp
 */
     game_items[10] = "Mace";
-    game_item_value[10] = 3;
+    game_item_value[10] = 10;
+    game_weapon_damage_modifier[0] = 3;
     game_weapon_damage[0] = false;
     game_weapon_damage_type[0] = DAMAGE_CRUSHING;
 
     game_items[11] = "Long Sword";
-    game_item_value[11] = 1;
+    game_item_value[11] = 10;
+    game_weapon_damage_modifier[1] = 1;
     game_weapon_damage[1] = false;
     game_weapon_damage_type[0] = DAMAGE_CUTTING;
 
     game_items[12] = "Short Bow";
-    game_item_value[12] = -4;
+    game_item_value[12] = 10;
+    game_weapon_damage_modifier[2] = -4;
     game_weapon_damage[2] = false;
     game_weapon_damage_type[0] = DAMAGE_CRUSHING;
 
     game_items[13] = "Arrow";
-    game_item_value[13] = 0;
+    game_item_value[13] = 10;
+    game_weapon_damage_modifier[3] = 0;
     game_weapon_damage[3] = true;
     game_weapon_damage_type[0] = DAMAGE_IMPALING;
 
     game_items[14] = "Dagger";
-    game_item_value[14] = 0;
+    game_item_value[14] = 10;
+    game_weapon_damage_modifier[4] = 0;
     game_weapon_damage[4] = true;
     game_weapon_damage_type[0] = DAMAGE_IMPALING;
 
     game_items[15] = "Two Handed Sword";
-    game_item_value[15] = 4;
+    game_item_value[15] = 10;
+    game_weapon_damage_modifier[5] = 4;
     game_weapon_damage[5] = false;
     game_weapon_damage_type[0] = DAMAGE_CUTTING;
 
     game_items[16] = "Dart";
-    game_item_value[16] = -3;
+    game_item_value[16] = 10;
+    game_weapon_damage_modifier[6] = -3;
     game_weapon_damage[6] = true;
     game_weapon_damage_type[0] = DAMAGE_IMPALING;
 
     game_items[17] = "Shuriken";
-    game_item_value[17] = 2;
+    game_item_value[17] = 10;
+    game_weapon_damage_modifier[7] = 2;
     game_weapon_damage[7] = true;
     game_weapon_damage_type[0] = DAMAGE_IMPALING;
 
     game_items[18] = "Spear";
-    game_item_value[18] = 3;
+    game_item_value[18] = 10;
+    game_weapon_damage_modifier[8] = 3;
     game_weapon_damage[8] = true;
     game_weapon_damage_type[0] = DAMAGE_IMPALING;
 
- //////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////
 /*
  Rings @ 61 '='
 Item	%chance	Description
@@ -506,7 +544,7 @@ The rings that provide bonuses may either give +1 or +2, but can also be cursed 
     game_items[33] = "Maintain Armour";
     game_item_value[33] = 5;
 
- /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
  Potions @ 40 !
 Item	        %chance	Description
@@ -567,7 +605,7 @@ Levitation	        6	Levitates for 29-32 turns
     game_items[45] = "Levitation";
     game_item_value[45] = 6;
 
- //////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
  Rods 50 /
 Rods can either be wands or staffs. While there are differences between them, they are minor.
@@ -632,7 +670,7 @@ Staves normally appear with 3-7 charges.
     game_items[63] = "Cancellation";
     game_item_value[63] = 5;
 
- /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
  Scrolls @ 70 ?
 Item	                    %chance	Description
@@ -710,46 +748,5 @@ Some scrolls require certain conditions to be met. If they aren't, you see the m
 
     game_items[81] = "Protect Armor";
     game_item_value[81] = 2;
-
- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 }
-
-// TODO: add room Contents when door is opened
-// Room_Contents. room_contents[index] room = dark (rnd(10) < (level - 1))
-// MAX CONTENTS PER LEVEL max things = num rooms  max objects = num_rooms
-// things = stairs doors gold & objects
-// objects = items 35% per max_object then pick random object
-// items & location
-
-// chance per room (rnd(100) < (gold value > 0 ? 80 : 25))
-
-// armour TODO : as above location  93          ]       object cycle through objects to place them
-// weapon TODO: as above location   41          )       object
-// rings TODO: as above             92          \       object
-// potions TODO : as above location 33          !       object
-// rods & staves TODO: as above     47          /       object
-// scrolls TODO: as above           63          ?       object
-
-// food TODO: as above              58          :       object
-// gold TODO: as above              42          *  #define GOLD_CALC (rnd(50 + 10 * level) + 2)
-// chance per room ((rnd(3) == 3) && (! has not seen amulet || (level >= max_level))) thing = gold
-// stairs down TODO: as above       62          >       thing
-// stairs up TODO: as above         60          <       thing
-// Trap TODO: as above              94          ^       thing
-
-/* TODO: Objects Update
-void Objects_Update( //              NOTE This can all be done in Game_Objects
-    i8 current_dungeon_level){      // add and remove objects from line of sight
-
-    //distribute monsters across the level. chance per room + wandering extra chance
-* how many ? = how many have been seen
- * monsters_added = 0
- *
- * add a monster
- *
- * copy its stats to the monster list for the level (101)
-     TODO : initialize a new dungeon level
-    */
-
-// generate a new monster as required
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

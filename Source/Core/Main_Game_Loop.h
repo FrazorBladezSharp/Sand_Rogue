@@ -6,6 +6,7 @@
 #define SAND_ROGUE_MAIN_GAME_LOOP_H
 
 #include "Source/Common.h"
+#include "Source/Core/Dungeon_Level.h"
 #include "Source/Core/Game_Objects.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
 #include "Source/Graphical_User_Interface/User_Input.h"
@@ -14,7 +15,6 @@
 
 void Main_Game_Loop(
     Shader shader,
-    Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
     SDL_Window* window
 );

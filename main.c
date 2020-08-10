@@ -33,7 +33,7 @@
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Core/Game_Objects.h"
 #include "Source/OpenGL/Sand_Floor_Tile_3D.h"
-#include "Source/Core/Dungeon_Level.h"
+//#include "Source/Core/Dungeon_Level.h"
 #include  "Source/Core/Main_Game_Loop.h"
 
 int
@@ -54,8 +54,6 @@ main() {
 
     Object_Initialize();
     Game_Items_Initialize();
-    Dungeon_Level_Initialize();
-    Dungeon_Level_New(1);
 
     Game_Model floor = Sand_Floor_Tile_3D_Create(window);
 
@@ -67,7 +65,6 @@ main() {
 
     Main_Game_Loop(
         shader,
-        Dungeon_level(),
         floor,
         window
     );

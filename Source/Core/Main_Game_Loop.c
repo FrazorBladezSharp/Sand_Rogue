@@ -8,31 +8,35 @@
 
 void Main_Game_Loop(
     Shader shader,
-    Dungeon_Level_Current* dungeon_level_current,
     Game_Model floor_model,
     SDL_Window* window)
 {
     // our main game loop Starts Here
+
+
+    Dungeon_Level_Initialize();
+    Dungeon_Level_New(1);
+    Dungeon_Level_Current* dungeon_level_current = Dungeon_level();
 
     Position* player_position = (Position*)Object_Lookup_Component(
         64,
         COMP_POSITION
     );
 
-    Position* monster_position = (Position*)Object_Lookup_Component(
-        77,
-        COMP_POSITION
-    );
+//    Position* monster_position = (Position*)Object_Lookup_Component(
+//        77,
+//        COMP_POSITION
+//    );
 
     Game_Model* player_model = (Game_Model*)Object_Lookup_Component(
         64,
         COMP_MODEL
     );
 
-    Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(
-        77,
-        COMP_MODEL
-    );
+//    Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(
+//        77,
+//        COMP_MODEL
+//    );
 
     Primary_Characteristics* player_primary =
         (Primary_Characteristics*)Object_Lookup_Component(
@@ -40,11 +44,11 @@ void Main_Game_Loop(
             COMP_PRIMARY_CHARACTERISTICS
     );
 
-    Primary_Characteristics* monster_primary =
-        (Primary_Characteristics*)Object_Lookup_Component(
-            77,
-            COMP_PRIMARY_CHARACTERISTICS
-    );
+//    Primary_Characteristics* monster_primary =
+//        (Primary_Characteristics*)Object_Lookup_Component(
+//            77,
+//            COMP_PRIMARY_CHARACTERISTICS
+//    );
 
     Secondary_Characteristics* player_secondary =
         (Secondary_Characteristics*)Object_Lookup_Component(
@@ -52,11 +56,11 @@ void Main_Game_Loop(
             COMP_SECONDARY_CHARACTERISTICS
     );
 
-    Secondary_Characteristics* monster_secondary =
-        (Secondary_Characteristics*)Object_Lookup_Component(
-            77,
-            COMP_SECONDARY_CHARACTERISTICS
-    );
+//    Secondary_Characteristics* monster_secondary =
+//        (Secondary_Characteristics*)Object_Lookup_Component(
+//            77,
+//            COMP_SECONDARY_CHARACTERISTICS
+//    );
 
     glUseProgram(
         shader.shader_program
@@ -67,6 +71,7 @@ void Main_Game_Loop(
 
 
     /////////////////////////////////////////////////////////////
+    // place player
 
     // camera
     Main_Camera camera;
@@ -121,7 +126,7 @@ void Main_Game_Loop(
         //mouseY = 0;
         current_game_state.players_current_action = ACTION_NONE;
         player_secondary->action_current = ACTION_NONE;
-        monster_secondary->action_current = ACTION_NONE;
+        //monster_secondary->action_current = ACTION_NONE;
 
         while (SDL_PollEvent(&event) == SDL_TRUE) {
         /*
@@ -129,8 +134,6 @@ void Main_Game_Loop(
          * current_game_state.game_is_running = false *(event.type == SDL_QUIT);
          *
          */
-
-
             if (event.type == SDL_QUIT) {
 
                 current_game_state.game_is_running = false;
@@ -151,28 +154,28 @@ void Main_Game_Loop(
             // we update the whole system
             current_game_state =  User_Keyboard_Input(
                 current_game_state,
-                dungeon_level_current,
-                monster_position
+                dungeon_level_current
+            //    monster_position
             );
 
             i32 attack_result = 0;
-            i32 monster_attack_result = 0;
+            //i32 monster_attack_result = 0;
 
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
                 player_secondary->action_current = ACTION_ATTACK;
-                monster_secondary->action_current = ACTION_ATTACK;
+                //monster_secondary->action_current = ACTION_ATTACK;
 
                 attack_result = Sand_Attack_Roll(
                     64,
                     77
                 );
 
-                monster_attack_result = Sand_Attack_Roll(
-                    77,
-                    64
-                );
+//                monster_attack_result = Sand_Attack_Roll(
+//                    77,
+//                    64
+//                );
 
                 printf(
                     "(%d)You punch for %d Damage : Health Status = %d\n",
@@ -181,19 +184,19 @@ void Main_Game_Loop(
                     player_primary->health_status
                 );
 
-                printf(
-                    "(%d)The Monster does %d damage : Health Status = %d\n",
-                    monster_secondary->hit_points_current,
-                    monster_attack_result,
-                    monster_primary->health_status
-                );
+//                printf(
+//                    "(%d)The Monster does %d damage : Health Status = %d\n",
+//                    monster_secondary->hit_points_current,
+//                    monster_attack_result,
+//                    monster_primary->health_status
+//                );
             }
 
-            Damage_Melee(
-                monster_secondary->action_current,
-                64,
-                monster_attack_result
-            );
+//            Damage_Melee(
+//                monster_secondary->action_current,
+//                64,
+//                monster_attack_result
+//            );
 
             Damage_Melee(
                 player_secondary->action_current,
@@ -375,42 +378,42 @@ void Main_Game_Loop(
 
         //////////////////// Render Monster ///////////////////////
 
-        glBindVertexArray(                          // set which VAO to draw
-            monster_model->vaoID
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[2],
-            1,
-            GL_FALSE,
-            (float *) projection_matrix
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[1],
-            1,
-            GL_FALSE,
-            (float *) current_game_state.main_camera.view_matrix
-        );
-
-        *monster_model = Calc_Model_matrix(
-            *monster_model,
-            monster_position
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[0],
-            1,
-            GL_FALSE,
-            (float *) monster_model->model_matrix
-        );
-
-        glDrawElements(                               // draw using Triangles
-            GL_TRIANGLES,
-            monster_model->num_indices,
-            GL_UNSIGNED_INT,
-            (void *) 0
-        );
+//        glBindVertexArray(                          // set which VAO to draw
+//            monster_model->vaoID
+//        );
+//
+//        glUniformMatrix4fv(
+//            shader.uniform_Locations[2],
+//            1,
+//            GL_FALSE,
+//            (float *) projection_matrix
+//        );
+//
+//        glUniformMatrix4fv(
+//            shader.uniform_Locations[1],
+//            1,
+//            GL_FALSE,
+//            (float *) current_game_state.main_camera.view_matrix
+//        );
+//
+//        *monster_model = Calc_Model_matrix(
+//            *monster_model,
+//            monster_position
+//        );
+//
+//        glUniformMatrix4fv(
+//            shader.uniform_Locations[0],
+//            1,
+//            GL_FALSE,
+//            (float *) monster_model->model_matrix
+//        );
+//
+//        glDrawElements(                               // draw using Triangles
+//            GL_TRIANGLES,
+//            monster_model->num_indices,
+//            GL_UNSIGNED_INT,
+//            (void *) 0
+//        );
 
         ///////////////////////////////////////////////////////////
 

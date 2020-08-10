@@ -39,7 +39,15 @@ add_executable(
         Source/GURPS/Sand_Combat.h
         Source/GURPS/Sand_Damage.c
         Source/GURPS/Sand_Damage.h
-        Source/GURPS/Monsters.c Source/GURPS/Monsters.h Source/Core/Dungeon_Level.c Source/Core/Dungeon_Level.h)
+        Source/GURPS/Monsters.c
+        Source/GURPS/Monsters.h
+        Source/Core/Dungeon_Level.c
+        Source/Core/Dungeon_Level.h
+        Source/GURPS/Items_Fixtures.c
+        Source/GURPS/Items_Fixtures.h
+        Source/OpenGL/Rendering.c
+        Source/OpenGL/Rendering.h
+)
 
 target_link_libraries(
         Sand_Rogue SDL2 GLEW GL assimp m
