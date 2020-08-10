@@ -74,7 +74,10 @@ void Main_Game_Loop(
     /////////////////////////////////////////////////////////////
     // place player
     // TODO : place player
+
     // camera
+    // TODO : (Valgrind) change camera to a static local_global pointer
+    // currently the camera is causing uninitialised memory error.
     Main_Camera camera;
     mat4 projection_matrix;
 
