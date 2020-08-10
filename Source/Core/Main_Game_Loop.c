@@ -8,11 +8,12 @@
 
 void Main_Game_Loop(
     Shader shader,
-    Game_Model floor_model,
     SDL_Window* window)
 {
     // our main game loop Starts Here
+    Dice_Initialize();
 
+    Game_Model floor_model = Sand_Floor_Tile_3D_Create(window);
 
     Dungeon_Level_Initialize();
     Dungeon_Level_New(1);
@@ -72,7 +73,7 @@ void Main_Game_Loop(
 
     /////////////////////////////////////////////////////////////
     // place player
-
+    // TODO : place player
     // camera
     Main_Camera camera;
     mat4 projection_matrix;
@@ -158,7 +159,7 @@ void Main_Game_Loop(
             //    monster_position
             );
 
-            i32 attack_result = 0;
+            i32 attack_result;
             //i32 monster_attack_result = 0;
 
             if(current_game_state.players_current_action ==
@@ -198,11 +199,11 @@ void Main_Game_Loop(
 //                monster_attack_result
 //            );
 
-            Damage_Melee(
-                player_secondary->action_current,
-                77,
-                attack_result
-            );
+//            Damage_Melee(
+//                player_secondary->action_current,
+//                77,
+//                attack_result
+//            );
         } // end of Game Update.
 
         ///////////////// Render ////////////////////////////////

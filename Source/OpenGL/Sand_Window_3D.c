@@ -4,15 +4,17 @@
 
 #include "Sand_Window_3D.h"
 
+
+
 SDL_Window* Sand_Window_Create()
 {
-    SDL_Window *window;                                   // Declare a pointer
-
     SDL_Init(
         SDL_INIT_EVENTS |
         SDL_INIT_TIMER |
         SDL_INIT_VIDEO
     );
+
+    SDL_Window *window;
 
     window = SDL_CreateWindow(
         WINDOW_TITLE,                                 // window title
@@ -99,8 +101,6 @@ SDL_Window* Sand_Window_Create()
 
 void Sand_Window_Destroy(SDL_Window* window)
 {
-    SDL_GL_DeleteContext(SDL_GL_GetCurrentContext());
-
     SDL_DestroyWindow(
         window
     );

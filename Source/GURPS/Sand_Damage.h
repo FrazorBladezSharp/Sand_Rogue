@@ -9,7 +9,7 @@
 #include "Source/Core/Game_Objects.h"
 #include "Source/Sand_Dice.h"
 
-
+// TODO : (Frazor) System change the access from Main Game Loop to Sand Combat
 
 void Damage_Melee(
     Action opponents_action,

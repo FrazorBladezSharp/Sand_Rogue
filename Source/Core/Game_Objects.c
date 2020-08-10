@@ -310,18 +310,18 @@ void Object_Cleanup()
         Vector_size(&vao_storage)
     );
 
-    for (int index = 0; index < Vector_size(&vao_storage); index++) {
-
-        GLuint vao = Vector_get(
-            &vao_storage,
-            index
-        );
-
-        glDeleteVertexArrays(
-            1,
-            (GLuint *) &vao
-        );
-    }
+//    for (int index = 0; index < Vector_size(&vao_storage); index++) {
+//
+//        GLuint vao = Vector_get(
+//            &vao_storage,
+//            index
+//        );
+//
+//        glDeleteVertexArrays(
+//            1,
+//            (GLuint *) &vao
+//        );
+//    }
 
     Vector_free_memory(
         &vao_storage
@@ -334,7 +334,7 @@ void Object_Cleanup()
         Vector_size(&vbo_storage)
     );
 
-    for (int index = 0; index < Vector_size(&vbo_storage); index++) {
+    for (int index = 0; index < Vector_size(&vbo_storage) - 1; index++) {
 
         GLuint vbo = Vector_get(
             &vbo_storage, index

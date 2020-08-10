@@ -10,6 +10,7 @@
 #include "Source/OpenGL/Load_Model_3D.h"
 #include "Source/Core/Map.h"
 #include "Source/GURPS/Monsters.h"
+#include "Source/GURPS/Items_Fixtures.h"
 
 void Object_Initialize();
 
@@ -65,7 +66,5 @@ void Object_Cleanup();
 ///////////////////////////// Items & Equipment /////////////////////////
 
 void Game_Items_Initialize();
-
-
 
 #endif //SAND_ROGUE_GAME_OBJECTS_H

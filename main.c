@@ -26,14 +26,9 @@
 ###############################################################
 */
 
-#include "Source/Common.h"
 #include "Source/OpenGL/Sand_Window_3D.h"
-#include "Source/Sand_Dice.h"
-#include "Source/Core/Text_File_Utils.h"
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Core/Game_Objects.h"
-#include "Source/OpenGL/Sand_Floor_Tile_3D.h"
-//#include "Source/Core/Dungeon_Level.h"
 #include  "Source/Core/Main_Game_Loop.h"
 
 int
@@ -50,12 +45,8 @@ main() {
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
 
-    Dice_Initialize();
-
     Object_Initialize();
     Game_Items_Initialize();
-
-    Game_Model floor = Sand_Floor_Tile_3D_Create(window);
 
     //////////////////// Shader /////////////////////////////////
 
@@ -65,7 +56,6 @@ main() {
 
     Main_Game_Loop(
         shader,
-        floor,
         window
     );
 

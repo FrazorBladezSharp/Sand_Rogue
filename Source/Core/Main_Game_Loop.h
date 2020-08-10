@@ -6,6 +6,9 @@
 #define SAND_ROGUE_MAIN_GAME_LOOP_H
 
 #include "Source/Common.h"
+#include "Source/OpenGL/Rendering.h"
+#include "Source/OpenGL/Sand_Floor_Tile_3D.h"
+#include "Source/Sand_Dice.h"
 #include "Source/Core/Dungeon_Level.h"
 #include "Source/Core/Game_Objects.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
@@ -13,9 +16,9 @@
 #include "Source/GURPS/Sand_Combat.h"
 #include "Source/GURPS/Sand_Damage.h"
 
+
 void Main_Game_Loop(
     Shader shader,
-    Game_Model floor_model,
     SDL_Window* window
 );
 
