@@ -22,11 +22,11 @@ static Monster_Stats monster_stats_component[MAX_ENTITIES];
 
 void Object_Initialize()
 {
-    Vector_init(
+    Vector_Init(
         &vao_storage                // initialize OpenGL handle storage
     );
 
-    Vector_init(
+    Vector_Init(
         &vbo_storage                // used to delete Gfx Card buffers
     );
 
@@ -267,14 +267,14 @@ void* Object_Lookup_Component(
 
 void Object_Add_VAO(GLint data)
 {                                   // TODO : (Frazor) sort this out
-    Vector_append(                  // this only exists as we use out original Hello World OpenGL
+    Vector_Append(                  // this only exists as we use out original Hello World OpenGL
         &vao_storage,               // as the floor tile and we didn't pass these args in
         data
     );
 }
 void Object_Add_VBO(GLint data)
 {
-    Vector_append(
+    Vector_Append(
         &vbo_storage,
         data
     );
@@ -300,12 +300,12 @@ void Object_Cleanup()
     // delete all vbo's that have been created
     printf(
         "Deleting VBO vectors: %d\n",
-        Vector_size(&vbo_storage)
+        Vector_Size(&vbo_storage)
     );
 
-    for (int index = 0; index < Vector_size(&vbo_storage); index++) {
+    for (int index = 0; index < Vector_Size(&vbo_storage); index++) {
 
-        GLuint vbo = Vector_get(
+        GLuint vbo = Vector_Get(
             &vbo_storage,
             index
         );
@@ -318,12 +318,12 @@ void Object_Cleanup()
     // delete all vao's that have been created
     printf(
         "Deleting VAO vectors: %d\n",
-        Vector_size(&vao_storage)
+        Vector_Size(&vao_storage)
     );
 
-    for (int index = 0; index < Vector_size(&vao_storage); index++) {
+    for (int index = 0; index < Vector_Size(&vao_storage); index++) {
 
-        GLuint vao = Vector_get(
+        GLuint vao = Vector_Get(
             &vao_storage,
             index
         );
@@ -334,11 +334,11 @@ void Object_Cleanup()
         );
     }
 
-    Vector_free_memory(
+    Vector_Free_Memory(
         &vbo_storage
     );
 
-    Vector_free_memory(
+    Vector_Free_Memory(
         &vao_storage
     );
 }

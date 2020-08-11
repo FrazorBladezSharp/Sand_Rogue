@@ -14,6 +14,10 @@ void Dungeon_Level_New(
     i8 dungeon_level
 );
 
+Position* Dungeon_Place_Player(
+    Position* position
+);
+
 Dungeon_Level_Current* Dungeon_level();
 
 void Dungeon_Level_Cleanup();

@@ -6,6 +6,7 @@
 
 Current_Game_State User_Keyboard_Input(
     Current_Game_State current_game_state,
+    Position* players_current_position,
     Dungeon_Level_Current* dungeon_level_current)
     //Position* monster_position)
 {
@@ -23,53 +24,53 @@ Current_Game_State User_Keyboard_Input(
 //    };
     // TODO : cant use bool if player is at edge boundaries ( ie : location 0,0,0)
     bool back = dungeon_level_current->map_cells
-        [(int)current_game_state.players_current_position->position[0] - 1]
-        [(int)current_game_state.players_current_position->position[2]];
+        [(int)players_current_position->position[0] - 1]
+        [(int)players_current_position->position[2]];
 
     bool forward = dungeon_level_current->map_cells
-        [(int)current_game_state.players_current_position->position[0] + 1]
-        [(int)current_game_state.players_current_position->position[2]];
+        [(int)players_current_position->position[0] + 1]
+        [(int)players_current_position->position[2]];
 
     bool left = dungeon_level_current->map_cells
-        [(int)current_game_state.players_current_position->position[0]]
-        [(int)current_game_state.players_current_position->position[2] - 1];
+        [(int)players_current_position->position[0]]
+        [(int)players_current_position->position[2] - 1];
 
     bool right = dungeon_level_current->map_cells
-        [(int)current_game_state.players_current_position->position[0]]
-        [(int)current_game_state.players_current_position->position[2] + 1];
+        [(int)players_current_position->position[0]]
+        [(int)players_current_position->position[2] + 1];
 
     if(currentKeyStates[SDL_SCANCODE_S] && back){
 
         // players x location decreases by 1
-        current_game_state.players_current_position->position[0] -= 1;
+        players_current_position->position[0] -= 1;
 
         current_game_state.main_camera.position[0] =
-            current_game_state.players_current_position->position[0] - 3.0f;
+            players_current_position->position[0] - 3.0f;
     }
     else if (currentKeyStates[SDL_SCANCODE_W] && forward) {
 
         // players x location increases by 1
-        current_game_state.players_current_position->position[0] += 1;
+        players_current_position->position[0] += 1;
 
         current_game_state.main_camera.position[0] =
-            current_game_state.players_current_position->position[0] - 3.0f;
+            players_current_position->position[0] - 3.0f;
     }
 
     if (currentKeyStates[SDL_SCANCODE_D] && right) {
 
         // player y location increases by 1
-        current_game_state.players_current_position->position[2] += 1;
+        players_current_position->position[2] += 1;
 
         current_game_state.main_camera.position[2] =
-            current_game_state.players_current_position->position[2] + 3.0f;
+            players_current_position->position[2] + 3.0f;
     }
     else if (currentKeyStates[SDL_SCANCODE_A] && left) {
 
         // player y location decreases by 1
-        current_game_state.players_current_position->position[2] -= 1;
+        players_current_position->position[2] -= 1;
 
         current_game_state.main_camera.position[2] =
-            current_game_state.players_current_position->position[2] + 3.0f;
+            players_current_position->position[2] + 3.0f;
     }
 
     // update camera & view_matrix

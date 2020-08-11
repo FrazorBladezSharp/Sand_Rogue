@@ -31,7 +31,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
     );
 
 
-    Vector_append(
+    Vector_Append(
         vao_storage,
         vao_buffer
     );
@@ -76,7 +76,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         &index_buffer
     );
 
-    Vector_append(
+    Vector_Append(
         vbo_storage,
         index_buffer
     );
@@ -102,7 +102,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         &vertex_buffer
     );
 
-    Vector_append(
+    Vector_Append(
         vbo_storage,
         vertex_buffer
     );
@@ -138,7 +138,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
 
     colors_array = (float*) malloc(
         sizeof(float) * mesh->mNumFaces * 3 * 4
-    );  // TODO : (Valgrind) Memory leak - this is never freed. x(27) Num Models
+    );
 
     uint i = 0;
 
@@ -161,7 +161,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         &color_buffer
     );
 
-    Vector_append(
+    Vector_Append(
         vbo_storage,
         color_buffer
     );
@@ -200,7 +200,7 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         &normal_buffer
     );
 
-    Vector_append(
+    Vector_Append(
         vbo_storage,
         normal_buffer
     );
@@ -246,6 +246,10 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
     //aiDetachAllLogStreams();
 
     free(face_array);
+
+    if(colors_array) {
+        free(colors_array);
+    }
 
     return loaded_asset;
 }

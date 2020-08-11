@@ -4,13 +4,13 @@
 
 #include "Sand_Vector.h"
 
-void Vector_init(Vector *vector){
+void Vector_Init(Vector *vector){
     vector->size = 0;
     vector->capacity = VECTOR_INITIAL_CAPACITY;
     vector->data = (int*) malloc(sizeof(int) * vector->capacity);
 }
 
-int Vector_get(Vector *vector, int index){
+int Vector_Get(Vector *vector, int index){
     if(index > vector->capacity || index < 0){
         printf("Index %d out of bounds for vector of size %d\n", index, vector->size);
         exit(1);
@@ -19,7 +19,7 @@ int Vector_get(Vector *vector, int index){
     return vector->data[index];
 }
 
-//void Vector_set(Vector *vector, int index, int value){
+//void Vector_Set(Vector *vector, int index, int value){
 //    while(index >= vector->size){
 //        Vector_append(vector, 0);
 //    }
@@ -27,69 +27,69 @@ int Vector_get(Vector *vector, int index){
 //    vector->data[index] = value;
 //}
 
-void Vector_append(Vector *vector, int value){
-    Vector_resize(vector);
+void Vector_Append(Vector *vector, int value){
+    Vector_Resize(vector);
 
     vector->data[vector->size++] = value;
 }
 
-//void Vector_prepend(Vector *vector, int value){
+//void Vector_Prepend(Vector *vector, int value){
 //    Vector_set(vector, 0, value);
 //    vector->size++;
 //}
 //
-//int Vector_pop(Vector *vector){
+//int Vector_Pop(Vector *vector){
 //    int data = vector->data[vector->size - 2];
 //    Vector_set(vector, vector->size - 1, 0);
 //    vector->size = vector->size - 1;
 //    return data;
 //}
 
-//void Vector_delete(Vector *vector, int index){
-//    for(int i = 0; i < index; i++){
-//        vector->data[index + i] = vector->data[index + i + 1];
-//    }
-//    vector->size = vector->size - 1;
-//}
+void Vector_Delete(Vector *vector, int index){
+    for(int i = 0; i < index; i++){
+        vector->data[index + i] = vector->data[index + i + 1];
+    }
+    vector->size = vector->size - 1;
+}
 
-//void Vector_delete_value(Vector *vector, int value){
-//    for(int i = 0; i < vector->size; i++){
-//        if(vector->data[i] == value){
-//            Vector_delete(vector, i);
-//        }
-//    }
-//}
-//
-//int Vector_find_value(Vector *vector, int value){
-//    for(int i = 0; i < vector->size; i++){
-//        if(vector->data[i] == value){
-//            return i;
-//        }
-//    }
-//
-//    return -1;
-//}
+void Vector_Delete_Value(Vector *vector, int value){
+    for(int i = 0; i < vector->size; i++){
+        if(vector->data[i] == value){
+            Vector_Delete(vector, i);
+        }
+    }
+}
 
-void Vector_resize(Vector *vector){
+int Vector_Find_Value(Vector *vector, int value){
+    for(int i = 0; i < vector->size; i++){
+        if(vector->data[i] == value){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void Vector_Resize(Vector *vector){
     if(vector->size >= vector->capacity){
         vector->capacity *= 2;
         vector->data = (int*) realloc(vector->data, sizeof(int) * vector->capacity);
     }
 }
 
-int Vector_size(Vector *vector){
+int Vector_Size(Vector *vector){
     return vector->size;
 }
 
-//int Vector_capacity(Vector *vector){
+//int Vector_Capacity(Vector *vector){
 //    return vector->capacity;
 //}
 //
-//bool Vector_is_empty(Vector *vector){
+//bool Vector_Is_Empty(Vector *vector){
 //    return vector->size == 0;
 //}
 
-void Vector_free_memory(Vector *vector) {
+void Vector_Free_Memory(Vector *vector) {
     free(vector->data);
 }
 

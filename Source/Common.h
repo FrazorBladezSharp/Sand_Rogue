@@ -71,6 +71,22 @@ typedef struct {
 
 } Point_3D;
 
+typedef enum {
+
+    UNIFORM_LOC_MODEL_MATRIX = 0,
+    UNIFORM_LOC_VIEW_MATRIX,
+    UNIFORM_LOC_PROJECTION_MATRIX,
+    UNIFORM_LOC_LIGHT_POSITION,
+    UNIFORM_LOC_LIGHT_COLOR,
+    UNIFORM_LOC_SHINE_DAMPER,
+    UNIFORM_LOC_REFLECTIVITY,
+    UNIFORM_LOC_SKY_COLOR,
+    UNIFORM_LOC_CAMERA_POSITION,
+
+    UNIFORM_LOC_COUNT
+
+} Shader_Uniform_Locations;
+
 typedef struct{
 
     GLuint shader_program;
@@ -279,8 +295,7 @@ typedef  struct {
     bool game_is_running;
     // camera
     Main_Camera main_camera;
-    // player_position
-    Position* players_current_position;
+    // player
     Action players_current_action;
 
 } Current_Game_State;

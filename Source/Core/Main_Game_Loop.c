@@ -12,6 +12,9 @@ void Main_Game_Loop(
 {
     // our main game loop Starts Here
     Dice_Initialize();
+    Vector render_models;
+    Vector_Init(&render_models);
+    Vector_Append(&render_models, 64);       // adds player to be rendered
 
     Game_Model floor_model = Sand_Floor_Tile_3D_Create(window);
 
@@ -24,62 +27,27 @@ void Main_Game_Loop(
         COMP_POSITION
     );
 
-//    Position* monster_position = (Position*)Object_Lookup_Component(
-//        77,
-//        COMP_POSITION
-//    );
-
-    Game_Model* player_model = (Game_Model*)Object_Lookup_Component(
-        64,
-        COMP_MODEL
-    );
-
-//    Game_Model* monster_model = (Game_Model*)Object_Lookup_Component(
-//        77,
-//        COMP_MODEL
-//    );
-
-    Primary_Characteristics* player_primary =
-        (Primary_Characteristics*)Object_Lookup_Component(
-            64,
-            COMP_PRIMARY_CHARACTERISTICS
-    );
-
-//    Primary_Characteristics* monster_primary =
+//    Primary_Characteristics* player_primary =
 //        (Primary_Characteristics*)Object_Lookup_Component(
-//            77,
+//            64,
 //            COMP_PRIMARY_CHARACTERISTICS
 //    );
-
+//
     Secondary_Characteristics* player_secondary =
         (Secondary_Characteristics*)Object_Lookup_Component(
             64,
             COMP_SECONDARY_CHARACTERISTICS
     );
 
-//    Secondary_Characteristics* monster_secondary =
-//        (Secondary_Characteristics*)Object_Lookup_Component(
-//            77,
-//            COMP_SECONDARY_CHARACTERISTICS
-//    );
-
-    glUseProgram(
-        shader.shader_program
-    );
-
-    /////////////////// Matrix locations in Shader ////////////////
-
-
-
-    /////////////////////////////////////////////////////////////
     // place player
     // TODO : place player
-
+    player_position = Dungeon_Place_Player(
+        player_position
+    );
     // camera
     // TODO : (Valgrind) change camera to a static local_global pointer
     // currently the camera is causing uninitialised memory error.
     Main_Camera camera;
-    mat4 projection_matrix;
 
     camera.position[0] = player_position->position[0] - 3.0f;
     camera.position[1] = 6.6f;
@@ -91,6 +59,8 @@ void Main_Game_Loop(
     camera = Calc_Camera_View_Matrix(
         camera
     );
+
+    mat4 projection_matrix;
 
     glm_perspective(
         45.0f,
@@ -117,7 +87,6 @@ void Main_Game_Loop(
 
         .game_is_running = true,
         .main_camera = camera,
-        .players_current_position = player_position,
         .players_current_action = ACTION_NONE
     };
 
@@ -159,11 +128,12 @@ void Main_Game_Loop(
             // we update the whole system
             current_game_state =  User_Keyboard_Input(
                 current_game_state,
+                player_position,
                 dungeon_level_current
             //    monster_position
             );
 
-            i32 attack_result;
+            //i32 attack_result;
             //i32 monster_attack_result = 0;
 
             if(current_game_state.players_current_action ==
@@ -172,261 +142,30 @@ void Main_Game_Loop(
                 player_secondary->action_current = ACTION_ATTACK;
                 //monster_secondary->action_current = ACTION_ATTACK;
 
-                attack_result = Sand_Attack_Roll(
-                    64,
-                    77
-                );
+//                attack_result = Sand_Attack_Roll(
+//                    64,
+//                    77
+//                );
 
 //                monster_attack_result = Sand_Attack_Roll(
 //                    77,
 //                    64
 //                );
-
-                printf(
-                    "(%d)You punch for %d Damage : Health Status = %d\n",
-                    player_secondary->hit_points_current,
-                    attack_result,
-                    player_primary->health_status
-                );
-
-//                printf(
-//                    "(%d)The Monster does %d damage : Health Status = %d\n",
-//                    monster_secondary->hit_points_current,
-//                    monster_attack_result,
-//                    monster_primary->health_status
-//                );
             }
-
-//            Damage_Melee(
-//                monster_secondary->action_current,
-//                64,
-//                monster_attack_result
-//            );
-
-//            Damage_Melee(
-//                player_secondary->action_current,
-//                77,
-//                attack_result
-//            );
         } // end of Game Update.
 
-        ///////////////// Render ////////////////////////////////
-
-        // TODO: rendering functionality
-
-        glClear(
-            GL_COLOR_BUFFER_BIT |
-            GL_DEPTH_BUFFER_BIT
-        );
-
-        glUseProgram(
-            shader.shader_program
-        );
-
-        glBindVertexArray(                          // set which VAO to draw
-            floor_model.vaoID
-        );
-        /* this could be made into an enum and moved to common.h
-     * model_matrix_loc = 0
-     * view_matrix_loc = 1
-     * projection_matrix_loc = 2
-     * light_position_loc = 3
-     * light_color_loc = 4
-     * shine_damper_loc = 5
-     * reflectivity_loc = 6
-     * sky_color_loc = 7
-     * camera_position_loc = 8
-     */
-        glUniformMatrix4fv(
-            shader.uniform_Locations[2],
-            1,
-            GL_FALSE,
-            (float *) projection_matrix
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[1],
-            1,
-            GL_FALSE,
-            (float *) current_game_state.main_camera.view_matrix
-        );
-
-        glUniform3f(
-            shader.uniform_Locations[3],
-            light_position[0],
-            light_position[1],
-            light_position[2]
-        );
-
-        glUniform3f(
-            shader.uniform_Locations[4],
-            light_color[0],
-            light_color[1],
-            light_color[2]
-        );
-
-        float shine_damper = 8.0f;
-
-        glUniform1f(
-            shader.uniform_Locations[5],
-            shine_damper
-        );                          // roughness of surface low = rough
-
-        float reflectivity = 1.0f; // % cloth = low// metal = med to high // water glass high //
-
-        glUniform1f(
-            shader.uniform_Locations[6],
-            reflectivity
-        );
-
-        vec3 sky_color;
-
-        sky_color[0] = 0.05f;
-        sky_color[1] = 0.02f;
-        sky_color[2] = 0.01f;
-
-        glUniform3f(
-            shader.uniform_Locations[7],
-            sky_color[0],
-            sky_color[1],
-            sky_color[2]
-        );
-
-        glUniform3f(
-            shader.uniform_Locations[8],
-            current_game_state.main_camera.position[0],
-            current_game_state.main_camera.position[1],
-            current_game_state.main_camera.position[2]
-        );
-
-        //////////////////////// Render Dungeon Map //////////////////////////
-
-        for (u8 x = 0; x <= MAP_WIDTH; x++) {
-
-            for (u8 z = 0; z <= MAP_HEIGHT; z++) {
-
-                if (dungeon_level_current->map_cells[x][z]) {
-
-                    vec3 floor_position = {(float) x, 0.0f, (float) z};
-
-                    Position current_floor_position = {
-                        0,
-                        floor_position[0],
-                        floor_position[1],
-                        floor_position[2],
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        1.0f
-                    };
-
-                    floor_model = Calc_Model_matrix(
-                        floor_model,
-                        &current_floor_position
-                    );
-
-                    glUniformMatrix4fv(
-                        shader.uniform_Locations[0],
-                        1,
-                        GL_FALSE,
-                        (float *) floor_model.model_matrix
-                    );
-
-                    glDrawElements(                               // draw using Triangles
-                        GL_TRIANGLES,
-                        floor_model.num_indices,
-                        GL_UNSIGNED_INT,
-                        (void *) 0
-                    );
-                }
-            }
-        } // end of map render
-
-        ////////////////////////////////// render Player ////////////////////////////////////////
-
-        glBindVertexArray(                          // set which VAO to draw
-            player_model->vaoID
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[2],
-            1,
-            GL_FALSE,
-            (float *) projection_matrix
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[1],
-            1,
-            GL_FALSE,
-            (float *) current_game_state.main_camera.view_matrix
-        );
-
-        *player_model = Calc_Model_matrix(
-            *player_model,
-            current_game_state.players_current_position
-        );
-
-        glUniformMatrix4fv(
-            shader.uniform_Locations[0],
-            1,
-            GL_FALSE,
-            (float *) player_model->model_matrix
-        );
-
-        glDrawElements(                               // draw using Triangles
-            GL_TRIANGLES,
-            player_model->num_indices,
-            GL_UNSIGNED_INT,
-            (void *) 0
-        );
-
-        //////////////////// Render Monster ///////////////////////
-
-//        glBindVertexArray(                          // set which VAO to draw
-//            monster_model->vaoID
-//        );
-//
-//        glUniformMatrix4fv(
-//            shader.uniform_Locations[2],
-//            1,
-//            GL_FALSE,
-//            (float *) projection_matrix
-//        );
-//
-//        glUniformMatrix4fv(
-//            shader.uniform_Locations[1],
-//            1,
-//            GL_FALSE,
-//            (float *) current_game_state.main_camera.view_matrix
-//        );
-//
-//        *monster_model = Calc_Model_matrix(
-//            *monster_model,
-//            monster_position
-//        );
-//
-//        glUniformMatrix4fv(
-//            shader.uniform_Locations[0],
-//            1,
-//            GL_FALSE,
-//            (float *) monster_model->model_matrix
-//        );
-//
-//        glDrawElements(                               // draw using Triangles
-//            GL_TRIANGLES,
-//            monster_model->num_indices,
-//            GL_UNSIGNED_INT,
-//            (void *) 0
-//        );
-
-        ///////////////////////////////////////////////////////////
-
-        glBindVertexArray(                          // disable the used VAO
-            0
-        );
-
         //////////////////////////////////////////////////////////
+
+        Render_all(
+            shader,
+            floor_model,
+            projection_matrix,
+            current_game_state,
+            light_position,
+            light_color,
+            dungeon_level_current,
+            &render_models
+        );
 
         // swap buffers for OpenGL
 
@@ -439,4 +178,6 @@ void Main_Game_Loop(
         );
 
     }   // end of the main game loop
+
+    Vector_Free_Memory(&render_models);
 }
