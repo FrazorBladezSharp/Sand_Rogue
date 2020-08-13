@@ -82,7 +82,7 @@ Dungeon_Level_Current* Items_Add_Fixtures_To_Level()
     Dungeon_Level_Current* ret = Dungeon_level();
     for(i32 testx = 0; testx < MAP_WIDTH; testx++){
         for(i32 testz = 0; testz < MAP_WIDTH; testz++){
-            if(ret->map_fixtures[testx][testz] == 43){
+            if(*ret->map_fixtures[(testx * testz) + testz] == 43){
                 printf("Door @  %d, %d\n", testx, testz);
             }
         }

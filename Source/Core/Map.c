@@ -21,12 +21,12 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
 
     while (rooms_generating) {
         // make a random room with a max size and width
-        u8 room_width = Dice_Roll(
+        u8 room_width_x = Dice_Roll(
             1,
             MAX_ROOM_WIDTH
         ) + 3;
 
-        u8 room_breadth = Dice_Roll(
+        u8 room_breadth_z = Dice_Roll(
             1,
             MAX_ROOM_HEIGHT
         ) + 3;
@@ -34,12 +34,12 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
         // place the room
         room_location.x = Dice_Roll(
             1,
-            MAP_WIDTH - room_width
+            MAP_WIDTH - room_width_x
         );
 
         room_location.z = Dice_Roll(
             1,
-            MAP_HEIGHT - room_breadth
+            MAP_HEIGHT - room_breadth_z
         );
 
         // attempt tp place room into map.
@@ -47,18 +47,18 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
             dungeon_level_current,
             room_location.x,
             room_location.z,
-            room_width,
-            room_breadth
+            room_width_x,
+            room_breadth_z
         );
 
         if (success) {
-            floor_tiles_used += (room_width) * (room_breadth);
+            floor_tiles_used += (room_width_x) * (room_breadth_z);
             level_rooms[room_count].dungeon_level = dungeon_level_current->dungeon_level;
             level_rooms[room_count].locationX = room_location.x;
             level_rooms[room_count].locationY = 0;
             level_rooms[room_count].locationZ = room_location.z;
-            level_rooms[room_count].width = room_width;
-            level_rooms[room_count].breadth = room_breadth;
+            level_rooms[room_count].width = room_width_x;
+            level_rooms[room_count].breadth = room_breadth_z;
             level_rooms[room_count].height = 1; // height of ceiling (ie Y-axis)
             level_rooms[room_count].light = 1;
 
@@ -138,11 +138,11 @@ Point_3D Map_Random_Point_In_Room(
 }
 
 bool Map_Carve_Room(Dungeon_Level_Current *dungeon_level_current,
-                    u32 x, u32 y, u32 width, u32 height) {
+                    u32 x, u32 y, u32 x_axis, u32 z_axis) {
 
     // make sure that no two rooms over lap.
-    for (uint i = x - 1; i < x + width + 1; i++) {
-        for (uint j = y - 1; j < y + height + 1; j++) {
+    for (uint i = x - 1; i < x + x_axis + 1; i++) {
+        for (uint j = y - 1; j < y + z_axis + 1; j++) {
             if (dungeon_level_current->map_cells[i][j]) {
                 return false;
             }
@@ -150,8 +150,8 @@ bool Map_Carve_Room(Dungeon_Level_Current *dungeon_level_current,
     }
 
     // all clear - go ahead and make the room
-    for (uint i = x; i < x + width; i++) {
-        for (uint j = y; j < y + height; j++) {
+    for (uint i = x; i < x + x_axis; i++) {
+        for (uint j = y; j < y + z_axis; j++) {
             dungeon_level_current->map_cells[i][j] = true;
         }
     }

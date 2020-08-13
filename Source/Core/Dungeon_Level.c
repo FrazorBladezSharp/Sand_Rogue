@@ -35,56 +35,56 @@ void Dungeon_Level_New(i8 dungeon_level){
 void Dungeon_Level_Add_Items_Fixtures(i32 item_fixture_id, i32 x, i32 z)
 {
     dungeon_level_current->map_fixtures[x][z] = item_fixture_id;
-    printf("adding %d to location x : %d, z : %d\n", item_fixture_id, x, z);
 }
 
 void Dungeon_Place_Doors()
 {
+    i32 door_id = 43;
     i32 number_of_rooms = 0; //Map_Number_Of_Rooms();
 
     for(i32 index = 0; index <= number_of_rooms; index++){
 
         Dungeon_Level_Rooms* current_room = Map_Lookup_Room(index);
-        // this gives locationX & LocationY as top left map point
+        // this gives locationX & LocationZ as top left map point
 
         i32 x_axis = current_room->locationX;
         i32 z_axis = current_room->locationZ;
 
-        i32 width = current_room->width;
-        i32 breadth = current_room->breadth;
+        i32 room_width_x = current_room->width;
+        i32 room_breadth_z = current_room->breadth;
 
-
-        // also gives Breadth(X) & Height(Z)(negative to positive)
-        /*
-         *      *******
-         *      *     *
-         *      *******
-         */
-        // check along west wall for corridors
-        // start at Z and go positive Height.
-        for(i32 z = z_axis; z <= width; z++){
-
-            if(dungeon_level_current->map_cells[x_axis][z]){
-
-                Dungeon_Level_Add_Items_Fixtures(43, x_axis, z);
-            }
+        // north wall
+        for(i32 i = x_axis; i < x_axis + room_width_x; i++){
+            Dungeon_Level_Add_Items_Fixtures(
+                door_id,
+                i,
+                z_axis
+            );
         }
-
-        // check along north wall for corridors
-        // start at X and go positive Breadth
-
-        // check along east wall for corridors +1 in x-axis
-        // start at Z + Breadth and go to positive Height
-//        for(i32 z = z_axis + breadth; z <= width; z++){
-//
-//            if(dungeon_level_current->map_cells[x_axis - 1][z]){
-//
-//                Dungeon_Level_Add_Items_Fixtures(43, x_axis, z);
-//            }
-//        }
-
-        // check along south wall for corridors +1 in z-axis
-        // start at X + Height and go positive Breadth
+        // south wall
+        for(i32 i = x_axis; i < x_axis + room_width_x; i++){
+            Dungeon_Level_Add_Items_Fixtures(
+                door_id,
+                i,
+                z_axis + room_breadth_z - 1
+            );
+        }
+        // west wall
+        for(i32 i = z_axis; i < z_axis + room_breadth_z; i++){
+            Dungeon_Level_Add_Items_Fixtures(
+                door_id,
+                x_axis,
+                i
+            );
+        }
+        // east wall
+        for(i32 i = z_axis; i < z_axis + room_breadth_z; i++){
+            Dungeon_Level_Add_Items_Fixtures(
+                door_id,
+                x_axis + room_width_x - 1,
+                i
+            );
+        }
     }
 }
 

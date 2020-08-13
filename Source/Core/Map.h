@@ -18,7 +18,7 @@ Point_3D Map_Random_Point_In_Room(
 );
 
 bool Map_Carve_Room(Dungeon_Level_Current *dungeon_level_current,
-                    u32 x, u32 y, u32 width, u32 height);
+                    u32 x, u32 y, u32 x_axis, u32 z_axis);
 
 void Map_Create_Corridor(
     Dungeon_Level_Current *dungeon_level_current,
