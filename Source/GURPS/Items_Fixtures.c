@@ -79,7 +79,15 @@ Dungeon_Level_Current* Items_Add_Fixtures_To_Level()
     Dungeon_Place_Doors();
     Dungeon_Place_Stairs();
     // TODO: Add Fixtures to Level
-    return Dungeon_level();
+    Dungeon_Level_Current* ret = Dungeon_level();
+    for(i32 testx = 0; testx < MAP_WIDTH; testx++){
+        for(i32 testz = 0; testz < MAP_WIDTH; testz++){
+            if(ret->map_fixtures[testx][testz] == 43){
+                printf("Door @  %d, %d\n", testx, testz);
+            }
+        }
+    }
+    return ret;
 // stairs down  as above       62          >       thing
 // stairs up  as above         60          <       thing
 // Trap  as above              94          ^       thing

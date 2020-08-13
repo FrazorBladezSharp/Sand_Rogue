@@ -110,21 +110,26 @@ Current_Game_State Object_Add_Doors_To_Render(
     i32 door = 43;
 
     Dungeon_Level_Current* current = Items_Add_Fixtures_To_Level();
+
     for(i32 x = 0; x < MAP_WIDTH; x++){
 
         for(i32 z = 0; z < MAP_HEIGHT; z++){
 
             if(current->map_fixtures[x][z] == door){
 
+                printf("current->map_fixtures[%d][%d]\n", x, z);
+
                 u32 index;
 
                 for (index = 100; index < MAX_ENTITIES; index++) {      // initialize Entities
 
-                    if(game_entities->entity_id[index] == UNUSED){
+                    if(object[index].object_id  == UNUSED){
 
                         break;
                     }            // set new door index
                 }
+                printf("New Object created : %d\n", index);
+                printf("Position = x : %d, z : %d\n", x, z);
 
                 game_entities->entity_id[index] = index;
                 object[index].object_id = index;
@@ -138,9 +143,9 @@ Current_Game_State Object_Add_Doors_To_Render(
 
                 object_position->object_id = index;
 
-                object_position->position[0] = 40.0f; //(float) x;
+                object_position->position[0] = (float) x;
                 object_position->position[1] = 0.5f;
-                object_position->position[2] = 20.0f; //(float) z;
+                object_position->position[2] = (float) z;
                 object_position->rotationX = 0.0f;
                 object_position->rotationY = -45.0f;
                 object_position->rotationZ = 0.0f;

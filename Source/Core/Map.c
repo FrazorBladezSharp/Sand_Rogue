@@ -59,7 +59,7 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
             level_rooms[room_count].locationZ = room_location.z;
             level_rooms[room_count].width = room_width;
             level_rooms[room_count].breadth = room_breadth;
-            level_rooms[room_count].height = 1;
+            level_rooms[room_count].height = 1; // height of ceiling (ie Y-axis)
             level_rooms[room_count].light = 1;
 
             if (room_count > 0) {
