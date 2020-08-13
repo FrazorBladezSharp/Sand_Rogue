@@ -85,10 +85,12 @@ void Object_Initialize()
         );
     }
 
-
-    //i32 number_of_dungeon_rooms = Map_Number_Of_Rooms();
-
-
+    Items_Initialize_Models(
+        &vao_storage,
+        &vbo_storage,
+        &model_component[0],
+        &object[0]
+    );
 }
 
 i32 Object_Create(
@@ -100,6 +102,78 @@ i32 Object_Create(
 
     return index;
 }
+
+Current_Game_State Object_Add_Doors_To_Render(
+    Current_Game_State render_objects
+){
+    // ask Items for a list of doors Vector ?
+    i32 door = 43;
+
+    Dungeon_Level_Current* current = Items_Add_Fixtures_To_Level();
+    for(i32 x = 0; x < MAP_WIDTH; x++){
+
+        for(i32 z = 0; z < MAP_HEIGHT; z++){
+
+            if(current->map_fixtures[x][z] == door){
+
+                u32 index;
+
+                for (index = 100; index < MAX_ENTITIES; index++) {      // initialize Entities
+
+                    if(game_entities->entity_id[index] == UNUSED){
+
+                        break;
+                    }            // set new door index
+                }
+
+                game_entities->entity_id[index] = index;
+                object[index].object_id = index;
+
+                // add position of door
+                Position *object_position;
+
+                object_position = (Position *) malloc(
+                    sizeof(Position)
+                );
+
+                object_position->object_id = index;
+
+                object_position->position[0] = 40.0f; //(float) x;
+                object_position->position[1] = 0.5f;
+                object_position->position[2] = 20.0f; //(float) z;
+                object_position->rotationX = 0.0f;
+                object_position->rotationY = -45.0f;
+                object_position->rotationZ = 0.0f;
+                object_position->scale = 1.0f;
+
+                position_component[object->object_id].object_id = index;    // keep track of all position components
+                object[index].component[COMP_POSITION] = object_position;   // add position component to object
+
+                ////////////////// add model ///////////////////////////////////////////
+
+                Game_Model* object_model;
+
+                object_model = (Game_Model *) malloc(
+                    sizeof(Game_Model)
+                );
+
+                Game_Model* model_to_use = (Game_Model*)Object_Lookup_Component(door, COMP_MODEL);
+
+                object_model->object_id = model_to_use->object_id;
+                object_model->vaoID = model_to_use->vaoID;
+                object_model->num_indices = model_to_use->num_indices;
+
+                model_component[object->object_id].object_id = index;
+                object[index].component[COMP_MODEL] = object_model;
+
+                Vector_Append(&render_objects.models_to_render, index);
+            } // end of if model = 42
+        } // end of z loop
+    } // end of x loop
+
+    return render_objects;
+}
+
     //////////////////////// Position Component //////////////////////////
 void Object_Add_Position(
     i32 object_id,

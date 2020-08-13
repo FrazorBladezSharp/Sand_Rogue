@@ -11,8 +11,7 @@ void Render_all(
     Current_Game_State current_game_state,
     vec3 light_position,
     vec3 light_color,
-    Dungeon_Level_Current* dungeon_level_current,
-    Vector* render_models)
+    Dungeon_Level_Current* dungeon_level_current)
 {
     glClear(
         GL_COLOR_BUFFER_BIT |
@@ -132,9 +131,9 @@ void Render_all(
         }
     } // end of map render
 
-    for(i32 index = 0; index < Vector_Size(render_models); index++){
+    for(i32 index = 0; index < Vector_Size(&current_game_state.models_to_render); index++){
 
-        Render_Model(Vector_Get(render_models, index), shader);
+        Render_Model(Vector_Get(&current_game_state.models_to_render, index), shader);
     }
 
     glBindVertexArray(                          // disable the used VAO

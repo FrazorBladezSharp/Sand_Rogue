@@ -29,7 +29,7 @@ void Items_Load_Model(
     Game_Object *object
 );
 
-void Items_Add_Fixtures_To_Level();
+Dungeon_Level_Current* Items_Add_Fixtures_To_Level();
 
 void Items_Add_to_Room(i32 number_of_dungeon_rooms);
 

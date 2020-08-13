@@ -12,9 +12,6 @@ void Main_Game_Loop(
 {
     // our main game loop Starts Here
     Dice_Initialize();
-    Vector render_models;
-    Vector_Init(&render_models);
-    Vector_Append(&render_models, 64);       // adds player to be rendered
 
     Game_Model floor_model = Sand_Floor_Tile_3D_Create(window);
 
@@ -27,12 +24,6 @@ void Main_Game_Loop(
         COMP_POSITION
     );
 
-//    Primary_Characteristics* player_primary =
-//        (Primary_Characteristics*)Object_Lookup_Component(
-//            64,
-//            COMP_PRIMARY_CHARACTERISTICS
-//    );
-//
     Secondary_Characteristics* player_secondary =
         (Secondary_Characteristics*)Object_Lookup_Component(
             64,
@@ -44,6 +35,8 @@ void Main_Game_Loop(
     player_position = Dungeon_Place_Player(
         player_position
     );
+
+
     // camera
     // TODO : (Valgrind) change camera to a static local_global pointer
     // currently the camera is causing uninitialised memory error.
@@ -83,24 +76,28 @@ void Main_Game_Loop(
     light_color[2] = 0.8f;
 
     // main run time game loop
+    Vector render_models;
+    Vector_Init(&render_models);
+    Vector_Append(&render_models, 64);       // adds player to be rendered
+
     Current_Game_State current_game_state = {
 
         .game_is_running = true,
         .main_camera = camera,
-        .players_current_action = ACTION_NONE
+        .players_current_action = ACTION_NONE,
+        .models_to_render = render_models
     };
 
+    // add Object to render &render_models
+    current_game_state =  Object_Add_Doors_To_Render(current_game_state);
+
     SDL_Event event;
-    //i32 mouseX;
-    //i32 mouseY;
 
     while (current_game_state.game_is_running) {
 
-        //mouseX = 0;
-        //mouseY = 0;
         current_game_state.players_current_action = ACTION_NONE;
         player_secondary->action_current = ACTION_NONE;
-        //monster_secondary->action_current = ACTION_NONE;
+
 
         while (SDL_PollEvent(&event) == SDL_TRUE) {
         /*
@@ -130,27 +127,12 @@ void Main_Game_Loop(
                 current_game_state,
                 player_position,
                 dungeon_level_current
-            //    monster_position
             );
-
-            //i32 attack_result;
-            //i32 monster_attack_result = 0;
 
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
                 player_secondary->action_current = ACTION_ATTACK;
-                //monster_secondary->action_current = ACTION_ATTACK;
-
-//                attack_result = Sand_Attack_Roll(
-//                    64,
-//                    77
-//                );
-
-//                monster_attack_result = Sand_Attack_Roll(
-//                    77,
-//                    64
-//                );
             }
         } // end of Game Update.
 
@@ -163,8 +145,7 @@ void Main_Game_Loop(
             current_game_state,
             light_position,
             light_color,
-            dungeon_level_current,
-            &render_models
+            dungeon_level_current
         );
 
         // swap buffers for OpenGL

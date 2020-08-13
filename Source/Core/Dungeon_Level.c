@@ -34,7 +34,7 @@ void Dungeon_Level_New(i8 dungeon_level){
 
 void Dungeon_Level_Add_Items_Fixtures(i32 item_fixture_id, i32 x, i32 z)
 {
-    dungeon_level_current->map_fixtures[x][z] = item_fixture_id; // TODO : add to render and test doors
+    dungeon_level_current->map_fixtures[x][z] = item_fixture_id;
 }
 
 void Dungeon_Place_Doors()

@@ -74,11 +74,12 @@ void Items_Load_Model(
 // Doors  as above            43          +       thing
 //}
 
-void Items_Add_Fixtures_To_Level()
+Dungeon_Level_Current* Items_Add_Fixtures_To_Level()
 {
     Dungeon_Place_Doors();
     Dungeon_Place_Stairs();
     // TODO: Add Fixtures to Level
+    return Dungeon_level();
 // stairs down  as above       62          >       thing
 // stairs up  as above         60          <       thing
 // Trap  as above              94          ^       thing

@@ -19,8 +19,7 @@ void Render_all(
     Current_Game_State current_game_state,
     vec3 light_position,
     vec3 light_color,
-    Dungeon_Level_Current* dungeon_level_current,
-    Vector* render_models
+    Dungeon_Level_Current* dungeon_level_current
 );
 
 void Render_Model(

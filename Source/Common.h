@@ -298,6 +298,8 @@ typedef  struct {
     Main_Camera main_camera;
     // player
     Action players_current_action;
+    // models to render
+    Vector models_to_render;
 
 } Current_Game_State;
 
