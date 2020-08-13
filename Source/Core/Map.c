@@ -212,3 +212,10 @@ i32 Map_Number_Of_Rooms()
 {
     return room_count;
 }
+
+Dungeon_Level_Rooms* Map_Lookup_Room(i32 room_number)
+{
+    return &level_rooms[room_number];
+}
+
+

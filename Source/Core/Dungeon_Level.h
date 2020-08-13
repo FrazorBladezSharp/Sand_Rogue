@@ -14,6 +14,12 @@ void Dungeon_Level_New(
     i8 dungeon_level
 );
 
+void Dungeon_Level_Add_Items_Fixtures(i32 fixture_id, i32 x, i32 y);
+
+void Dungeon_Place_Doors();
+
+void Dungeon_Place_Stairs();
+
 Position* Dungeon_Place_Player(
     Position* position
 );

@@ -5,8 +5,59 @@
 #include "Items_Fixtures.h"
 
 // TODO: Initialize Models
-void Items_Initialize_Models()
-{
+void Items_Initialize_Models(
+    Vector *vao_storage,
+    Vector *vbo_storage,
+    Game_Model *model_component,
+    Game_Object *object
+){
+//    char buffer[126];
+
+//        sprintf(
+//            buffer,
+//            "Resource/Models/Ascii_3D/%c.obj",
+//            index
+//        );
+    vec4 color = {0.5f, 0.25f, 0.1f, 1.0f};
+
+    Items_Load_Model(
+        43,
+        color,
+        "Resource/Models/Ascii_3D/+.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+
+}
+
+void Items_Load_Model(
+    i32 object_id,
+    vec4 color,
+    const char* file_path,
+    Vector *vao_storage,
+    Vector *vbo_storage,
+    Game_Model *model_component,
+    Game_Object *object){
+
+    Game_Model *object_model;
+
+    object_model = Load_Model_3D(   // memory is allocated by the model loader.
+        file_path,
+        color,
+        vao_storage,
+        vbo_storage
+    );
+
+    object_model->object_id = object_id;
+
+    model_component[object->object_id].object_id = object_id;
+    object[object_id].component[COMP_MODEL] = object_model;
+}
+
+//void Items_Initialize_Models()
+//{
 // armour  as above location  93          ]       object cycle through objects to place them
 // weapon as above location   41          )       object
 // rings  as above             61          =       object
@@ -21,19 +72,21 @@ void Items_Initialize_Models()
 // stairs up  as above         60          <       thing
 // Trap  as above              94          ^       thing
 // Doors  as above            43          +       thing
+//}
 
-}
-
-void Items_Add_To_Level()
+void Items_Add_Fixtures_To_Level()
 {
+    Dungeon_Place_Doors();
+    Dungeon_Place_Stairs();
     // TODO: Add Fixtures to Level
 // stairs down  as above       62          >       thing
 // stairs up  as above         60          <       thing
 // Trap  as above              94          ^       thing
 // Doors  as above            43          +       thing
+
 }
 
-void Items_Add_to_Room()
+void Items_Add_to_Room(i32 number_of_dungeon_rooms)
 {
     // TODO: add room Contents when door is opened
 // Room_Contents. room_contents[index] room = dark (rnd(10) < (level - 1))

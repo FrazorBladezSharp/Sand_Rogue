@@ -178,7 +178,7 @@ void Monsters_Initialize_Models(
             model_component,
             object
         );
-    } // end of model loading.
+    } // end of monster model loading.
 }
 
 
@@ -190,7 +190,6 @@ void Monsters_Load_Monster_Model(
     Vector *vbo_storage,
     Game_Model *model_component,
     Game_Object *object) {
-
 
     Game_Model *object_model;
 

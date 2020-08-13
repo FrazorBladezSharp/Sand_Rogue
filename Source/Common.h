@@ -97,6 +97,7 @@ typedef struct {
 
     i8 dungeon_level;
     bool map_cells[MAP_WIDTH + 1][MAP_HEIGHT + 1];
+    i32 map_fixtures[MAP_WIDTH + 1][MAP_HEIGHT + 1];
 
 } Dungeon_Level_Current;
 
