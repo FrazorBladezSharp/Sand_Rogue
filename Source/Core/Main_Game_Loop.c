@@ -31,16 +31,11 @@ void Main_Game_Loop(
     );
 
     // place player
-    // TODO : place player
     player_position = Dungeon_Place_Player(
         player_position
     );
 
-
-
-
     // camera
-    // TODO : (Valgrind) change camera to a static local_global pointer
     // currently the camera is causing uninitialised memory error.
     Main_Camera camera;
 
@@ -91,7 +86,8 @@ void Main_Game_Loop(
     };
 
     // add Object to render (&render_models)
-    current_game_state =  Object_Add_Doors_To_Render(current_game_state);
+    current_game_state = Object_Add_Doors_To_Render(current_game_state);
+    current_game_state = Object_Add_Stairs_To_Render(current_game_state);
     // add Test Monster
     current_game_state = Object_Add_Monster_To_Render(current_game_state);
     Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);

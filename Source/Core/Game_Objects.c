@@ -191,6 +191,17 @@ Current_Game_State Object_Add_Doors_To_Render(
     return render_objects;
 }
 
+Current_Game_State Object_Add_Stairs_To_Render(Current_Game_State render_objects)
+{
+    i32 id = 62;
+    i32 room = 0;
+
+    Object_Add_Position(id, room);
+
+    Vector_Append(&render_objects.models_to_render, id);
+    return render_objects;
+}
+
     //////////////////////// Position Component //////////////////////////
 void Object_Add_Position(
     i32 object_id,
@@ -358,36 +369,6 @@ void* Object_Lookup_Component(
 {
     return object[object_id].component[component];
 }
-
-void Object_Add_VAO(GLint data)
-{                                   // TODO : (Frazor) sort this out
-    Vector_Append(                  // this only exists as we use out original Hello World OpenGL
-        &vao_storage,               // as the floor tile and we didn't pass these args in
-        data
-    );
-}
-void Object_Add_VBO(GLint data)
-{
-    Vector_Append(
-        &vbo_storage,
-        data
-    );
-}
-
-/* TODO: Objects Update
-void Objects_Update( //              NOTE This can all be done in Game_Objects
-    i8 current_dungeon_level){      // add and remove objects from line of sight
-
-    //distribute monsters across the level. chance per room + wandering extra chance
-* how many ? = how many have been seen
- * monsters_added = 0
- *
- * add a monster
- *
- * copy its stats to the monster list for the level (101)
-    */
-
-// generate a new monster as required
 
 void Object_Cleanup()
 {

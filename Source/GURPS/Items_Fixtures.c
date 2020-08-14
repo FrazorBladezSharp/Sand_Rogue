@@ -4,7 +4,6 @@
 
 #include "Items_Fixtures.h"
 
-// TODO: Initialize Models
 void Items_Initialize_Models(
     Vector *vao_storage,
     Vector *vbo_storage,
@@ -30,6 +29,16 @@ void Items_Initialize_Models(
         object
     );
 
+    Items_Load_Model(
+        62,
+        color,
+        "Resource/Models/Ascii_3D/Greater_Than.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+
 }
 
 void Items_Load_Model(
@@ -42,6 +51,8 @@ void Items_Load_Model(
     Game_Object *object){
 
     Game_Model *object_model;
+
+    object->object_id = object_id;
 
     object_model = Load_Model_3D(   // memory is allocated by the model loader.
         file_path,
@@ -78,7 +89,7 @@ Dungeon_Level_Current* Items_Add_Fixtures_To_Level()
 {
     Dungeon_Place_Doors();
     Dungeon_Place_Stairs();
-    // TODO: Add Fixtures to Level
+
     Dungeon_Level_Current* ret = Dungeon_level();
 
     return ret;
