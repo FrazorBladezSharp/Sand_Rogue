@@ -10,6 +10,7 @@
 #include "Source/Core/Game_Objects.h"
 
 Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window);
+void Sand_Floor_Cleanup();
 
 // this is destroyed in the Core/Objects.c file
 

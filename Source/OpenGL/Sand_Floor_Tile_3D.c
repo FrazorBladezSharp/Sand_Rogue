@@ -4,6 +4,13 @@
 
 #include "Sand_Floor_Tile_3D.h"
 
+static GLuint vaoID;
+static GLuint iboID;                                     // Index Buffer Object for our Indices
+static GLuint vboID;                                  // Vertex Buffer Object for the vertices
+static GLuint color_buffer;                           // Vertex Buffer Object for the vertices
+static GLuint nboID;                                  // Vertex Buffer Object for the vertices
+
+
 Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
 {
     SDL_GL_MakeCurrent(window, SDL_GL_GetCurrentContext());
@@ -34,14 +41,10 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
         0, 2, 3              // triangle 1
     };
 
-    GLuint vaoID;
-
     glCreateVertexArrays(
         1,
         &vaoID
     );
-
-    Object_Add_VAO(vaoID);
 
     glBindVertexArray(                          // bind the VAO to record what we do
         vaoID
@@ -49,14 +52,10 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
 
     /////////////////////////// Index Buffer ////////////////////////////////////
 
-    u32 iboID;                              // Index Buffer Object for our Indices
-
     glGenBuffers(
         1,
         &iboID
     );
-
-    Object_Add_VBO(iboID);
 
     glBindBuffer(
         GL_ELEMENT_ARRAY_BUFFER,
@@ -72,14 +71,10 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
 
     /////////////////////////////// Vertex Buffer ///////////////////////////////////////////////
 
-    GLuint vboID;                                  // Vertex Buffer Object for the vertices
-
     glGenBuffers(
         1,
         &vboID
     );
-
-    Object_Add_VBO(vboID);
 
     glBindBuffer(
         GL_ARRAY_BUFFER,
@@ -108,14 +103,10 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
 
     /////////////////////////// Color Buffer /////////////////////////////////////////
 
-    GLuint color_buffer;                                  // Vertex Buffer Object for the vertices
-
     glGenBuffers(
         1,
         &color_buffer
     );
-
-    Object_Add_VBO(color_buffer);
 
     glBindBuffer(
         GL_ARRAY_BUFFER,
@@ -144,14 +135,10 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
 
     /////////////////////////// Normals Buffer /////////////////////////////////////////
 
-    GLuint nboID;                                  // Vertex Buffer Object for the vertices
-
     glGenBuffers(
         1,
         &nboID
     );
-
-    Object_Add_VBO(nboID);
 
     glBindBuffer(
         GL_ARRAY_BUFFER,
@@ -201,4 +188,33 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
     );
 
     return floor;
+}
+
+void Sand_Floor_Cleanup()
+{
+
+    glDeleteVertexArrays(
+        1,
+        (GLuint *) &iboID
+    );
+
+    glDeleteVertexArrays(
+        1,
+        (GLuint *) &vboID
+    );
+
+    glDeleteVertexArrays(
+        1,
+        (GLuint *) &color_buffer
+    );
+
+    glDeleteVertexArrays(
+        1,
+        (GLuint *) &nboID
+    );
+
+    glDeleteVertexArrays(
+        1,
+        (GLuint *) &vaoID
+    );
 }

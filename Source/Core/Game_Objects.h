@@ -53,14 +53,6 @@ void* Object_Lookup_Component(
     i32 component
 );
 
-void Object_Add_VAO(
-    GLint data
-);
-
-void Object_Add_VBO(
-    GLint data
-);
-
 void Object_Cleanup();
 
 ///////////////////////////// Items & Equipment /////////////////////////

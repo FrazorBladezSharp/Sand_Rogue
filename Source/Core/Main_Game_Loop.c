@@ -167,5 +167,6 @@ void Main_Game_Loop(
 
     }   // end of the main game loop
 
+    Sand_Floor_Cleanup();
     Vector_Free_Memory(&render_models);
 }
