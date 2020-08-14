@@ -142,6 +142,8 @@ static i8 damage_melee[27] = {
 };
 static i8 damage_ranged[27];
 static i32 shock[27];
+static i32 health[27];
+static i32 attack_target[27];
 
 
 
@@ -210,18 +212,18 @@ void Monsters_Data_Initialize() {
 
     memset (health_status,0,90);
     memset (shock, 0, 90);
+    memset (attack_target, -1, 90);
 
-    for(u8 index = 64; index < 91; index++){
+    for(i32 index = 0; index < 27; index++){
 
-        //health_status[index] = HEALTH_STATUS_NONE;
         will[index] = 3 + level[index];
         base_speed[index] = 4.19 + (level[index] * 0.01); // may need to modify this
-        hit_points_max[index] = level[index];             // number of dice to roll
-        hit_points_current[index] = hit_points_max[index];
+        hit_points_max[index] = level[index] * 6;             // number of dice to roll
+        hit_points_current[index] = Dice_Roll(level[index], 6);
+        health[index] = hit_points_max[index];
         dodge[index] = will[index];
         attack_skill[index] = will[index];
         damage_ranged[index] = level[index] - 6;
-        //shock[index] = 0;
     }
 
 
@@ -395,4 +397,12 @@ u8 Monsters_Damage_Ranged(i32 monster_id) {
 
 i32 Monsters_Shock(i32 monster_id) {
     return shock[monster_id];
+}
+
+i32 Monster_Health(i32 monster_id){
+    return health[monster_id];
+}
+
+i32 Monster_Attack_Target(i32 target_id){
+    return attack_target[target_id];
 }

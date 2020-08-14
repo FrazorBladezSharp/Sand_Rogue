@@ -27,48 +27,56 @@ void Damage_Melee(
     DR at all. Reduce the victim’s current HP
     total by the injury sustained.
     */
-    Primary_Characteristics* primary = (Primary_Characteristics*) Object_Lookup_Component(
-        object_id,
-        COMP_PRIMARY_CHARACTERISTICS
-    );
 
-    Secondary_Characteristics* secondary = (Secondary_Characteristics*) Object_Lookup_Component(
+    Monster_Stats* defender = (Monster_Stats*)Object_Lookup_Component(
         object_id,
-        COMP_SECONDARY_CHARACTERISTICS
+        COMP_MONSTER_STATS
     );
-
-    Combat_Stats* combat = (Combat_Stats*) Object_Lookup_Component(
-        object_id,
-        COMP_COMBAT_STATS
-    );
+//    Primary_Characteristics* primary = (Primary_Characteristics*) Object_Lookup_Component(
+//        object_id,
+//        COMP_PRIMARY_CHARACTERISTICS
+//    );
+//
+//    Secondary_Characteristics* secondary = (Secondary_Characteristics*) Object_Lookup_Component(
+//        object_id,
+//        COMP_SECONDARY_CHARACTERISTICS
+//    );
+//
+//    Combat_Stats* combat = (Combat_Stats*) Object_Lookup_Component(
+//        object_id,
+//        COMP_COMBAT_STATS
+//    );
 
     if(damage <= 0) {
 
-        if(primary->health_status == HEALTH_STATUS_SHOCK){
+        if(defender->health_status == HEALTH_STATUS_SHOCK){
 
-            primary->health_status = HEALTH_STATUS_NONE;
+            defender->health_status = HEALTH_STATUS_NONE;
         }
 
         return;
 
-    }else if(primary->health_status == HEALTH_STATUS_NONE){
+    }else if(defender->health_status == HEALTH_STATUS_NONE){
 
-        primary->health_status = HEALTH_STATUS_SHOCK;
+        defender->health_status = HEALTH_STATUS_SHOCK;
     }
 
-    i32 health = primary->health;
+    i32 health = defender->health; // primary->health;
 
-    secondary->hit_points_current -= damage;
+    //secondary->hit_points_current -= damage;
+    defender->hit_points_current -= damage;
     /*
      All effects are cumulative.
      Less than 1/3 your HP left – You are reeling
      from your wounds. Halve your Move
      and Dodge (round up).
      */
-    if(secondary->hit_points_current < secondary->hit_points_max / 3){
+    if(defender->hit_points_current < defender->hit_points_max / 3){
 
-        secondary->basic_move /= 2;
-        combat->dodge /= 2;
+        //secondary->basic_move /= 2;
+        defender->base_speed *= 0.5f;
+        //->dodge /= 2;
+        defender->dodge *= 0.5f;
     }
     /*
      0 HP or less – You are in immediate danger
@@ -91,14 +99,14 @@ void Damage_Melee(
     Nothing.
     */
     i32 multiple_negative_hp =
-        secondary->hit_points_current / health;
+        (i32)(defender->hit_points_current / health);
 
-    if(secondary->hit_points_current <=0 &&
+    if(defender->hit_points_current <=0 &&
         opponents_action != ACTION_NONE){
 
         printf("Object %d makes a health roll (Negative Hp)\n", object_id);
 
-        primary->health_status = Damage_Health_Roll(
+        defender->health_status = Damage_Health_Roll(
             health,
             multiple_negative_hp,
             HEALTH_STATUS_UNCONCIOUS
@@ -119,11 +127,11 @@ void Damage_Melee(
     you survive, you must roll again at -22
     HP, -33 HP, and so on . . .
      */
-    if((secondary->hit_points_current <= ((-1 + multiple_negative_hp) * health)) &&
-      ((secondary->hit_points_current > ((-2 + multiple_negative_hp) * health)))){
+    if((defender->hit_points_current <= ((-1 + multiple_negative_hp) * health)) &&
+      ((defender->hit_points_current > ((-2 + multiple_negative_hp) * health)))){
 
         printf("Object %d makes a health roll (Death)\n", object_id);
-        primary->health_status = Damage_Health_Roll(
+        defender->health_status = Damage_Health_Roll(
             health,
             0,
             HEALTH_STATUS_DEATH
@@ -136,9 +144,9 @@ void Damage_Melee(
     You have lost a total of 6 times your HP! Nobody can
     survive that much injury.
      */
-    if(secondary->hit_points_current <= (-5 * health)){
+    if(defender->hit_points_current <= (-5 * health)){
 
-        primary->health_status = HEALTH_STATUS_DEATH;
+        defender->health_status = HEALTH_STATUS_DEATH;
 
         return;
     }
@@ -176,7 +184,7 @@ void Damage_Melee(
         shock_generated = -4;
     }
 
-    combat->shock = shock_generated;
+    defender->shock = shock_generated;
     /*
     Major Wounds
     A “major wound” is any single injury of
@@ -187,17 +195,17 @@ void Damage_Melee(
     if(damage > health / 2){
 
         printf("Object %d makes a health roll (Major Wounds)\n", object_id);
-        primary->health_status = Damage_Health_Roll(
+        defender->health_status = Damage_Health_Roll(
             health,
             0,
             HEALTH_STATUS_MAJOR_WOUNDS
         );
     }
 
-    if(primary->health_status == HEALTH_STATUS_MORTAL_WOUNDS){
+    if(defender->health_status == HEALTH_STATUS_MORTAL_WOUNDS){
 
         printf("Object %d makes a health roll (Mortal Wounds)\n", object_id);
-        primary->health_status = Damage_Health_Roll(
+        defender->health_status = Damage_Health_Roll(
             health,
             0,
             HEALTH_STATUS_MORTAL_WOUNDS

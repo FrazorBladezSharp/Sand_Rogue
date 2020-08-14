@@ -44,10 +44,23 @@ before you roll.
    same hand.
 */
 
-// TODO : Re-write combat to use monster data with 0 = default player.
-// requires a full re-working of variables used.
+void Sand_Combat_Update(i32 monster_id)
+{
+    i32 player_id = 64;
+    i32 damage;
 
-i32 Sand_Attack_Roll(i32 attacker, i32 defender)
+    damage = Sand_Combat_Resolution(player_id, monster_id);
+    if(damage > 0) printf("Player does %d Damage.\n", damage);
+    Damage_Melee(ACTION_ATTACK, monster_id, damage);
+
+    damage = Sand_Combat_Resolution(monster_id, player_id);
+    if(damage > 0) printf("Monster does %d Damage.\n", damage);
+    Damage_Melee(ACTION_ATTACK, player_id, damage);
+}
+
+i32 Sand_Combat_Resolution(
+    i32 attacker_id,
+    i32 defender_id)
 {
     /*
     Your “attack roll” is a regular success
@@ -55,18 +68,28 @@ i32 Sand_Attack_Roll(i32 attacker, i32 defender)
     plus or minus any appropriate modifiers)
     with the weapon you are using. */
 
-    Primary_Characteristics* primary = (Primary_Characteristics*)Object_Lookup_Component(
-        attacker,
-        COMP_PRIMARY_CHARACTERISTICS
+    Monster_Stats* attacker = (Monster_Stats*)Object_Lookup_Component(
+        attacker_id,
+        COMP_MONSTER_STATS
     );
 
-    Combat_Stats* combat = (Combat_Stats*)Object_Lookup_Component(
-        attacker,
-        COMP_COMBAT_STATS
+    Monster_Stats* defender = (Monster_Stats*)Object_Lookup_Component(
+        defender_id,
+        COMP_MONSTER_STATS
     );
 
-    i32 attack_base_skill = primary->dexterity;
-    i32 attack_modifiers = combat->shock;
+//    Primary_Characteristics* primary = (Primary_Characteristics*)Object_Lookup_Component(
+//        attacker_id,
+//        COMP_PRIMARY_CHARACTERISTICS
+//    );
+//
+//    Combat_Stats* combat = (Combat_Stats*)Object_Lookup_Component(
+//        attacker_id,
+//        COMP_COMBAT_STATS
+//    );
+
+    u8 attack_base_skill = attacker->attack_skill; // primary->dexterity;
+    i32 attack_modifiers = attacker->shock; // combat->shock;
 
     i32 attack_roll;
     i32 effective_skill = attack_base_skill + attack_modifiers;
@@ -192,7 +215,7 @@ i32 Sand_Attack_Roll(i32 attacker, i32 defender)
 
 
 
-bool Defence_Roll(i32 object_id)
+bool Defence_Roll(Monster_Stats* defender)
 {
     /*
     Defense Roll
@@ -203,12 +226,12 @@ bool Defence_Roll(i32 object_id)
     defense was ineffective and the attack struck
     home.
     */
-    Combat_Stats* combat = Object_Lookup_Component(
-        object_id,
-        COMP_COMBAT_STATS
-    );
+//    Combat_Stats* combat = Object_Lookup_Component(
+//        object_id,
+//        COMP_COMBAT_STATS
+//    );
 
-    i32 active_defence_score = combat->dodge; // basic dodge speed for stats @ 9
+    i32 active_defence_score = defender->dodge; // combat->dodge;
     /*
     If you are stunned, any active defense is at -4.
 

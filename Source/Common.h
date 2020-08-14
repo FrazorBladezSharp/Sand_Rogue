@@ -38,7 +38,7 @@
 #define MAX_ROOM_WIDTH 16
 #define MAX_ROOM_HEIGHT 12
 //#define MAX_ROOMS 126
-#define MAX_ROOM_CONTENTS 1024
+//#define MAX_ROOM_CONTENTS 1024 TODO : room contents
 
 #define MAX_ENTITIES 1024
 
@@ -81,9 +81,9 @@ typedef enum {
     UNIFORM_LOC_SHINE_DAMPER,
     UNIFORM_LOC_REFLECTIVITY,
     UNIFORM_LOC_SKY_COLOR,
-    UNIFORM_LOC_CAMERA_POSITION,
+    UNIFORM_LOC_CAMERA_POSITION
 
-    UNIFORM_LOC_COUNT
+    //UNIFORM_LOC_COUNT
 
 } Shader_Uniform_Locations;
 
@@ -113,11 +113,11 @@ typedef struct {
     u8 light;
 } Dungeon_Level_Rooms;
 
-typedef struct{
-
-    i8 dungeon_level;
-    i32 contents[MAX_ROOM_CONTENTS];
-} Room_Contents;
+//typedef struct{ TODO: complete the room contents.
+//
+//    i8 dungeon_level;
+//    i32 contents[MAX_ROOM_CONTENTS];
+//} Room_Contents;
 
 typedef struct {
     vec3 position;
@@ -149,9 +149,9 @@ typedef enum {
     DAMAGE_POISON_STRENGTH,
     DAMAGE_DRAIN_MAX_HP,
     DAMAGE_DRAIN_HP,
-    DAMAGE_MIMIC,
+    DAMAGE_MIMIC
 
-    DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
+    //DAMAGE_TYPE_COUNT               // keep a count on how many Damage Types we have
 
 } Damage_Type;
 
@@ -159,9 +159,9 @@ typedef enum{
 
     ACTION_NONE,
     ACTION_MOVE,
-    ACTION_ATTACK,
+    ACTION_ATTACK
 
-    ACTION_COUNT
+    //ACTION_COUNT
 
 } Action;
 
@@ -171,9 +171,9 @@ typedef enum {
     COMP_PRIMARY_CHARACTERISTICS,
     COMP_SECONDARY_CHARACTERISTICS,
     COMP_COMBAT_STATS,
-    COMP_MONSTER_STATS,
+    COMP_MONSTER_STATS
 
-    COMP_COUNT                                  // keep a count on how many components we have
+    //COMP_COUNT                                  // keep a count on how many components we have
 
 } Game_Component;
 
@@ -185,9 +185,9 @@ typedef enum{
     HEALTH_STATUS_KNOCKDOWN_AND_STUN,
     HEALTH_STATUS_UNCONCIOUS,
     HEALTH_STATUS_MORTAL_WOUNDS,
-    HEALTH_STATUS_DEATH,
+    HEALTH_STATUS_DEATH
 
-    HEALTH_STATUS_COUNT
+    //HEALTH_STATUS_COUNT
 } Health_Status;
 
 typedef struct {
@@ -272,8 +272,9 @@ typedef struct {
     Health_Status health_status;
     u8 treasure;
     u32 AI_to_use;
+    i32 attack_target;
+    i32 health;
     i32 will;
-    float base_speed;
     i32 unit_xp;
     i32 hit_points_max;
     i32 hit_points_current;
@@ -285,6 +286,7 @@ typedef struct {
     i8 damage_melee;
     i8 damage_ranged;
     i32 shock;
+    float base_speed;
 
 } Monster_Stats;
 

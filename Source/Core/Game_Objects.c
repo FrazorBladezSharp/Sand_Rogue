@@ -53,8 +53,6 @@ void Object_Initialize()
         &object[0]
     );
 
-    Monsters_Data_Initialize();
-
     // Create the player
     u32 room = 0;
     i32 player_id;
@@ -78,6 +76,8 @@ void Object_Initialize()
     );
 
     // create the monsters
+    Monsters_Data_Initialize();
+
     for (u8 index = 64; index < 91; index++){
 
         Object_Add_Monster_Stats(
@@ -325,6 +325,7 @@ void Object_Add_Monster_Stats(i32 object_id) {
 
     i32 monster_id = object_id - 64;
 
+    monster->object_id = object_id;
     sprintf(monster->name,"%s", Monsters_Name(monster_id));
     monster->health_status = Monsters_Health_Status(monster_id);
     monster->treasure = Monsters_Treasure(monster_id);
@@ -342,6 +343,8 @@ void Object_Add_Monster_Stats(i32 object_id) {
     monster->damage_melee = Monsters_Damage_Melee(monster_id);
     monster->damage_ranged = Monsters_Damage_Ranged(monster_id);
     monster->shock = Monsters_Shock(monster_id);
+    monster->health = Monster_Health(monster_id);
+    monster->attack_target = Monster_Attack_Target(monster_id);
 
     monster_stats_component[object->object_id].object_id = object_id;
     object[object_id].component[COMP_MONSTER_STATS] = monster;

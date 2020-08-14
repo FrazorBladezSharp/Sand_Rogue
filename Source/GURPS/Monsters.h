@@ -54,6 +54,8 @@ Damage_Type Monsters_Damage_Type(i32 monster_id);
 u8 Monsters_Damage_Melee(i32 monster_id);
 u8 Monsters_Damage_Ranged(i32 monster_id);
 i32 Monsters_Shock(i32 monster_id);
+i32 Monster_Health(i32 monster_id);
+i32 Monster_Attack_Target(i32 target_id);
 
 
 #define SAND_ROGUE_MONSTERS_H

@@ -37,6 +37,8 @@ void Main_Game_Loop(
     );
 
 
+
+
     // camera
     // TODO : (Valgrind) change camera to a static local_global pointer
     // currently the camera is causing uninitialised memory error.
@@ -92,7 +94,7 @@ void Main_Game_Loop(
     current_game_state =  Object_Add_Doors_To_Render(current_game_state);
     // add Test Monster
     current_game_state = Object_Add_Monster_To_Render(current_game_state);
-
+    Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);
 
     SDL_Event event;
 
@@ -129,13 +131,15 @@ void Main_Game_Loop(
             current_game_state =  User_Keyboard_Input(
                 current_game_state,
                 player_position,
-                dungeon_level_current
+                dungeon_level_current,
+                monster_position
             );
 
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 
                 player_secondary->action_current = ACTION_ATTACK;
+                Sand_Combat_Update(77);
             }
         } // end of Game Update.
 

@@ -71,9 +71,9 @@ void Dungeon_Place_Doors()
         // south wall
         for(i32 i = x_axis; i < x_axis + room_width_x; i++){
 
-            if(z_axis + room_breadth_z + 1 > MAP_HEIGHT) break;
+            if(z_axis + room_breadth_z > MAP_HEIGHT) break;
 
-            if(dungeon_level_current->map_cells[i][z_axis + room_breadth_z + 1]) {
+            if(dungeon_level_current->map_cells[i][z_axis + room_breadth_z]) {
 
                 Dungeon_Level_Add_Items_Fixtures(
                     door_id,
