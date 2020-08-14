@@ -1,11 +1,10 @@
 
 /** @file Main This is Prototype Code
  * TODO : finish current todo's
-
- * TODO : healing injuries
+ * TODO :  injuries_healing
  * TODO : spell mechanics & ranged attacks (Targeting) ???
  * TODO : Traps
- * TODO : Line Of Sight and lighting (add / remove render_models)
+ * TODO : Line Of Sight and lighting (add / remove render_models)(room Contents)
  * TODO : MAX_LEVELS = 26
  * TODO : stairs down and Victory Conditions
  * TODO : Graphical User Interface.
