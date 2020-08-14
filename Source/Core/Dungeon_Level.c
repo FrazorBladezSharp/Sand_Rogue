@@ -40,12 +40,13 @@ void Dungeon_Level_Add_Items_Fixtures(i32 item_fixture_id, i32 x, i32 z)
 void Dungeon_Place_Doors()
 {
     i32 door_id = 43;
-    i32 number_of_rooms = 0; //Map_Number_Of_Rooms();
+    i32 number_of_rooms = Map_Number_Of_Rooms();
 
     for(i32 index = 0; index <= number_of_rooms; index++){
 
         Dungeon_Level_Rooms* current_room = Map_Lookup_Room(index);
         // this gives locationX & LocationZ as top left map point
+
 
         i32 x_axis = current_room->locationX;
         i32 z_axis = current_room->locationZ;
@@ -55,35 +56,59 @@ void Dungeon_Place_Doors()
 
         // north wall
         for(i32 i = x_axis; i < x_axis + room_width_x; i++){
-            Dungeon_Level_Add_Items_Fixtures(
-                door_id,
-                i,
-                z_axis
-            );
+
+            if(z_axis - 1 < 0) break;
+
+            if(dungeon_level_current->map_cells[i][z_axis - 1]) {
+
+                Dungeon_Level_Add_Items_Fixtures(
+                    door_id,
+                    i,
+                    z_axis - 1
+                );
+            }
         }
         // south wall
         for(i32 i = x_axis; i < x_axis + room_width_x; i++){
-            Dungeon_Level_Add_Items_Fixtures(
-                door_id,
-                i,
-                z_axis + room_breadth_z - 1
-            );
+
+            if(z_axis + room_breadth_z + 1 > MAP_HEIGHT) break;
+
+            if(dungeon_level_current->map_cells[i][z_axis + room_breadth_z + 1]) {
+
+                Dungeon_Level_Add_Items_Fixtures(
+                    door_id,
+                    i,
+                    z_axis + room_breadth_z
+                );
+            }
         }
         // west wall
         for(i32 i = z_axis; i < z_axis + room_breadth_z; i++){
-            Dungeon_Level_Add_Items_Fixtures(
-                door_id,
-                x_axis,
-                i
-            );
+
+            if(x_axis - 1 < 0) break;
+
+            if(dungeon_level_current->map_cells[x_axis - 1][i]) {
+
+                Dungeon_Level_Add_Items_Fixtures(
+                    door_id,
+                    x_axis - 1,
+                    i
+                );
+            }
         }
         // east wall
         for(i32 i = z_axis; i < z_axis + room_breadth_z; i++){
-            Dungeon_Level_Add_Items_Fixtures(
-                door_id,
-                x_axis + room_width_x - 1,
-                i
-            );
+
+            if(x_axis + room_width_x > MAP_WIDTH) break;
+
+            if(dungeon_level_current->map_cells[x_axis + room_width_x][i]) {
+
+                Dungeon_Level_Add_Items_Fixtures(
+                    door_id,
+                    x_axis + room_width_x,
+                    i
+                );
+            }
         }
     }
 }
