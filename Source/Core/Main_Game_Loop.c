@@ -88,8 +88,11 @@ void Main_Game_Loop(
         .models_to_render = render_models
     };
 
-    // add Object to render &render_models
+    // add Object to render (&render_models)
     current_game_state =  Object_Add_Doors_To_Render(current_game_state);
+    // add Test Monster
+    current_game_state = Object_Add_Monster_To_Render(current_game_state);
+
 
     SDL_Event event;
 

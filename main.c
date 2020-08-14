@@ -1,7 +1,7 @@
 
 /** @file Main This is Prototype Code
  * TODO : finish current todo's
- * TODO : add Doors.
+
  * TODO : healing injuries
  * TODO : spell mechanics & ranged attacks (Targeting) ???
  * TODO : Traps

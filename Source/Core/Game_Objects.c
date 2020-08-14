@@ -103,9 +103,21 @@ i32 Object_Create(
     return index;
 }
 
+Current_Game_State  Object_Add_Monster_To_Render(
+    Current_Game_State render_objects){
+
+    i32 monster_id = 77;
+    i32 room = 0;
+
+    Object_Add_Position(monster_id, room);
+
+    Vector_Append(&render_objects.models_to_render, monster_id);
+    return render_objects;
+}
+
 Current_Game_State Object_Add_Doors_To_Render(
-    Current_Game_State render_objects
-){
+    Current_Game_State render_objects){
+
     // ask Items for a list of doors Vector ?
     i32 door = 43;
 
