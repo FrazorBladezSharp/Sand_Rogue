@@ -15,7 +15,6 @@
 #include "Source/Graphical_User_Interface/User_Input.h"
 #include "Source/GURPS/Sand_Combat.h"
 
-
 void Main_Game_Loop(
     Shader shader,
     SDL_Window* window

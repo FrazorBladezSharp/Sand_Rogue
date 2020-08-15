@@ -82,6 +82,7 @@ void Main_Game_Loop(
         .game_is_running = true,
         .main_camera = camera,
         .players_current_action = ACTION_NONE,
+        .number_of_rests = 0,
         .models_to_render = render_models
     };
 
@@ -125,7 +126,7 @@ void Main_Game_Loop(
 
             // we update the whole system
             current_game_state =  User_Keyboard_Input(
-                current_game_state,
+                &current_game_state,
                 player_position,
                 dungeon_level_current,
                 monster_position

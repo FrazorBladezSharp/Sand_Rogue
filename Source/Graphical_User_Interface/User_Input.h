@@ -7,9 +7,10 @@
 
 #include "Source/Common.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
+#include "Source/GURPS/Injuries_Healing.h"
 
 Current_Game_State User_Keyboard_Input(
-    Current_Game_State current_game_state,
+    Current_Game_State* current_game_state,
     Position* players_current_position,
     Dungeon_Level_Current* dungeon_level_current,
     Position* monster_position

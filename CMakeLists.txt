@@ -47,6 +47,8 @@ add_executable(
         Source/GURPS/Items_Fixtures.h
         Source/OpenGL/Rendering.c
         Source/OpenGL/Rendering.h
+        Source/GURPS/Injuries_Healing.c
+        Source/GURPS/Injuries_Healing.h
 )
 
 target_link_libraries(

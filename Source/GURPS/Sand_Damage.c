@@ -222,6 +222,18 @@ Health_Status Damage_Health_Roll(
 
     int dice_roll = Dice_Roll(3, 6);
 
+    if(type == HEALTH_STATUS_RESTED){
+
+        if(dice_roll <= health){
+
+            return HEALTH_STATUS_FULL_REST;
+        }
+        else{
+
+            return type;
+        }
+    }
+
     printf("\n dice roll %d : (Unconcious)\n", dice_roll);
     if(type == HEALTH_STATUS_UNCONCIOUS){
 

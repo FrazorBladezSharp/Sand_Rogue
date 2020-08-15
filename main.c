@@ -1,7 +1,6 @@
 
 /** @file Main This is Prototype Code
  * TODO : finish current todo's
- * TODO :  injuries_healing
  * TODO : spell mechanics & ranged attacks (Targeting) ???
  * TODO : Traps
  * TODO : Line Of Sight and lighting (add / remove render_models)(room Contents)

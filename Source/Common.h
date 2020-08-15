@@ -185,8 +185,9 @@ typedef enum{
     HEALTH_STATUS_KNOCKDOWN_AND_STUN,
     HEALTH_STATUS_UNCONCIOUS,
     HEALTH_STATUS_MORTAL_WOUNDS,
-    HEALTH_STATUS_DEATH
-
+    HEALTH_STATUS_DEATH,
+    HEALTH_STATUS_RESTED,
+    HEALTH_STATUS_FULL_REST
     //HEALTH_STATUS_COUNT
 } Health_Status;
 
@@ -300,6 +301,7 @@ typedef  struct {
     Main_Camera main_camera;
     // player
     Action players_current_action;
+    i32 number_of_rests;
     // models to render
     Vector models_to_render;
 
