@@ -22,8 +22,7 @@ static Combat_Stats combat_stats_component[MAX_ENTITIES];
 static Monster_Stats monster_stats_component[MAX_ENTITIES];
 //static Room_Contents room_contents[MAX_ROOM_CONTENTS];
 
-void Object_Initialize()
-{
+void Object_Initialize() {
     Vector_Init(
         &vao_storage                // initialize OpenGL handle storage
     );
@@ -46,7 +45,7 @@ void Object_Initialize()
         position_component[index].object_id = UNUSED;       // clear all component id's
         model_component[index].object_id = UNUSED;
         primary_characteristic_component[index].object_id = UNUSED;
-        secondary_characteristic_component[index].object_id= UNUSED;
+        secondary_characteristic_component[index].object_id = UNUSED;
         combat_stats_component[index].object_id = UNUSED;
         monster_stats_component[index].object_id = UNUSED;
     }
@@ -83,7 +82,7 @@ void Object_Initialize()
     // create the monsters
     Monsters_Data_Initialize();
 
-    for (u8 index = 64; index < 91; index++){
+    for (u8 index = 64; index < 91; index++) {
 
         Object_Add_Monster_Stats(
             index
@@ -99,34 +98,34 @@ void Object_Initialize()
 
     // for each room test for a wandering monster
     i32 number_of_rooms = Map_Number_Of_Rooms();
-    Dungeon_Level_Current* current_level = Dungeon_level();
+    Dungeon_Level_Current *current_level = Dungeon_level();
     i8 level = current_level->dungeon_level;
 
-    for(i32 monster_room = 0; monster_room < number_of_rooms; monster_room++){
+    for (i32 monster_room = 0; monster_room < number_of_rooms; monster_room++) {
 
         i32 dice_roll = Dice_Roll(1, 6);
 
         printf("Wandering Monster dice roll = %d \n", dice_roll);
 
-        if(dice_roll == 1){
+        if (dice_roll == 1) {
 
             char monster_model = Monsters_Add_Wandering(level);
             i32 index;
 
             for (index = 300; index < MAX_ENTITIES; index++) {      // initialize Entities
 
-                if(object[index].object_id  == UNUSED){
+                if (object[index].object_id == UNUSED) {
 
                     break;
                 }            // set new monster index
             }
             //static Game_Object object[MAX_ENTITIES];
-            object[index].object_id = (i32)monster_model;
+            object[index].object_id = (i32) monster_model;
             //static Game_Entities game_entities[MAX_ENTITIES];
-            game_entities->entity_id[index] = (i32)monster_model;
+            game_entities->entity_id[index] = (i32) monster_model;
             //static Position position_component[MAX_ENTITIES];
             // we need to create a position
-            Position* monster_position = (Position*)malloc(sizeof(Position));
+            Position *monster_position = (Position *) malloc(sizeof(Position));
             monster_position = Dungeon_Place_Monster(monster_room, monster_position);
             monster_position->rotationX = 0.0f;
             monster_position->rotationY = -45.0f;
@@ -139,13 +138,13 @@ void Object_Initialize()
 
             // as above but with the model
 
-            Game_Model* object_model;
+            Game_Model *object_model;
 
             object_model = (Game_Model *) malloc(
                 sizeof(Game_Model)
             );
 
-            Game_Model* model_to_use = (Game_Model*)Object_Lookup_Component((i32)monster_model, COMP_MODEL);
+            Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component((i32) monster_model, COMP_MODEL);
 
             object_model->object_id = model_to_use->object_id;
             object_model->vaoID = model_to_use->vaoID;
@@ -154,9 +153,70 @@ void Object_Initialize()
             model_component[object->object_id].object_id = index;
             object[index].component[COMP_MODEL] = object_model;
 
+            // TODO : make solid and attack-able set to AI_MEAN ACTION_NONE
+
             Vector_Append(&monsters_wandering, index);
         }
+    } // end of wandering monsters
+
+    // populate room 0 with possible residents
+    i32 dice_roll = Dice_Roll(1, 6);
+
+    printf("Room Monster dice roll = %d \n", dice_roll);
+
+    if (dice_roll <= 2) {
+
+        char monster_model = Monsters_Add_Wandering(level);
+        i32 index;
+
+        for (index = 400; index < MAX_ENTITIES; index++) {      // initialize Entities
+
+            if (object[index].object_id == UNUSED) {
+
+                break;
+            }            // set new monster index
+        }
+        //static Game_Object object[MAX_ENTITIES];
+        object[index].object_id = (i32) monster_model;
+        //static Game_Entities game_entities[MAX_ENTITIES];
+        game_entities->entity_id[index] = (i32) monster_model;
+        //static Position position_component[MAX_ENTITIES];
+        // we need to create a position
+        Position *monster_position = (Position *) malloc(sizeof(Position));
+        monster_position = Dungeon_Place_Monster(0, monster_position);
+        monster_position->rotationX = 0.0f;
+        monster_position->rotationY = -45.0f;
+        monster_position->rotationZ = 0.0f;
+        monster_position->scale = 1.0f;
+        monster_position->object_id = index;
+
+        position_component[object->object_id].object_id = index;    // keep track of all position components
+        object[index].component[COMP_POSITION] = monster_position;   // add position component to object
+
+        // as above but with the model
+
+        Game_Model *object_model;
+
+        object_model = (Game_Model *) malloc(
+            sizeof(Game_Model)
+        );
+
+        Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component((i32) monster_model, COMP_MODEL);
+
+        object_model->object_id = model_to_use->object_id;
+        object_model->vaoID = model_to_use->vaoID;
+        object_model->num_indices = model_to_use->num_indices;
+
+        model_component[object->object_id].object_id = index;
+        object[index].component[COMP_MODEL] = object_model;
+
+        // TODO : make solid and attack-able set t0 ACTION_SLEEP
+
     }
+    // TODO : add Items
+    // we have discovered room 0 by default
+    Dungeon_Level_Rooms* level_rooms = Map_Lookup_Room(0);
+    level_rooms->discovered = true;
 }
 
 i32 Object_Create(
@@ -167,6 +227,24 @@ i32 Object_Create(
     object[index].object_id = ascii_character;                 // assign the object an entity id
 
     return index;
+}
+
+Current_Game_State Object_Add_Room_Monster_To_Render(
+    Current_Game_State render_objects){
+
+    for(i32 monster_id = 400; monster_id < MAX_ENTITIES; monster_id++){
+
+        if(object[monster_id].object_id == UNUSED){
+
+            return render_objects;
+        }
+
+        Vector_Append(&render_objects.models_to_render, monster_id);
+        printf("Wandering Monster added to Rendering : %d\n", monster_id);
+    }
+
+    return render_objects;
+
 }
 
 Current_Game_State  Object_Add_Wandering_Monster_To_Render(

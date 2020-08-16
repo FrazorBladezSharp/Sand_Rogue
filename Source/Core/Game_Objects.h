@@ -19,6 +19,10 @@ i32 Object_Create(
     i32 ascii_character
 );
 
+Current_Game_State Object_Add_Room_Monster_To_Render(
+    Current_Game_State render_objects
+);
+
 Current_Game_State  Object_Add_Wandering_Monster_To_Render(
     Current_Game_State render_objects
 );

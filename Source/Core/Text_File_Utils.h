@@ -21,8 +21,9 @@
 #ifndef TEXT_FILE_UTILS_H
 #define TEXT_FILE_UTILS_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "Source/Common.h"
+
+
 
 
 char *Read_A_Text_File(

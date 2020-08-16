@@ -54,6 +54,7 @@ Dungeon_Level_Current *Map_Create_Dungeon_Level(
         if (success) {
             floor_tiles_used += (room_width_x) * (room_breadth_z);
             level_rooms[room_count].dungeon_level = dungeon_level_current->dungeon_level;
+            level_rooms[room_count].discovered = false;
             level_rooms[room_count].locationX = room_location.x;
             level_rooms[room_count].locationY = 0;
             level_rooms[room_count].locationZ = room_location.z;

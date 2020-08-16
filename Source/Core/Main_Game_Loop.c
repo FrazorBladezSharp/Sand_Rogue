@@ -86,6 +86,8 @@ void Main_Game_Loop(
         .main_camera = camera,
         .players_current_action = ACTION_NONE,
         .number_of_rests = 0,
+        .is_player_in_a_room = true,
+        .room_number = 0,
         .models_to_render = render_models
     };
 
@@ -97,6 +99,7 @@ void Main_Game_Loop(
     Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);
     // add Wandering Monsters
     current_game_state = Object_Add_Wandering_Monster_To_Render(current_game_state);
+    current_game_state = Object_Add_Room_Monster_To_Render(current_game_state);
 
     SDL_Event event;
 
@@ -136,6 +139,10 @@ void Main_Game_Loop(
                 dungeon_level_current,
                 monster_position
             );
+
+            // TODO : update players location within dungeon
+            // is the player in a room
+            // which room
 
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){

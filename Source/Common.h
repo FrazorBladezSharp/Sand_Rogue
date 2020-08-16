@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
@@ -104,6 +105,7 @@ typedef struct {
 typedef struct {
 
     i8 dungeon_level;
+    bool discovered;
     u8 locationX;
     u8 locationY;
     u8 locationZ;
@@ -112,12 +114,6 @@ typedef struct {
     u8 height;
     u8 light;
 } Dungeon_Level_Rooms;
-
-//typedef struct{ TODO: complete the room contents.
-//
-//    i8 dungeon_level;
-//    i32 contents[MAX_ROOM_CONTENTS];
-//} Room_Contents;
 
 typedef struct {
     vec3 position;
@@ -324,6 +320,8 @@ typedef  struct {
     // player
     Action players_current_action;
     i32 number_of_rests;
+    bool is_player_in_a_room;
+    i32 room_number;
     // models to render
     Vector models_to_render;
 
