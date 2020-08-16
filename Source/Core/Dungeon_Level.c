@@ -131,6 +131,19 @@ Position* Dungeon_Place_Player(
     return position;
 }
 
+Position* Dungeon_Place_Monster(
+    u32 current_room,
+    Position* position){
+
+    Point_3D place = Map_Random_Point_In_Room(current_room);
+    // TODO : only place the monster if location is not occupied by the player or another monster.
+    position->position[0] = place.x;
+    position->position[1] = 0.5f;
+    position->position[2] = place.z;
+
+    return position;
+}
+
 Dungeon_Level_Current* Dungeon_level(){
     return dungeon_level_current;
 }

@@ -20,7 +20,7 @@ i32 Injuries_Healing_Update(
     penalty if conditions are bad, or a bonus if
         conditions are very good.
 */
-
+// TODO : add non rested healing for every 16 turns
 // this only applies if the player rests for a number of turns (10)
 if(is_resting){
 

@@ -28,6 +28,11 @@ Position* Dungeon_Place_Player(
     Position* position
 );
 
+Position* Dungeon_Place_Monster(
+    u32 current_room,
+    Position* position
+);
+
 Dungeon_Level_Current* Dungeon_level();
 
 void Dungeon_Level_Cleanup();

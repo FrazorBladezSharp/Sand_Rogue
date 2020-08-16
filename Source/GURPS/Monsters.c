@@ -43,16 +43,6 @@ static u8 treasure[27] = {
     0, 70, 0, 0, 40, 100, 15, 0, 0,
     0, 0, 50, 0, 20, 0, 30, 30, 0
 };
-typedef enum{
-
-    MONSTERS_AI_NORMAL = 0,
-    MONSTERS_AI_MEAN = 1,
-    MONSTERS_AI_FLYING = 2,
-    MONSTERS_AI_REGEN = 4,
-    MONSTERS_AI_GREEDY = 8,
-    MONSTERS_AI_INVISIBLE = 16
-
-} Monsters_AI;
 
 static u32 AI_to_use[27] = {
 
@@ -219,7 +209,7 @@ void Monsters_Data_Initialize() {
         will[index] = 3 + level[index];
         base_speed[index] = 4.19 + (level[index] * 0.01); // may need to modify this
         hit_points_max[index] = level[index] * 6;             // number of dice to roll
-        hit_points_current[index] = Dice_Roll(level[index], 6);
+        hit_points_current[index] = Dice_Roll(level[index], 6); // TODO : this needs correcting
         health[index] = hit_points_max[index];
         dodge[index] = will[index];
         attack_skill[index] = will[index];

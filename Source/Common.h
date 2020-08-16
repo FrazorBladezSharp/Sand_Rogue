@@ -159,11 +159,23 @@ typedef enum{
 
     ACTION_NONE,
     ACTION_MOVE,
-    ACTION_ATTACK
+    ACTION_ATTACK,
+    ACTION_ASLEEP
 
     //ACTION_COUNT
 
 } Action;
+
+typedef enum{
+
+    MONSTERS_AI_NORMAL = 0,
+    MONSTERS_AI_MEAN = 1,
+    MONSTERS_AI_FLYING = 2,
+    MONSTERS_AI_REGEN = 4,
+    MONSTERS_AI_GREEDY = 8,
+    MONSTERS_AI_INVISIBLE = 16
+
+} Monsters_AI;
 
 typedef enum {
     COMP_POSITION = 0,

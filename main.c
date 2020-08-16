@@ -26,7 +26,6 @@
 
 #include "Source/OpenGL/Sand_Window_3D.h"
 #include "Source/OpenGL/Shaders.h"
-#include "Source/Core/Game_Objects.h"
 #include  "Source/Core/Main_Game_Loop.h"
 
 int
@@ -42,9 +41,6 @@ main() {
 
     // window openGL - NOTE : must be done first to get the openGL context.
     SDL_Window* window = Sand_Window_Create();
-
-    Object_Initialize();
-    Game_Items_Initialize();
 
     //////////////////// Shader /////////////////////////////////
 

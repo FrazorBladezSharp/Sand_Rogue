@@ -19,6 +19,9 @@ void Main_Game_Loop(
     Dungeon_Level_New(1);
     Dungeon_Level_Current* dungeon_level_current = Dungeon_level();
 
+    Object_Initialize();
+    Game_Items_Initialize();
+
     Position* player_position = (Position*)Object_Lookup_Component(
         64,
         COMP_POSITION
@@ -92,6 +95,8 @@ void Main_Game_Loop(
     // add Test Monster
     current_game_state = Object_Add_Monster_To_Render(current_game_state);
     Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);
+    // add Wandering Monsters
+    current_game_state = Object_Add_Wandering_Monster_To_Render(current_game_state);
 
     SDL_Event event;
 
