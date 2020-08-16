@@ -191,6 +191,16 @@ typedef enum{
     //HEALTH_STATUS_COUNT
 } Health_Status;
 
+typedef enum {
+
+    ATTACK_TARGET_NONE = 0,
+    ATTACK_TARGET_NORTH,
+    ATTACK_TARGET_SOUTH,
+    ATTACK_TARGET_WEST,
+    ATTACK_TARGET_EAST
+
+} Attack_Target;
+
 typedef struct {
     i32 entity_id[MAX_ENTITIES];
 } Game_Entities;
@@ -273,7 +283,7 @@ typedef struct {
     Health_Status health_status;
     u8 treasure;
     u32 AI_to_use;
-    i32 attack_target;
+    Attack_Target attack_target;
     i32 health;
     i32 will;
     i32 unit_xp;

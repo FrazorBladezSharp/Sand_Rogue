@@ -50,6 +50,16 @@ void Object_Add_Monster_Stats(
     i32 object_id
 );
 
+i32  Object_lookup_Wandering_Monster_location(
+    i32 x_axis,
+    i32 z_axis
+);
+
+i32  Object_lookup_Room_Monster_location(
+    i32 x_axis,
+    i32 z_axis
+);
+
 void* Object_Lookup_Component(
     i32 object_id,
     i32 component

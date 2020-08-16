@@ -49,16 +49,86 @@ void Sand_Combat_Update(i32 monster_id)
     i32 player_id = 64;
     i32 damage;
 
-    damage = Sand_Combat_Resolution(player_id, monster_id);
+    damage = Sand_Combat_Melee_Resolution(player_id, monster_id);
     if(damage > 0) printf("Player does %d Damage.\n", damage);
     Damage_Melee(ACTION_ATTACK, monster_id, damage);
 
-    damage = Sand_Combat_Resolution(monster_id, player_id);
+    damage = Sand_Combat_Melee_Resolution(monster_id, player_id);
     if(damage > 0) printf("Monster does %d Damage.\n", damage);
     Damage_Melee(ACTION_ATTACK, player_id, damage);
 }
 
-i32 Sand_Combat_Resolution(
+i32 Sand_Combat_Target_Search(i32 actor, Attack_Target direction){
+
+    if(direction < 1 || direction > 4 ){
+
+        return 0;
+    }
+
+    Position* actors_position = (Position*)Object_Lookup_Component(
+        actor,
+        COMP_POSITION
+    );
+    // define variables
+    float x_axis = actors_position->position[0];
+    float z_axis = actors_position->position[2];
+    Dungeon_Level_Current* current_dungeon = Dungeon_level();
+    i32 object_at_location = 0;
+
+    // target = direction facing/ 1 = north/ 2 = south/ 3 = west/ 4 = east
+    // we can target and hit something beyond the line sight
+    // Test the 1st space in that direction
+    // if space exists the ask if there is a target-able object in that space
+
+    if(direction == 1){
+
+        // Search North = z_axis - 1
+        z_axis --;
+        // Test the 1st space in that direction etc
+        while(current_dungeon->map_cells[(i32)x_axis][(i32)z_axis] &&
+              object_at_location == 0){
+
+            // if space exists the ask if there is a target-able object in that space
+            object_at_location = Object_lookup_Wandering_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+
+            if(object_at_location != 0) break;
+
+            object_at_location = Object_lookup_Room_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+        } // repeat until we have no space to target
+
+    }else if (direction == 2){
+        // TODO : copy code from above.
+        // Search South = z_axis + 1
+        // Test the 1st space in that direction
+        // if space exists the ask if there is a target-able object in that space
+        // repeat until we have no space to target
+
+    }else if(direction == 3){
+
+        // Search West x_axis - 1
+        // Test the 1st space in that direction
+        // if space exists the ask if there is a target-able object in that space
+        // repeat until we have no space to target
+
+    }else if(direction == 4){
+
+        // Search East x_axis + 1
+        // Test the 1st space in that direction
+        // if space exists the ask if there is a target-able object in that space
+        // repeat until we have no space to target
+
+    }
+
+    return object_at_location;
+}
+
+i32 Sand_Combat_Melee_Resolution(
     i32 attacker_id,
     i32 defender_id)
 {
@@ -213,6 +283,70 @@ i32 Sand_Combat_Resolution(
     return damage;
 }
 
+i32 Sand_Combat_Ranged_Resolution(
+    i32 attacker_id) {
+
+    Monster_Stats* attacker = (Monster_Stats*)Object_Lookup_Component(attacker_id, COMP_MONSTER_STATS);
+
+    // check for first target in that direction
+    i32 defender_id = Sand_Combat_Target_Search(attacker_id, attacker->attack_target);
+    Monster_Stats* defender = (Monster_Stats*)Object_Lookup_Component(defender_id, COMP_MONSTER_STATS);
+    // roll to hit
+    i32 attack_roll = Dice_Roll(3, 6);
+    i32 effective_skill = attacker->attack_skill;
+
+    bool critical_hit = false;
+
+    critical_hit = Dice_Critical_Success(
+        effective_skill,
+        attack_roll
+    );
+
+    bool critical_max_damage = false;
+
+    if(attack_roll == 3){
+        critical_max_damage = true;
+    }
+
+    bool attack_hits = false;
+
+    if(attack_roll <= effective_skill) {
+        // roll defence
+        attack_hits = true;
+        if(Defence_Roll(defender)){
+
+            attack_hits = false;
+        }
+    }
+
+    bool critical_miss = false;
+
+    critical_miss = Dice_Critical_Failure(effective_skill, attack_roll);
+
+    if(critical_miss){
+        attack_hits = false;
+    }
+
+    i32 damage = 1;
+
+    if(attack_hits){
+
+        damage = Dice_Roll(1, 6) + attacker->damage_ranged;
+    }
+
+    if (damage < 1){
+
+        damage = 1;
+    }
+
+    // cloth = Damage Resistance 1.
+    damage = damage - defender->damage_resistance;
+
+    if(critical_max_damage){
+        damage = 6 + attacker->damage_ranged;
+    }
+    //return damage
+}
 
 
 bool Defence_Roll(Monster_Stats* defender)

@@ -212,7 +212,7 @@ void Monsters_Data_Initialize() {
 
     memset (health_status,0,90);
     memset (shock, 0, 90);
-    memset (attack_target, -1, 90);
+    memset (attack_target, 0, 90);
 
     for(i32 index = 0; index < 27; index++){
 
