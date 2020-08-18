@@ -20,14 +20,17 @@ i32 Injuries_Healing_Update(
     penalty if conditions are bad, or a bonus if
         conditions are very good.
 */
-// TODO : add non rested healing for every 16 turns
+
 // this only applies if the player rests for a number of turns (10)
 if(is_resting){
 
     current_game_state->number_of_rests++;
 }
 
-if(current_game_state->number_of_rests >= 10){
+current_game_state->natural_heal++;
+
+if(current_game_state->number_of_rests >= 10 ||
+   current_game_state->natural_heal >= 16){
 
     Monster_Stats* player_stats = Object_Lookup_Component(
         64,
@@ -46,6 +49,9 @@ if(current_game_state->number_of_rests >= 10){
 
             player_stats->hit_points_current += 1;
         }
+
+        current_game_state->natural_heal = 0;
+        current_game_state->number_of_rests = 0;
     }
 }
 

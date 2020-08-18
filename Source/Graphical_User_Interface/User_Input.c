@@ -13,7 +13,18 @@ Current_Game_State User_Keyboard_Input(
     const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
 
     if(currentKeyStates[SDL_SCANCODE_PERIOD]){
+
         Injuries_Healing_Update(true, current_game_state);
+        return *current_game_state;
+    }else{
+
+        Injuries_Healing_Update(false, current_game_state);
+    }
+
+    if(currentKeyStates[SDL_SCANCODE_T]){
+
+        current_game_state->players_current_action = ACTION_RANGED_ATTACK;
+        return *current_game_state;
     }
     // determine which of the 4 directions to move - 1 square
     // with community permission increase to 8 way.

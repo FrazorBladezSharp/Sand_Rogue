@@ -209,7 +209,7 @@ void Monsters_Data_Initialize() {
         will[index] = 3 + level[index];
         base_speed[index] = 4.19 + (level[index] * 0.01); // may need to modify this
         hit_points_max[index] = level[index] * 6;             // number of dice to roll
-        hit_points_current[index] = Dice_Roll(level[index], 6); // TODO : this needs correcting
+        hit_points_current[index] = level[index];
         health[index] = hit_points_max[index];
         dodge[index] = will[index];
         attack_skill[index] = will[index];

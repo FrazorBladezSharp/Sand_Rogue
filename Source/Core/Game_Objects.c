@@ -153,7 +153,7 @@ void Object_Initialize() {
             model_component[object->object_id].object_id = index;
             object[index].component[COMP_MODEL] = object_model;
 
-            // TODO : make solid and attack-able set to AI_MEAN ACTION_NONE
+            // TODO : make solid and add combat stats + set current HP set to AI_MEAN ACTION_NONE
 
             Vector_Append(&monsters_wandering, index);
         }
@@ -210,10 +210,10 @@ void Object_Initialize() {
         model_component[object->object_id].object_id = index;
         object[index].component[COMP_MODEL] = object_model;
 
-        // TODO : make solid and attack-able set t0 ACTION_SLEEP
+        // TODO : TODO : make solid and add combat stats + set current HP set to ACTION_SLEEP
 
     }
-    // TODO : add Items
+    // TODO : add Items model position and item stats
     // we have discovered room 0 by default
     Dungeon_Level_Rooms* level_rooms = Map_Lookup_Room(0);
     level_rooms->discovered = true;
@@ -524,17 +524,49 @@ void Object_Add_Monster_Stats(i32 object_id) {
 
 //////////////////////////////////////////////////////////////////////
 
-// TODO : Complete the Wandering Monster List - initialized at level creation
 i32  Object_lookup_Wandering_Monster_location(i32 x_axis, i32 z_axis)
 {
+    i32 target_id = 0;
 
-    return 0;
+    for(i32 index = 0; index < Vector_Size(&monsters_wandering); index++){
+
+        i32 current_id = Vector_Get(&monsters_wandering, index);
+
+        Position* monster = (Position*)Object_Lookup_Component(
+            current_id,
+            COMP_POSITION
+        );
+
+        if(monster->position[0] == x_axis && monster->position[2] == z_axis){
+
+            target_id = current_id;
+            break;
+        }
+    }
+
+    return target_id;
 }
-// TODO : Complete the Room Monster List - initialized as player enters room
 i32  Object_lookup_Room_Monster_location(i32 x_axis, i32 z_axis)
 {
+    i32 target_id = 0;
 
-    return 0;
+    for(i32 index = 0; index < Vector_Size(&monsters_rooms); index++){
+
+        i32 current_id = Vector_Get(&monsters_rooms, index);
+
+        Position* monster = (Position*)Object_Lookup_Component(
+            current_id,
+            COMP_POSITION
+        );
+
+        if(monster->position[0] == x_axis && monster->position[2] == z_axis){
+
+            target_id = current_id;
+            break;
+        }
+    }
+
+    return target_id;
 }
 
 void* Object_Lookup_Component(
@@ -591,6 +623,8 @@ void Object_Cleanup()
         &vao_storage
     );
 }
+
+/////////////////////////////////////////// Item Data /////////////////////////////////////
 
 #define MAX_ITEMS 1024
 

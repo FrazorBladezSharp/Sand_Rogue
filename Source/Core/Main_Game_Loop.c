@@ -144,6 +144,9 @@ void Main_Game_Loop(
             // is the player in a room
             // which room
 
+            // if current game state player action = ranged attack then resolve
+            // NOTE : attacker -> attack target needs to be set by the GUI.
+
             if(current_game_state.players_current_action ==
                 ACTION_ATTACK){
 

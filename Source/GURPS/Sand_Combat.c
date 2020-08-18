@@ -80,7 +80,7 @@ i32 Sand_Combat_Target_Search(i32 actor, Attack_Target direction){
     // Test the 1st space in that direction
     // if space exists the ask if there is a target-able object in that space
 
-    if(direction == 1){
+    if(direction == ATTACK_TARGET_NORTH){
 
         // Search North = z_axis - 1
         z_axis --;
@@ -102,27 +102,71 @@ i32 Sand_Combat_Target_Search(i32 actor, Attack_Target direction){
             );
         } // repeat until we have no space to target
 
-    }else if (direction == 2){
-        // TODO : copy code from above.
-        // Search South = z_axis + 1
-        // Test the 1st space in that direction
-        // if space exists the ask if there is a target-able object in that space
-        // repeat until we have no space to target
+    }else if (direction == ATTACK_TARGET_SOUTH){
 
-    }else if(direction == 3){
+        // Search South = z_axis + 1
+        z_axis ++;
+        // Test the 1st space in that direction etc
+        while(current_dungeon->map_cells[(i32)x_axis][(i32)z_axis] &&
+              object_at_location == 0){
+
+            // if space exists the ask if there is a target-able object in that space
+            object_at_location = Object_lookup_Wandering_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+
+            if(object_at_location != 0) break;
+
+            object_at_location = Object_lookup_Room_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+        } // repeat until we have no space to target
+
+    }else if(direction == ATTACK_TARGET_WEST){
 
         // Search West x_axis - 1
-        // Test the 1st space in that direction
-        // if space exists the ask if there is a target-able object in that space
-        // repeat until we have no space to target
+        x_axis --;
+        // Test the 1st space in that direction etc
+        while(current_dungeon->map_cells[(i32)x_axis][(i32)z_axis] &&
+              object_at_location == 0){
 
-    }else if(direction == 4){
+            // if space exists the ask if there is a target-able object in that space
+            object_at_location = Object_lookup_Wandering_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+
+            if(object_at_location != 0) break;
+
+            object_at_location = Object_lookup_Room_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+        } // repeat until we have no space to target
+
+    }else if(direction == ATTACK_TARGET_EAST){
 
         // Search East x_axis + 1
-        // Test the 1st space in that direction
-        // if space exists the ask if there is a target-able object in that space
-        // repeat until we have no space to target
+        x_axis ++;
+        // Test the 1st space in that direction etc
+        while(current_dungeon->map_cells[(i32)x_axis][(i32)z_axis] &&
+              object_at_location == 0){
 
+            // if space exists the ask if there is a target-able object in that space
+            object_at_location = Object_lookup_Wandering_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+
+            if(object_at_location != 0) break;
+
+            object_at_location = Object_lookup_Room_Monster_location(
+                (i32)x_axis,
+                (i32)z_axis
+            );
+        } // repeat until we have no space to target
     }
 
     return object_at_location;
@@ -286,21 +330,37 @@ i32 Sand_Combat_Melee_Resolution(
 i32 Sand_Combat_Ranged_Resolution(
     i32 attacker_id) {
 
-    Monster_Stats* attacker = (Monster_Stats*)Object_Lookup_Component(attacker_id, COMP_MONSTER_STATS);
+    Monster_Stats* attacker = (Monster_Stats*)Object_Lookup_Component(
+        attacker_id,
+        COMP_MONSTER_STATS
+    );
 
     // check for first target in that direction
-    i32 defender_id = Sand_Combat_Target_Search(attacker_id, attacker->attack_target);
-    Monster_Stats* defender = (Monster_Stats*)Object_Lookup_Component(defender_id, COMP_MONSTER_STATS);
+    i32 defender_id = Sand_Combat_Target_Search(
+        attacker_id,
+        attacker->attack_target
+    );
+
+    if(defender_id == 0){
+
+        return 0;
+    }
+
+    Monster_Stats* defender = (Monster_Stats*)Object_Lookup_Component(
+        defender_id,
+        COMP_MONSTER_STATS
+    );
+
     // roll to hit
     i32 attack_roll = Dice_Roll(3, 6);
     i32 effective_skill = attacker->attack_skill;
 
-    bool critical_hit = false;
-
-    critical_hit = Dice_Critical_Success(
-        effective_skill,
-        attack_roll
-    );
+//    bool critical_hit = false;
+//
+//    critical_hit = Dice_Critical_Success(
+//        effective_skill,
+//        attack_roll
+//    );
 
     bool critical_max_damage = false;
 
@@ -345,7 +405,8 @@ i32 Sand_Combat_Ranged_Resolution(
     if(critical_max_damage){
         damage = 6 + attacker->damage_ranged;
     }
-    //return damage
+
+    return damage;
 }
 
 

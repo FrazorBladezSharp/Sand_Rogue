@@ -156,7 +156,8 @@ typedef enum{
     ACTION_NONE,
     ACTION_MOVE,
     ACTION_ATTACK,
-    ACTION_ASLEEP
+    ACTION_RANGED_ATTACK,
+    //ACTION_ASLEEP
 
     //ACTION_COUNT
 
@@ -320,6 +321,7 @@ typedef  struct {
     // player
     Action players_current_action;
     i32 number_of_rests;
+    i32 natural_heal;
     bool is_player_in_a_room;
     i32 room_number;
     // models to render
