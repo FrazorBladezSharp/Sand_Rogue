@@ -1,10 +1,12 @@
 
 /** @file Main This is Prototype Code
+ * Todo : Initialize Monster AI Dijkstra
+ *
  * TODO : finish current todo's
  * TODO : spell mechanics & ranged attacks (Targeting) ???
  * TODO : Traps
  * TODO : Update All Monster Actions (bring the dungeon to life)
- * Todo : Initialize Monster AI
+ *
  * TODO : Line Of Sight and lighting (add / remove render_models)(room Contents)
  * TODO : MAX_LEVELS = 26
  * TODO : stairs down and Victory Conditions

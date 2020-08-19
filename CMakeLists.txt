@@ -49,7 +49,7 @@ add_executable(
         Source/OpenGL/Rendering.h
         Source/GURPS/Injuries_Healing.c
         Source/GURPS/Injuries_Healing.h
-)
+        Source/GURPS/Monster_AI.c Source/GURPS/Monster_AI.h)
 
 target_link_libraries(
         Sand_Rogue SDL2 SDL2main GLEW GL assimp m

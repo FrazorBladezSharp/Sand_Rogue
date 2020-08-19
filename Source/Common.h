@@ -38,8 +38,6 @@
 #define MAP_HEIGHT 40
 #define MAX_ROOM_WIDTH 16
 #define MAX_ROOM_HEIGHT 12
-//#define MAX_ROOMS 126
-//#define MAX_ROOM_CONTENTS 1024 TODO : room contents
 
 #define MAX_ENTITIES 1024
 

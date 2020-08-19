@@ -11,8 +11,11 @@
 #include "Source/Core/Map.h"
 #include "Source/GURPS/Monsters.h"
 #include "Source/GURPS/Items_Fixtures.h"
+#include "Source/GURPS/Monster_AI.h"
 
 void Object_Initialize();
+
+void Object_Update();
 
 i32 Object_Create(
     i32 index,

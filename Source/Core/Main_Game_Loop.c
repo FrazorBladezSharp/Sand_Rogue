@@ -143,10 +143,15 @@ void Main_Game_Loop(
                 monster_position
             );
 
+            // Player
             // TODO : update players location within dungeon
             // is the player in a room
             // which room
 
+            //Monster
+            Object_Update();
+
+            // Combat
             // if current game state player action = ranged attack then resolve
             // NOTE : attacker -> attack target needs to be set by the GUI.
 

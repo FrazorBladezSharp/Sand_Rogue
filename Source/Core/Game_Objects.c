@@ -339,6 +339,13 @@ void Object_Initialize() {
     level_rooms->discovered = true;
 }
 
+void Object_Update()
+{
+    Position* player_position = (Position*)Object_Lookup_Component(64, COMP_POSITION);
+    //Todo : Initialize Monster AI Dijkstra
+    Monster_AI_Djikstra_Map((i32)player_position->position[0], (i32)player_position->position[2]);
+}
+
 i32 Object_Create(
         i32 index,
         i32 ascii_character) {
@@ -754,23 +761,23 @@ void* Object_Lookup_Component(
 void Object_Cleanup()
 {
     // delete all vbo's that have been created
-    printf(
-        "Deleting VBO vectors: %d\n",
-        Vector_Size(&vbo_storage)
-    );
-
-    for (int index = 0; index < Vector_Size(&vbo_storage); index++) {
-
-        GLuint vbo = Vector_Get(
-            &vbo_storage,
-            index
-        );
-
-        glDeleteVertexArrays(
-            1,
-            (GLuint *) &vbo
-        );
-    }
+//    printf(
+//        "Deleting VBO vectors: %d\n",
+//        Vector_Size(&vbo_storage)
+//    );
+//
+//    for (int index = 0; index < Vector_Size(&vbo_storage); index++) {
+//
+//        GLuint vbo = Vector_Get(
+//            &vbo_storage,
+//            index
+//        );
+//
+//        glDeleteVertexArrays(
+//            1,
+//            (GLuint *) &vbo
+//        );
+//    }
     // delete all vao's that have been created
     printf(
         "Deleting VAO vectors: %d\n",
@@ -797,6 +804,10 @@ void Object_Cleanup()
     Vector_Free_Memory(
         &vao_storage
     );
+
+    Vector_Free_Memory(&monsters_wandering);
+    Vector_Free_Memory(&monsters_rooms);
+    Vector_Free_Memory(&Items_in_rooms);
 }
 
 /////////////////////////////////////////// Item Data /////////////////////////////////////
