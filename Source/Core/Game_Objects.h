@@ -77,6 +77,6 @@ void Object_Cleanup();
 
 ///////////////////////////// Items & Equipment /////////////////////////
 
-void Game_Items_Initialize();
+void Game_Item_Data_Initialize();
 
 #endif //SAND_ROGUE_GAME_OBJECTS_H

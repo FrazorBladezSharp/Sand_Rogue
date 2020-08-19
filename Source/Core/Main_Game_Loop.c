@@ -19,8 +19,9 @@ void Main_Game_Loop(
     Dungeon_Level_New(1);
     Dungeon_Level_Current* dungeon_level_current = Dungeon_level();
 
+
     Object_Initialize();
-    Game_Items_Initialize();
+
 
     Position* player_position = (Position*)Object_Lookup_Component(
         64,

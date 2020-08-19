@@ -5,12 +5,20 @@
 //  with a bonus for completing a set number of levels.
 //  so set 5 objectives per level
 
+#define MAX_ITEMS 1024
 #include "Game_Objects.h"
 
 static Vector vao_storage;
 static Vector vbo_storage;
 static Vector monsters_wandering;   // initialize to ACTION_NONE
 static Vector monsters_rooms;       // initialize to ACTION_ASLEEP
+
+static const char* game_items[MAX_ITEMS];              // Item data used for generating Objects
+static i32 game_item_value[MAX_ITEMS];
+static i32 game_armor_rating[9];
+static i32 game_weapon_damage_modifier[9];
+static bool game_weapon_damage[9];
+static Damage_Type game_weapon_damage_type[9];
 
 static Game_Object object[MAX_ENTITIES];
 static Game_Entities game_entities[MAX_ENTITIES];
@@ -159,8 +167,23 @@ void Object_Initialize() {
         }
     } // end of wandering monsters
 
-    // populate room 0 with possible residents
+    Game_Item_Data_Initialize();            // Initialize the data so we can make objects
+    // TODO : add Items model position and item stats
+    // populate room 0 with possible items
     i32 dice_roll = Dice_Roll(1, 6);
+    printf("Room Item dice roll = %d \n", dice_roll);
+    while(dice_roll <= 2){
+
+        // item category          dont forget food and gold
+        // 1 d 100 for an item from that category
+
+        // once we know which item, create and place the object.
+
+        dice_roll = Dice_Roll(1, 6);
+    }
+
+    // populate room 0 with possible residents
+    dice_roll = Dice_Roll(1, 6);
 
     printf("Room Monster dice roll = %d \n", dice_roll);
 
@@ -214,6 +237,10 @@ void Object_Initialize() {
 
     }
     // TODO : add Items model position and item stats
+
+    // populate room 0 with possible items
+
+
     // we have discovered room 0 by default
     Dungeon_Level_Rooms* level_rooms = Map_Lookup_Room(0);
     level_rooms->discovered = true;
@@ -626,16 +653,7 @@ void Object_Cleanup()
 
 /////////////////////////////////////////// Item Data /////////////////////////////////////
 
-#define MAX_ITEMS 1024
-
-static const char* game_items[MAX_ITEMS];
-static i32 game_item_value[MAX_ITEMS];
-static i32 game_armor_rating[9];
-static i32 game_weapon_damage_modifier[9];
-static bool game_weapon_damage[9];
-static Damage_Type game_weapon_damage_type[9];
-
-void Game_Items_Initialize() {
+void Game_Item_Data_Initialize() {
 /*
  * convert to G.U.R.P.S.
  * AC = AC - 2 first column works for our system

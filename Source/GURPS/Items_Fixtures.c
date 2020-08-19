@@ -19,6 +19,7 @@ void Items_Initialize_Models(
 //        );
     vec4 color = {0.5f, 0.25f, 0.1f, 1.0f};
 
+    // Door 43      +
     Items_Load_Model(
         43,
         color,
@@ -29,6 +30,7 @@ void Items_Initialize_Models(
         object
     );
 
+    // Stairs Down  62  >
     Items_Load_Model(
         62,
         color,
@@ -39,6 +41,66 @@ void Items_Initialize_Models(
         object
     );
 
+    // Armor    93      ]
+    Items_Load_Model(
+        93,
+        color,
+        "Resource/Models/Ascii_3D/Armor.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+    // Weapon   41      )
+    Items_Load_Model(
+        41,
+        color,
+        "Resource/Models/Ascii_3D/Weapon.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+    // Rings    61      =
+    Items_Load_Model(
+        61,
+        color,
+        "Resource/Models/Ascii_3D/Rings.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+    // Potions  33      !
+    Items_Load_Model(
+        33,
+        color,
+        "Resource/Models/Ascii_3D/Potions.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+    // Rods     47      /
+    Items_Load_Model(
+        47,
+        color,
+        "Resource/Models/Ascii_3D/Rods.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+    // Scrolls  63      ?
+    Items_Load_Model(
+        63,
+        color,
+        "Resource/Models/Ascii_3D/Scrolls.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
 }
 
 void Items_Load_Model(
