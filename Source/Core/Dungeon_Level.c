@@ -119,6 +119,20 @@ void Dungeon_Place_Stairs()
     Dungeon_Level_Add_Items_Fixtures(62, place.x, place.z);
 }
 
+Position* Dungeon_Place_Items(
+    i32 item_id,
+    i32 room,
+    Position* position)
+{
+    Point_3D place = Map_Random_Point_In_Room(room);
+    Dungeon_Level_Add_Items_Fixtures(item_id, place.x, place.z);
+    position->position[0] = place.x;
+    position->position[1] = 0.5f;
+    position->position[2] = place.z;
+
+    return position;
+}
+
 Position* Dungeon_Place_Player(
     Position* position){
 

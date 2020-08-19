@@ -19,6 +19,11 @@ i32 Object_Create(
     i32 ascii_character
 );
 
+void Object_Item_Create(
+    i32 index,
+    i32 ascii_character
+);
+
 Current_Game_State Object_Add_Room_Monster_To_Render(
     Current_Game_State render_objects
 );
@@ -35,7 +40,14 @@ Current_Game_State Object_Add_Doors_To_Render(
     Current_Game_State render_objects
 );
 
-Current_Game_State Object_Add_Stairs_To_Render(Current_Game_State render_objects);
+Current_Game_State Object_Add_Stairs_To_Render(
+    Current_Game_State render_objects
+);
+
+Current_Game_State Object_Add_Items_To_Render(
+    Current_Game_State render_objects
+);
+
 
 void Object_Add_Position(
     i32 object_id,

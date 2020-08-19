@@ -101,6 +101,8 @@ void Main_Game_Loop(
     // add Wandering Monsters
     current_game_state = Object_Add_Wandering_Monster_To_Render(current_game_state);
     current_game_state = Object_Add_Room_Monster_To_Render(current_game_state);
+    // add items to level
+    current_game_state =  Object_Add_Items_To_Render(current_game_state);
 
     SDL_Event event;
 

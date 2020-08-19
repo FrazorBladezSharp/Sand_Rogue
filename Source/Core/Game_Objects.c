@@ -28,6 +28,7 @@ static Vector vao_storage;
 static Vector vbo_storage;
 static Vector monsters_wandering;   // initialize to ACTION_NONE
 static Vector monsters_rooms;       // initialize to ACTION_ASLEEP
+static Vector Items_in_rooms;
 
 static const char* game_items[MAX_ITEMS];              // Item data used for generating Objects
 static i32 game_item_value[MAX_ITEMS];
@@ -57,6 +58,7 @@ void Object_Initialize() {
 
     Vector_Init(&monsters_wandering);
     Vector_Init(&monsters_rooms);
+    Vector_Init(&Items_in_rooms);
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
 
@@ -189,14 +191,22 @@ void Object_Initialize() {
     // TODO : add Items model position and item stats
 
     // populate room 0 with possible items
-    i32 dice_roll = Dice_Roll(1, 6);
+    i32 dice_roll = 1;//Dice_Roll(1, 6);
     printf("Room Item dice roll = %d \n", dice_roll);
     while(dice_roll <= 2){
-
 
         // item category       ***   dont forget food and gold  ***
         // cycle the category and role for result
         current_item_category++;
+        i32 index;
+
+        for (index = 800; index < MAX_ENTITIES; index++) {      // initialize Entities
+
+            if (object[index].object_id == UNUSED) {
+
+                break;
+            }            // set new Item index
+        }
 
         if(current_item_category == ITEM_CATEGORY_COUNT){
 
@@ -206,47 +216,64 @@ void Object_Initialize() {
             // Food         = 1
             // place food
 
+            Object_Item_Create(index, 58); // create and place the item
+            Vector_Append(&Items_in_rooms, index);
+
         }else if(current_item_category == ITEM_CATEGORY_GOLD){
-            // Gold         = 1d6 * dungeon level
+            // Gold         = 1d6 * dungeon level *** only roll if picked up.
             // place Gold
+            Object_Item_Create(index, 42); // create and place the item
+            Vector_Append(&Items_in_rooms, 42);
 
         }else if(current_item_category == ITEM_CATEGORY_SCROLL){
-            // Scroll       = 1d100
+            // Scroll       = 1d100 *** only roll if picked up. maybe a blank scroll (mimic ???)
             // place scroll
+            Object_Item_Create(index, 63); // create and place the item
+            Vector_Append(&Items_in_rooms, 63);
 
         }else if(current_item_category == ITEM_CATEGORY_POTION){
             // Potion       = 1d100
             // place potion
+            Object_Item_Create(index, 33); // create and place the item
+            Vector_Append(&Items_in_rooms, 33);
+
 
         }else if(current_item_category == ITEM_CATEGORY_ROD){
             // Rod          = 1d100
             // place rod
+            Object_Item_Create(index, 47); // create and place the item
+            Vector_Append(&Items_in_rooms, 47);
+
 
         }else if(current_item_category == ITEM_CATEGORY_RING){
             // Ring         = 1d100
             // place ring
+            Object_Item_Create(index, 61); // create and place the item
+            Vector_Append(&Items_in_rooms, 61);
+
 
         }else if(current_item_category == ITEM_CATEGORY_ARMOR){
             // Armor        = 1d100
             // place armor
+            Object_Item_Create(index, 93); // create and place the item
+            Vector_Append(&Items_in_rooms, 93);
+
 
         }else if(current_item_category == ITEM_CATEGORY_WEAPON){
             // Weapon       = 1d100
             // place weapon
+            Object_Item_Create(index, 41); // create and place the item
+            Vector_Append(&Items_in_rooms, 41);
+
 
         }else{
             // reset to default
             current_item_category = ITEM_CATEGORY_FOOD;
         }
 
-        // 1 d 100 for an item from that category
-
-
-
-        // once we know which item, create and place the object.
-
         dice_roll = Dice_Roll(1, 6);
-    }
+
+    } // end of populate room 0 with possible items
 
     // populate room 0 with possible residents
     dice_roll = Dice_Roll(1, 6);
@@ -320,6 +347,46 @@ i32 Object_Create(
     object[index].object_id = ascii_character;                 // assign the object an entity id
 
     return index;
+}
+
+void Object_Item_Create(
+    i32 index,
+    i32 ascii_character
+    ){
+
+    game_entities->entity_id[index] = index;         // register Item as an entity
+    object[index].object_id = index;                 // assign the Item an entity id
+
+    //static Position position_component[MAX_ENTITIES];
+    // we need to create a position
+    Position *item_position = (Position *) malloc(sizeof(Position));
+
+    item_position = Dungeon_Place_Items(58, 0, item_position);
+    item_position->rotationX = 0.0f;
+    item_position->rotationY = -45.0f;
+    item_position->rotationZ = 0.0f;
+    item_position->scale = 1.0f;
+    item_position->object_id = index;
+
+    position_component[object->object_id].object_id = index;    // keep track of all position components
+    object[index].component[COMP_POSITION] = item_position;   // add position component to object
+
+    // as above but with the model
+
+    Game_Model *object_model;
+
+    object_model = (Game_Model *) malloc(
+        sizeof(Game_Model)
+    );
+
+    Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component(ascii_character, COMP_MODEL);
+
+    object_model->object_id = model_to_use->object_id;
+    object_model->vaoID = model_to_use->vaoID;
+    object_model->num_indices = model_to_use->num_indices;
+
+    model_component[object->object_id].object_id = index;
+    object[index].component[COMP_MODEL] = object_model;
 }
 
 Current_Game_State Object_Add_Room_Monster_To_Render(
@@ -453,6 +520,21 @@ Current_Game_State Object_Add_Stairs_To_Render(Current_Game_State render_objects
     Object_Add_Position(id, room);
 
     Vector_Append(&render_objects.models_to_render, id);
+    return render_objects;
+}
+
+Current_Game_State Object_Add_Items_To_Render(
+
+    Current_Game_State render_objects){
+
+    for(i32 index = 0; index < Vector_Size(&Items_in_rooms); index++) {
+
+        Vector_Append(
+            &render_objects.models_to_render,
+            Vector_Get(&Items_in_rooms, index)
+        );
+    }
+
     return render_objects;
 }
 

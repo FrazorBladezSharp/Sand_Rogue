@@ -24,6 +24,12 @@ void Dungeon_Place_Doors();
 
 void Dungeon_Place_Stairs();
 
+Position* Dungeon_Place_Items(
+    i32 item_id,
+    i32 room,
+    Position* position
+);
+
 Position* Dungeon_Place_Player(
     Position* position
 );
