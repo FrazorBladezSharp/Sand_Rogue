@@ -8,6 +8,22 @@
 #define MAX_ITEMS 1024
 #include "Game_Objects.h"
 
+typedef enum {
+
+    ITEM_CATEGORY_FOOD = 0,
+    ITEM_CATEGORY_GOLD,
+    ITEM_CATEGORY_SCROLL,
+    ITEM_CATEGORY_POTION,
+    ITEM_CATEGORY_ROD,
+    ITEM_CATEGORY_RING,
+    ITEM_CATEGORY_ARMOR,
+    ITEM_CATEGORY_WEAPON,
+
+    ITEM_CATEGORY_COUNT
+} Item_Category;
+
+static i32 current_item_category;
+
 static Vector vao_storage;
 static Vector vbo_storage;
 static Vector monsters_wandering;   // initialize to ACTION_NONE
@@ -168,14 +184,64 @@ void Object_Initialize() {
     } // end of wandering monsters
 
     Game_Item_Data_Initialize();            // Initialize the data so we can make objects
+    current_item_category = -1;
+
     // TODO : add Items model position and item stats
+
     // populate room 0 with possible items
     i32 dice_roll = Dice_Roll(1, 6);
     printf("Room Item dice roll = %d \n", dice_roll);
     while(dice_roll <= 2){
 
-        // item category          dont forget food and gold
+
+        // item category       ***   dont forget food and gold  ***
+        // cycle the category and role for result
+        current_item_category++;
+
+        if(current_item_category == ITEM_CATEGORY_COUNT){
+
+            current_item_category = ITEM_CATEGORY_FOOD;
+        }
+        if(current_item_category == ITEM_CATEGORY_FOOD){
+            // Food         = 1
+            // place food
+
+        }else if(current_item_category == ITEM_CATEGORY_GOLD){
+            // Gold         = 1d6 * dungeon level
+            // place Gold
+
+        }else if(current_item_category == ITEM_CATEGORY_SCROLL){
+            // Scroll       = 1d100
+            // place scroll
+
+        }else if(current_item_category == ITEM_CATEGORY_POTION){
+            // Potion       = 1d100
+            // place potion
+
+        }else if(current_item_category == ITEM_CATEGORY_ROD){
+            // Rod          = 1d100
+            // place rod
+
+        }else if(current_item_category == ITEM_CATEGORY_RING){
+            // Ring         = 1d100
+            // place ring
+
+        }else if(current_item_category == ITEM_CATEGORY_ARMOR){
+            // Armor        = 1d100
+            // place armor
+
+        }else if(current_item_category == ITEM_CATEGORY_WEAPON){
+            // Weapon       = 1d100
+            // place weapon
+
+        }else{
+            // reset to default
+            current_item_category = ITEM_CATEGORY_FOOD;
+        }
+
         // 1 d 100 for an item from that category
+
+
 
         // once we know which item, create and place the object.
 

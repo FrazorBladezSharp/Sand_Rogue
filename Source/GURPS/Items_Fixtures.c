@@ -19,6 +19,28 @@ void Items_Initialize_Models(
 //        );
     vec4 color = {0.5f, 0.25f, 0.1f, 1.0f};
 
+    // Food 58      :
+    Items_Load_Model(
+        58,
+        color,
+        "Resource/Models/Ascii_3D/Food.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+
+    // Gold 42      *
+    Items_Load_Model(
+        42,
+        color,
+        "Resource/Models/Ascii_3D/Gold.obj",
+        vao_storage,
+        vbo_storage,
+        model_component,
+        object
+    );
+
     // Door 43      +
     Items_Load_Model(
         43,
