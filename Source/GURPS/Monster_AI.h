@@ -8,7 +8,7 @@
 #include "Source/Common.h"
 #include "Source/Core/Dungeon_Level.h"
 
-void Monster_AI_Djikstra_Map(
+void Monster_AI_Dijkstra_Map(
     i32 target_x,
     i32 target_z
 );

@@ -343,7 +343,7 @@ void Object_Update()
 {
     Position* player_position = (Position*)Object_Lookup_Component(64, COMP_POSITION);
     //Todo : Initialize Monster AI Dijkstra
-    Monster_AI_Djikstra_Map((i32)player_position->position[0], (i32)player_position->position[2]);
+    Monster_AI_Dijkstra_Map((i32)player_position->position[0], (i32)player_position->position[2]);
 }
 
 i32 Object_Create(
