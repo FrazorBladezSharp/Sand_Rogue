@@ -10,15 +10,25 @@ Current_Game_State User_Keyboard_Input(
     Dungeon_Level_Current* dungeon_level_current,
     Position* monster_position)
 {
-    const u8 *currentKeyStates = SDL_GetKeyboardState(NULL);
+    const u8 *currentKeyStates = SDL_GetKeyboardState(
+        NULL
+    );
 
     if(currentKeyStates[SDL_SCANCODE_PERIOD]){
 
-        Injuries_Healing_Update(true, current_game_state);
+        Injuries_Healing_Update(
+            true,
+            current_game_state
+        );
+
         return *current_game_state;
+
     }else{
 
-        Injuries_Healing_Update(false, current_game_state);
+        Injuries_Healing_Update(
+            false,
+            current_game_state
+        );
     }
 
     if(currentKeyStates[SDL_SCANCODE_T]){
@@ -92,8 +102,7 @@ Current_Game_State User_Keyboard_Input(
             current_game_state->main_camera
     );
 
-    if((players_current_position->position[0] == monster_position->position[0])
-        &&
+    if((players_current_position->position[0] == monster_position->position[0])&&
         (players_current_position->position[2] == monster_position->position[2])){
 
         current_game_state->players_current_action = ACTION_ATTACK;
