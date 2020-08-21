@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_MONSTER_AI_H
 #define SAND_ROGUE_MONSTER_AI_H
 
-#include "Source/Common.h"
 #include "Source/Core/Dungeon_Level.h"
 
 void Monster_AI_Dijkstra_Map(

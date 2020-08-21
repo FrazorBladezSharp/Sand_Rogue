@@ -4,7 +4,6 @@
 
 #ifndef SAND_ROGUE_MONSTERS_H
 
-#include "Source/Common.h"
 #include "Source/Sand_Dice.h"
 #include "Source/OpenGL/Load_Model_3D.h"
 

@@ -1,18 +1,17 @@
 
-/** @file Main This is Prototype Code
- * Todo : Initialize Monster AI Djikstra
- *
+/** @file Main This is Prototype Code *
  * TODO : finish current todo's
- * TODO : spell mechanics & ranged attacks (Targeting) ???
- * TODO : Traps
- * TODO : Update All Monster Actions (bring the dungeon to life)
  *
+ *
+ * ////////////// end of the prototype ////////////////////////
  * TODO : Line Of Sight and lighting (add / remove render_models)(room Contents)
  * TODO : MAX_LEVELS = 26
  * TODO : stairs down and Victory Conditions
  * TODO : Graphical User Interface.
  * TODO : Backpack / Equipment
  * TODO : Missing features.
+ * TODO : Traps
+ * TODO : spell mechanics & ranged attacks (Targeting) ???
 ###############################################################
 # Project created by Frazor Sharp 2020 Jul 22
 #

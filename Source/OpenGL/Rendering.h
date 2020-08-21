@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_RENDERING_H
 #define SAND_ROGUE_RENDERING_H
 
-#include "Source/Common.h"
 #include "Source/OpenGL/Shaders.h"
 #include "Source/Core/Game_Objects.h"
 #include "Source/Core/Dungeon_Level.h"
