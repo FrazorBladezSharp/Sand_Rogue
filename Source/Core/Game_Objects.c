@@ -56,9 +56,17 @@ void Object_Initialize() {
         &vbo_storage                // used to delete Gfx Card buffers
     );
 
-    Vector_Init(&monsters_wandering);
-    Vector_Init(&monsters_rooms);
-    Vector_Init(&Items_in_rooms);
+    Vector_Init(
+        &monsters_wandering
+    );
+
+    Vector_Init(
+        &monsters_rooms
+    );
+
+    Vector_Init(
+        &Items_in_rooms
+    );
 
     for (u32 index = 0; index < MAX_ENTITIES; index++) {      // initialize Entities
 
@@ -129,13 +137,17 @@ void Object_Initialize() {
 
     for (i32 monster_room = 0; monster_room < number_of_rooms; monster_room++) {
 
-        i32 dice_roll = Dice_Roll(1, 6);
-
-        printf("Wandering Monster dice roll = %d \n", dice_roll);
+        i32 dice_roll = Dice_Roll(
+            1,
+            6
+        );
 
         if (dice_roll == 1) {
 
-            char monster_model = Monsters_Add_Wandering(level);
+            char monster_model = Monsters_Add_Wandering(
+                level
+            );
+
             i32 index;
 
             for (index = 300; index < MAX_ENTITIES; index++) {      // initialize Entities
@@ -145,14 +157,24 @@ void Object_Initialize() {
                     break;
                 }            // set new monster index
             }
+
             //static Game_Object object[MAX_ENTITIES];
             object[index].object_id = (i32) monster_model;
+
             //static Game_Entities game_entities[MAX_ENTITIES];
             game_entities->entity_id[index] = (i32) monster_model;
+
             //static Position position_component[MAX_ENTITIES];
             // we need to create a position
-            Position *monster_position = (Position *) malloc(sizeof(Position));
-            monster_position = Dungeon_Place_Monster(monster_room, monster_position);
+            Position *monster_position = (Position *) malloc(
+                sizeof(Position)
+            );
+
+            monster_position = Dungeon_Place_Monster(
+                monster_room,
+                monster_position
+            );
+
             monster_position->rotationX = 0.0f;
             monster_position->rotationY = -45.0f;
             monster_position->rotationZ = 0.0f;
@@ -170,7 +192,10 @@ void Object_Initialize() {
                 sizeof(Game_Model)
             );
 
-            Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component((i32) monster_model, COMP_MODEL);
+            Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component(
+                (i32) monster_model,
+                COMP_MODEL
+            );
 
             object_model->object_id = model_to_use->object_id;
             object_model->vaoID = model_to_use->vaoID;
@@ -191,34 +216,48 @@ void Object_Initialize() {
                 COMP_MONSTER_STATS
             );
 
-            memcpy(monster_stats, stats_to_use, sizeof(Monster_Stats));
+            memcpy(
+                monster_stats,
+                stats_to_use,
+                sizeof(Monster_Stats)
+            );
 
             monster_stats->object_id = index;
             monster_stats->AI_to_use = MONSTERS_AI_MEAN; // maybe add || with original AI
-            monster_stats->hit_points_current = Dice_Roll(stats_to_use->hit_points_current, 6);
+
+            monster_stats->hit_points_current = Dice_Roll(
+                stats_to_use->hit_points_current,
+                6
+            );
 
             monster_stats_component[object->object_id].object_id = index;
             object[index].component[COMP_MONSTER_STATS] = monster_stats;
 
-            // TODO : make solid + set current HP set to AI_MEAN ACTION_NONE
+            // TODO : make solid
 
-            Vector_Append(&monsters_wandering, index);
+            Vector_Append(
+                &monsters_wandering,
+                index
+            );
         }
     } // end of wandering monsters
 
     Game_Item_Data_Initialize();            // Initialize the data so we can make objects
     current_item_category = -1;
 
-    // TODO : add Items model position and item stats
-
     // populate room 0 with possible items
     i32 dice_roll = 1;//Dice_Roll(1, 6);
-    printf("Room Item dice roll = %d \n", dice_roll);
+
     while(dice_roll <= 2){
 
-        // item category       ***   dont forget food and gold  ***
         // cycle the category and role for result
         current_item_category++;
+
+        if(current_item_category == ITEM_CATEGORY_COUNT){
+
+            current_item_category = ITEM_CATEGORY_FOOD;
+        }
+
         i32 index;
 
         for (index = 800; index < MAX_ENTITIES; index++) {      // initialize Entities
@@ -229,81 +268,134 @@ void Object_Initialize() {
             }            // set new Item index
         }
 
-        if(current_item_category == ITEM_CATEGORY_COUNT){
-
-            current_item_category = ITEM_CATEGORY_FOOD;
-        }
         if(current_item_category == ITEM_CATEGORY_FOOD){
-            // Food         = 1
-            // place food
 
-            Object_Item_Create(index, 58); // create and place the item
-            Vector_Append(&Items_in_rooms, index);
+            // place food
+            Object_Item_Create(                 // create and place the item
+                index,
+                58
+            );
+
+            Vector_Append(
+                &Items_in_rooms,
+                index
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_GOLD){
-            // Gold         = 1d6 * dungeon level *** only roll if picked up.
+
             // place Gold
-            Object_Item_Create(index, 42); // create and place the item
-            Vector_Append(&Items_in_rooms, 42);
+            Object_Item_Create(
+                index,
+                42
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                42
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_SCROLL){
-            // Scroll       = 1d100 *** only roll if picked up. maybe a blank scroll (mimic ???)
+
             // place scroll
-            Object_Item_Create(index, 63); // create and place the item
-            Vector_Append(&Items_in_rooms, 63);
+            Object_Item_Create(
+                index,
+                63
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                63
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_POTION){
-            // Potion       = 1d100
-            // place potion
-            Object_Item_Create(index, 33); // create and place the item
-            Vector_Append(&Items_in_rooms, 33);
 
+            // place potion
+            Object_Item_Create(
+                index,
+                33
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                33
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_ROD){
-            // Rod          = 1d100
-            // place rod
-            Object_Item_Create(index, 47); // create and place the item
-            Vector_Append(&Items_in_rooms, 47);
 
+            // place rod
+            Object_Item_Create(
+                index,
+                47
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                47
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_RING){
-            // Ring         = 1d100
-            // place ring
-            Object_Item_Create(index, 61); // create and place the item
-            Vector_Append(&Items_in_rooms, 61);
 
+            // place ring
+            Object_Item_Create(
+                index,
+                61
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                61
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_ARMOR){
-            // Armor        = 1d100
-            // place armor
-            Object_Item_Create(index, 93); // create and place the item
-            Vector_Append(&Items_in_rooms, 93);
 
+            // place armor
+            Object_Item_Create(
+                index,
+                93
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                93
+            );
 
         }else if(current_item_category == ITEM_CATEGORY_WEAPON){
-            // Weapon       = 1d100
-            // place weapon
-            Object_Item_Create(index, 41); // create and place the item
-            Vector_Append(&Items_in_rooms, 41);
 
+            // place weapon
+            Object_Item_Create(
+                index,
+                41
+            ); // create and place the item
+
+            Vector_Append(
+                &Items_in_rooms,
+                41
+            );
 
         }else{
+
             // reset to default
             current_item_category = ITEM_CATEGORY_FOOD;
         }
 
-        dice_roll = Dice_Roll(1, 6);
-
+        dice_roll = Dice_Roll(
+            1,
+            6
+        );
     } // end of populate room 0 with possible items
 
     // populate room 0 with possible residents
-    dice_roll = Dice_Roll(1, 6);
-
-    printf("Room Monster dice roll = %d \n", dice_roll);
+    dice_roll = Dice_Roll(
+        1,
+        6
+    );
 
     if (dice_roll <= 2) {
 
-        char monster_model = Monsters_Add_Wandering(level);
+        char monster_model = Monsters_Add_Wandering(
+            level
+        );
+
         i32 index;
 
         for (index = 400; index < MAX_ENTITIES; index++) {      // initialize Entities
@@ -313,14 +405,24 @@ void Object_Initialize() {
                 break;
             }            // set new monster index
         }
+
         //static Game_Object object[MAX_ENTITIES];
         object[index].object_id = (i32) monster_model;
+
         //static Game_Entities game_entities[MAX_ENTITIES];
         game_entities->entity_id[index] = (i32) monster_model;
+
         //static Position position_component[MAX_ENTITIES];
         // we need to create a position
-        Position *monster_position = (Position *) malloc(sizeof(Position));
-        monster_position = Dungeon_Place_Monster(0, monster_position);
+        Position *monster_position = (Position *) malloc(
+            sizeof(Position)
+        );
+
+        monster_position = Dungeon_Place_Monster(
+            0,
+            monster_position
+        );
+
         monster_position->rotationX = 0.0f;
         monster_position->rotationY = -45.0f;
         monster_position->rotationZ = 0.0f;
@@ -338,7 +440,10 @@ void Object_Initialize() {
             sizeof(Game_Model)
         );
 
-        Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component((i32) monster_model, COMP_MODEL);
+        Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component(
+            (i32) monster_model,
+            COMP_MODEL
+        );
 
         object_model->object_id = model_to_use->object_id;
         object_model->vaoID = model_to_use->vaoID;
@@ -350,21 +455,29 @@ void Object_Initialize() {
         // TODO : TODO : make solid and add combat stats + set current HP set to ACTION_SLEEP
 
     }
-    // TODO : add Items model position and item stats
 
+    // TODO : add Items model position and item stats
     // populate room 0 with possible items
 
-
     // we have discovered room 0 by default
-    Dungeon_Level_Rooms* level_rooms = Map_Lookup_Room(0);
+    Dungeon_Level_Rooms* level_rooms = Map_Lookup_Room(
+        0
+    );
+
     level_rooms->discovered = true;
 }
 
 void Object_Update(){
 
-    Position* player_position = (Position*)Object_Lookup_Component(64, COMP_POSITION);
+    Position* player_position = (Position*)Object_Lookup_Component(
+        64,
+        COMP_POSITION
+    );
 
-    Monster_AI_Dijkstra_Map((i32)player_position->position[0], (i32)player_position->position[2]);
+    Monster_AI_Dijkstra_Map(
+        (i32)player_position->position[0],
+        (i32)player_position->position[2]
+    );
 
 //    static Vector monsters_wandering;   // initialize to ACTION_NONE - done
 //    static Vector monsters_rooms;       // initialize to ACTION_ASLEEP - check this as room 0 is different
@@ -390,8 +503,15 @@ void Object_Update(){
     for(i32 current_monster = 0; current_monster < Vector_Size(&monsters_wandering); current_monster++){
 
         // look at monster stats for current action
-        i32 monster = Vector_Get(&monsters_wandering, current_monster);
-        Monster_Stats* monster_stats = (Monster_Stats*)Object_Lookup_Component(monster, COMP_MONSTER_STATS);
+        i32 monster = Vector_Get(
+            &monsters_wandering,
+            current_monster
+        );
+
+        Monster_Stats* monster_stats = (Monster_Stats*)Object_Lookup_Component(
+            monster,
+            COMP_MONSTER_STATS
+        );
 
         // send to correct AI_Unit
         //    MONSTERS_AI_NORMAL = 0,
@@ -417,8 +537,6 @@ void Object_Update(){
                 monster_stats->current_action = ACTION_MOVE;
             }
         }
-
-
         //    MONSTERS_AI_FLYING = 2,
         //    MONSTERS_AI_REGEN = 4,
         //    MONSTERS_AI_GREEDY = 8,
@@ -428,7 +546,7 @@ void Object_Update(){
 
 i32 Object_Create(
         i32 index,
-        i32 ascii_character) {
+        i32 ascii_character){
 
     game_entities->entity_id[index] = ascii_character;         // register object as an entity
     object[index].object_id = ascii_character;                 // assign the object an entity id
@@ -438,17 +556,23 @@ i32 Object_Create(
 
 void Object_Item_Create(
     i32 index,
-    i32 ascii_character
-    ){
+    i32 ascii_character){
 
     game_entities->entity_id[index] = index;         // register Item as an entity
     object[index].object_id = index;                 // assign the Item an entity id
 
     //static Position position_component[MAX_ENTITIES];
     // we need to create a position
-    Position *item_position = (Position *) malloc(sizeof(Position));
+    Position *item_position = (Position *) malloc(
+        sizeof(Position)
+    );
 
-    item_position = Dungeon_Place_Items(58, 0, item_position);
+    item_position = Dungeon_Place_Items(
+        58,
+        0,
+        item_position
+    );
+
     item_position->rotationX = 0.0f;
     item_position->rotationY = -45.0f;
     item_position->rotationZ = 0.0f;
@@ -466,7 +590,10 @@ void Object_Item_Create(
         sizeof(Game_Model)
     );
 
-    Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component(ascii_character, COMP_MODEL);
+    Game_Model *model_to_use = (Game_Model *) Object_Lookup_Component(
+        ascii_character,
+        COMP_MODEL
+    );
 
     object_model->object_id = model_to_use->object_id;
     object_model->vaoID = model_to_use->vaoID;
@@ -486,12 +613,13 @@ Current_Game_State Object_Add_Room_Monster_To_Render(
             return render_objects;
         }
 
-        Vector_Append(&render_objects.models_to_render, monster_id);
-        printf("Wandering Monster added to Rendering : %d\n", monster_id);
+        Vector_Append(
+            &render_objects.models_to_render,
+            monster_id
+        );
     }
 
     return render_objects;
-
 }
 
 Current_Game_State  Object_Add_Wandering_Monster_To_Render(
@@ -504,8 +632,10 @@ Current_Game_State  Object_Add_Wandering_Monster_To_Render(
             return render_objects;
         }
 
-        Vector_Append(&render_objects.models_to_render, monster_id);
-        printf("Wandering Monster added to Rendering : %d\n", monster_id);
+        Vector_Append(
+            &render_objects.models_to_render,
+            monster_id
+        );
     }
 
     return render_objects;
@@ -517,12 +647,16 @@ Current_Game_State  Object_Add_Monster_To_Render(
     i32 monster_id = 77; // test monster M
     i32 room = 0;
 
-    Object_Add_Position(monster_id, room);
-    Monster_Stats* m_stats = (Monster_Stats*)Object_Lookup_Component(77, COMP_MONSTER_STATS);
-    printf("Test Monster AI = %u\n", m_stats->AI_to_use);
-    printf("Monster AI Mean = %u\n", MONSTERS_AI_MEAN);
+    Object_Add_Position(
+        monster_id,
+        room
+    );
 
-    Vector_Append(&render_objects.models_to_render, monster_id);
+    Vector_Append(
+        &render_objects.models_to_render,
+        monster_id
+    );
+
     return render_objects;
 }
 
@@ -581,7 +715,10 @@ Current_Game_State Object_Add_Doors_To_Render(
                     sizeof(Game_Model)
                 );
 
-                Game_Model* model_to_use = (Game_Model*)Object_Lookup_Component(door, COMP_MODEL);
+                Game_Model* model_to_use = (Game_Model*)Object_Lookup_Component(
+                    door,
+                    COMP_MODEL
+                );
 
                 object_model->object_id = model_to_use->object_id;
                 object_model->vaoID = model_to_use->vaoID;
@@ -590,7 +727,10 @@ Current_Game_State Object_Add_Doors_To_Render(
                 model_component[object->object_id].object_id = index;
                 object[index].component[COMP_MODEL] = object_model;
 
-                Vector_Append(&render_objects.models_to_render, index);
+                Vector_Append(
+                    &render_objects.models_to_render,
+                    index
+                );
             } // end of if model = 42
         } // end of z loop
     } // end of x loop
@@ -598,19 +738,26 @@ Current_Game_State Object_Add_Doors_To_Render(
     return render_objects;
 }
 
-Current_Game_State Object_Add_Stairs_To_Render(Current_Game_State render_objects)
-{
+Current_Game_State Object_Add_Stairs_To_Render(
+    Current_Game_State render_objects){
+
     i32 id = 62;
     i32 room = 0;
 
-    Object_Add_Position(id, room);
+    Object_Add_Position(
+        id,
+        room
+    );
 
-    Vector_Append(&render_objects.models_to_render, id);
+    Vector_Append(
+        &render_objects.models_to_render,
+        id
+    );
+
     return render_objects;
 }
 
 Current_Game_State Object_Add_Items_To_Render(
-
     Current_Game_State render_objects){
 
     for(i32 index = 0; index < Vector_Size(&Items_in_rooms); index++) {
@@ -890,6 +1037,8 @@ void Object_Cleanup()
 }
 
 /////////////////////////////////////////// Item Data /////////////////////////////////////
+/////////////////////////// move to RPG System as this is not Generic /////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 void Game_Item_Data_Initialize() {
 /*

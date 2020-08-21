@@ -17,6 +17,7 @@ void Dungeon_Level_Initialize(){
 void Dungeon_Level_New(i8 dungeon_level){
 
     dungeon_level_current->dungeon_level = dungeon_level;
+
     // set all locations to false.
     for (int x = 0; x <= MAP_WIDTH; x++) {
 
@@ -110,13 +111,20 @@ void Dungeon_Place_Doors()
                 );
             }
         }
-    }
+    } // end of loop for number of rooms
 }
 
 void Dungeon_Place_Stairs()
 {
-    Point_3D place = Map_Random_Point_In_Room(1);
-    Dungeon_Level_Add_Items_Fixtures(62, place.x, place.z);
+    Point_3D place = Map_Random_Point_In_Room(
+        1  // is this being overwritten as its goes to room 0
+    );
+
+    Dungeon_Level_Add_Items_Fixtures(
+        62,
+        place.x,
+        place.z
+    );
 }
 
 Position* Dungeon_Place_Items(
@@ -124,8 +132,16 @@ Position* Dungeon_Place_Items(
     i32 room,
     Position* position)
 {
-    Point_3D place = Map_Random_Point_In_Room(room);
-    Dungeon_Level_Add_Items_Fixtures(item_id, place.x, place.z);
+    Point_3D place = Map_Random_Point_In_Room(
+        room
+    );
+
+    Dungeon_Level_Add_Items_Fixtures(
+        item_id,
+        place.x,
+        place.z
+    );
+
     position->position[0] = place.x;
     position->position[1] = 0.5f;
     position->position[2] = place.z;
@@ -136,7 +152,9 @@ Position* Dungeon_Place_Items(
 Position* Dungeon_Place_Player(
     Position* position){
 
-    Point_3D place = Map_Random_Point_In_Room(0);
+    Point_3D place = Map_Random_Point_In_Room(
+        0
+    );
 
     position->position[0] = place.x;
     position->position[1] = 0.5f;
@@ -149,8 +167,11 @@ Position* Dungeon_Place_Monster(
     u32 current_room,
     Position* position){
 
-    Point_3D place = Map_Random_Point_In_Room(current_room);
-    // TODO : only place the monster if location is not occupied by the player or another monster.
+    Point_3D place = Map_Random_Point_In_Room(
+        current_room
+    );
+
+    // only place the monster if location is not occupied by the player or another monster.
     position->position[0] = place.x;
     position->position[1] = 0.5f;
     position->position[2] = place.z;

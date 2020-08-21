@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_GAME_OBJECTS_H
 #define SAND_ROGUE_GAME_OBJECTS_H
 
-#include "Source/Common.h"
 #include "Source/Core/Sand_Vector.h"
 #include "Source/OpenGL/Load_Model_3D.h"
 #include "Source/Core/Map.h"
@@ -92,6 +91,6 @@ void Object_Cleanup();
 
 ///////////////////////////// Items & Equipment /////////////////////////
 
-void Game_Item_Data_Initialize();
+void Game_Item_Data_Initialize(); // move to RPG System as this is not Generic
 
 #endif //SAND_ROGUE_GAME_OBJECTS_H

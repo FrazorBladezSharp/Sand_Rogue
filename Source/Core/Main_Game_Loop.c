@@ -8,20 +8,23 @@
 
 void Main_Game_Loop(
     Shader shader,
-    SDL_Window* window)
-{
-    // our main game loop Starts Here
+    SDL_Window* window){
+
     Dice_Initialize();
 
-    Game_Model floor_model = Sand_Floor_Tile_3D_Create(window);
+    Game_Model floor_model = Sand_Floor_Tile_3D_Create(
+        window
+    );
 
     Dungeon_Level_Initialize();
-    Dungeon_Level_New(1);
+
+    Dungeon_Level_New(
+        1
+    );
+
     Dungeon_Level_Current* dungeon_level_current = Dungeon_level();
 
-
     Object_Initialize();
-
 
     Position* player_position = (Position*)Object_Lookup_Component(
         64,
@@ -40,7 +43,6 @@ void Main_Game_Loop(
     );
 
     // camera
-    // currently the camera is causing uninitialised memory error.
     Main_Camera camera;
 
     camera.position[0] = player_position->position[0] - 3.0f;
@@ -48,7 +50,10 @@ void Main_Game_Loop(
     camera.position[2] = player_position->position[2] + 3.0f;
     camera.rotationX = 60.0f;
     camera.rotationY = 45.0f;
-    glm_mat4_identity(camera.view_matrix);
+
+    glm_mat4_identity(
+        camera.view_matrix
+    );
 
     camera = Calc_Camera_View_Matrix(
         camera
@@ -78,8 +83,15 @@ void Main_Game_Loop(
 
     // main run time game loop
     Vector render_models;
-    Vector_Init(&render_models);
-    Vector_Append(&render_models, 64);       // adds player to be rendered
+
+    Vector_Init(
+        &render_models
+    );
+
+    Vector_Append(
+        &render_models,
+        64
+    );       // adds player to be rendered
 
     Current_Game_State current_game_state = {
 
@@ -93,16 +105,37 @@ void Main_Game_Loop(
     };
 
     // add Object to render (&render_models)
-    current_game_state = Object_Add_Doors_To_Render(current_game_state);
-    current_game_state = Object_Add_Stairs_To_Render(current_game_state);
+    current_game_state = Object_Add_Doors_To_Render(
+        current_game_state
+    );
+
+    current_game_state = Object_Add_Stairs_To_Render(
+        current_game_state
+    );
+
     // add Test Monster
-    current_game_state = Object_Add_Monster_To_Render(current_game_state);
-    Position* monster_position = (Position*)Object_Lookup_Component(77, COMP_POSITION);
+    current_game_state = Object_Add_Monster_To_Render(
+        current_game_state
+    );
+
+    Position* monster_position = (Position*)Object_Lookup_Component(
+        77,
+        COMP_POSITION
+    );
+
     // add Wandering Monsters
-    current_game_state = Object_Add_Wandering_Monster_To_Render(current_game_state);
-    current_game_state = Object_Add_Room_Monster_To_Render(current_game_state);
+    current_game_state = Object_Add_Wandering_Monster_To_Render(
+        current_game_state
+    );
+
+    current_game_state = Object_Add_Room_Monster_To_Render(
+        current_game_state
+    );
+
     // add items to level
-    current_game_state =  Object_Add_Items_To_Render(current_game_state);
+    current_game_state = Object_Add_Items_To_Render(
+        current_game_state
+    );
 
     SDL_Event event;
 
@@ -144,7 +177,7 @@ void Main_Game_Loop(
             );
 
             // Player
-            // TODO : update players location within dungeon
+            // update players location within dungeon
             // is the player in a room
             // which room
 
@@ -159,7 +192,10 @@ void Main_Game_Loop(
                 ACTION_ATTACK){
 
                 player_secondary->action_current = ACTION_ATTACK;
-                Sand_Combat_Update(77);
+
+                Sand_Combat_Update(
+                    77
+                );
             }
         } // end of Game Update.
 
@@ -188,5 +224,8 @@ void Main_Game_Loop(
     }   // end of the main game loop
 
     Sand_Floor_Cleanup();
-    Vector_Free_Memory(&render_models);
+
+    Vector_Free_Memory(
+        &render_models
+    );
 }

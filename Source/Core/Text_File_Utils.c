@@ -33,7 +33,6 @@ char *Read_A_Text_File(const char *file) {
     if (file_in == NULL) {
 
         return NULL;
-
     }
 
     ///////////// read file into a buffer ////////////////////
@@ -54,19 +53,19 @@ char *Read_A_Text_File(const char *file) {
     fseek(
         file_in,
         0L,
-        SEEK_SET                  // go to start of file
+        SEEK_SET                     // go to start of file
     );
 
     buffer = (char *) calloc(        // allocates memory
-        file_length + 1,               // file_length amount
-        sizeof(char)               // in bytes
+        file_length + 1,      // file_length amount
+        sizeof(char)                 // in bytes
     );
 
     if (buffer == NULL) {
         return NULL;
     }
 
-    fread(               // read all of file from current position
+    fread(                          // read all of file from current position
         buffer,
         sizeof(char),
         file_length,
