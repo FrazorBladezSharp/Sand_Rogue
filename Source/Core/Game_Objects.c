@@ -45,7 +45,7 @@ static Primary_Characteristics primary_characteristic_component[MAX_ENTITIES];
 static Secondary_Characteristics secondary_characteristic_component[MAX_ENTITIES];
 static Combat_Stats combat_stats_component[MAX_ENTITIES];
 static Monster_Stats monster_stats_component[MAX_ENTITIES];
-//static Room_Contents room_contents[MAX_ROOM_CONTENTS];
+
 
 void Object_Initialize() {
     Vector_Init(
@@ -179,7 +179,28 @@ void Object_Initialize() {
             model_component[object->object_id].object_id = index;
             object[index].component[COMP_MODEL] = object_model;
 
-            // TODO : make solid and add combat stats + set current HP set to AI_MEAN ACTION_NONE
+            // add combat stats
+            Monster_Stats* monster_stats;
+
+            monster_stats = (Monster_Stats*)malloc(
+                sizeof(Monster_Stats)
+            );
+
+            Monster_Stats* stats_to_use = (Monster_Stats*)Object_Lookup_Component(
+                (i32)monster_model,
+                COMP_MONSTER_STATS
+            );
+
+            memcpy(monster_stats, stats_to_use, sizeof(Monster_Stats));
+
+            monster_stats->object_id = index;
+            monster_stats->AI_to_use = MONSTERS_AI_MEAN; // maybe add || with original AI
+            monster_stats->hit_points_current = Dice_Roll(stats_to_use->hit_points_current, 6);
+
+            monster_stats_component[object->object_id].object_id = index;
+            object[index].component[COMP_MONSTER_STATS] = monster_stats;
+
+            // TODO : make solid + set current HP set to AI_MEAN ACTION_NONE
 
             Vector_Append(&monsters_wandering, index);
         }
@@ -339,11 +360,70 @@ void Object_Initialize() {
     level_rooms->discovered = true;
 }
 
-void Object_Update()
-{
+void Object_Update(){
+
     Position* player_position = (Position*)Object_Lookup_Component(64, COMP_POSITION);
-    //Todo : Initialize Monster AI Dijkstra
+
     Monster_AI_Dijkstra_Map((i32)player_position->position[0], (i32)player_position->position[2]);
+
+//    static Vector monsters_wandering;   // initialize to ACTION_NONE - done
+//    static Vector monsters_rooms;       // initialize to ACTION_ASLEEP - check this as room 0 is different
+//
+
+    // register currently active monsters on the AI map
+//    for(i32 register_current = 0; register_current < Vector_Size(&monsters_wandering); register_current++){
+//
+//        i32 monster = Vector_Get(&monsters_wandering, register_current);
+//        Position* monster_position = (Position*)Object_Lookup_Component(monster, COMP_POSITION);
+//        Monster_AI_Register(monster_position);
+//    }
+//
+//    for(i32 register_current = 0; register_current < Vector_Size(&monsters_rooms); register_current++){
+//
+//        i32 monster = Vector_Get(&monsters_rooms, register_current);
+//        Position* monster_position = (Position*)Object_Lookup_Component(monster, COMP_POSITION);
+//        Monster_AI_Register(monster_position);
+//    }
+
+    ///////////////////////////////////////////////////////
+
+    for(i32 current_monster = 0; current_monster < Vector_Size(&monsters_wandering); current_monster++){
+
+        // look at monster stats for current action
+        i32 monster = Vector_Get(&monsters_wandering, current_monster);
+        Monster_Stats* monster_stats = (Monster_Stats*)Object_Lookup_Component(monster, COMP_MONSTER_STATS);
+
+        // send to correct AI_Unit
+        //    MONSTERS_AI_NORMAL = 0,
+
+        //    MONSTERS_AI_MEAN = 1,
+        if(monster_stats->AI_to_use == MONSTERS_AI_MEAN){      // this needs a bit shift ??
+
+            // send data to the Monster_AI_Mean() thingy
+            Position* monster_position = (Position*)Object_Lookup_Component(
+                monster,
+                COMP_POSITION
+            );
+
+            bool attack = Monster_AI_Mean(
+                monster_position
+            );
+
+            if(attack){
+                monster_stats->current_action = ACTION_ATTACK;
+                // we may consider using attack targeting at this point
+            }else{
+
+                monster_stats->current_action = ACTION_MOVE;
+            }
+        }
+
+
+        //    MONSTERS_AI_FLYING = 2,
+        //    MONSTERS_AI_REGEN = 4,
+        //    MONSTERS_AI_GREEDY = 8,
+        //    MONSTERS_AI_INVISIBLE = 16
+    }
 }
 
 i32 Object_Create(
@@ -434,10 +514,13 @@ Current_Game_State  Object_Add_Wandering_Monster_To_Render(
 Current_Game_State  Object_Add_Monster_To_Render(
     Current_Game_State render_objects){
 
-    i32 monster_id = 77;
+    i32 monster_id = 77; // test monster M
     i32 room = 0;
 
     Object_Add_Position(monster_id, room);
+    Monster_Stats* m_stats = (Monster_Stats*)Object_Lookup_Component(77, COMP_MONSTER_STATS);
+    printf("Test Monster AI = %u\n", m_stats->AI_to_use);
+    printf("Monster AI Mean = %u\n", MONSTERS_AI_MEAN);
 
     Vector_Append(&render_objects.models_to_render, monster_id);
     return render_objects;
@@ -457,8 +540,6 @@ Current_Game_State Object_Add_Doors_To_Render(
 
             if(current->map_fixtures[x][z] == door){
 
-                printf("current->map_fixtures[%d][%d]\n", x, z);
-
                 u32 index;
 
                 for (index = 100; index < MAX_ENTITIES; index++) {      // initialize Entities
@@ -468,8 +549,6 @@ Current_Game_State Object_Add_Doors_To_Render(
                         break;
                     }            // set new door index
                 }
-                printf("New Object created : %d\n", index);
-                printf("Position = x : %d, z : %d\n", x, z);
 
                 game_entities->entity_id[index] = index;
                 object[index].object_id = index;

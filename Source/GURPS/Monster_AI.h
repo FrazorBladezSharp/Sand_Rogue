@@ -13,4 +13,12 @@ void Monster_AI_Dijkstra_Map(
     i32 target_z
 );
 
+void Monster_AI_Register(
+    Position* monster_position
+);
+
+bool Monster_AI_Mean(
+    Position* monster_position
+);
+
 #endif //SAND_ROGUE_MONSTER_AI_H

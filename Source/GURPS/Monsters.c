@@ -134,6 +134,7 @@ static i8 damage_ranged[27];
 static i32 shock[27];
 static i32 health[27];
 static i32 attack_target[27];
+static Action current_action[27];
 
 
 
@@ -200,20 +201,22 @@ void Monsters_Load_Monster_Model(
 
 void Monsters_Data_Initialize() {
 
-    memset (health_status,0,90);
-    memset (shock, 0, 90);
-    memset (attack_target, 0, 90);
+    memset(health_status,HEALTH_STATUS_NONE,90);
+    memset(shock, 0, 90);
+    memset(attack_target, ATTACK_TARGET_NONE, 90);
+
 
     for(i32 index = 0; index < 27; index++){
 
         will[index] = 3 + level[index];
         base_speed[index] = 4.19 + (level[index] * 0.01); // may need to modify this
-        hit_points_max[index] = level[index] * 6;             // number of dice to roll
-        hit_points_current[index] = level[index];
+        hit_points_max[index] = level[index] * 6;
+        hit_points_current[index] = level[index];       // number of dice to roll
         health[index] = hit_points_max[index];
         dodge[index] = will[index];
         attack_skill[index] = will[index];
         damage_ranged[index] = level[index] - 6;
+        current_action[index] = ACTION_NONE;
     }
 
 

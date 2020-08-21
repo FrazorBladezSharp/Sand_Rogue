@@ -155,7 +155,7 @@ typedef enum{
     ACTION_MOVE,
     ACTION_ATTACK,
     ACTION_RANGED_ATTACK,
-    //ACTION_ASLEEP
+    ACTION_ASLEEP
 
     //ACTION_COUNT
 
@@ -305,6 +305,7 @@ typedef struct {
     i8 damage_ranged;
     i32 shock;
     float base_speed;
+    Action current_action;
 
 } Monster_Stats;
 

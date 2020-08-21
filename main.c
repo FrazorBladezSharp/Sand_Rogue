@@ -1,6 +1,6 @@
 
 /** @file Main This is Prototype Code
- * Todo : Initialize Monster AI Dijkstra
+ * Todo : Initialize Monster AI Djikstra
  *
  * TODO : finish current todo's
  * TODO : spell mechanics & ranged attacks (Targeting) ???
