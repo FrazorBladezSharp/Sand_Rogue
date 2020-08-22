@@ -41,7 +41,7 @@
 
 #define MAX_ENTITIES 1024
 
-#define VECTOR_INITIAL_CAPACITY 8
+#define VECTOR_INITIAL_CAPACITY 8 // integers i32
 
 ////////////////////////// Typedefs ////////////////////////////////////
 
@@ -90,6 +90,7 @@ typedef struct{
 
     GLuint shader_program;
     GLuint uniform_Locations[64];
+
 } Shader;
 
 typedef struct {
@@ -111,14 +112,17 @@ typedef struct {
     u8 breadth;
     u8 height;
     u8 light;
+
 } Dungeon_Level_Rooms;
 
 typedef struct {
+
     vec3 position;
     float rotationX;
     float rotationY;
     float rotationZ;
     mat4 view_matrix;
+
 } Main_Camera;
 
 ///////////////////////////// ECS /////////////////////////////////
@@ -154,8 +158,8 @@ typedef enum{
     ACTION_NONE,
     ACTION_MOVE,
     ACTION_ATTACK,
-    ACTION_RANGED_ATTACK,
-    ACTION_ASLEEP
+    ACTION_RANGED_ATTACK
+    //ACTION_ASLEEP                  use this for monsters placed into a room
 
     //ACTION_COUNT
 
@@ -195,7 +199,9 @@ typedef enum{
     HEALTH_STATUS_DEATH,
     HEALTH_STATUS_RESTED,
     HEALTH_STATUS_FULL_REST
+
     //HEALTH_STATUS_COUNT
+
 } Health_Status;
 
 typedef enum {
@@ -209,12 +215,16 @@ typedef enum {
 } Attack_Target;
 
 typedef struct {
+
     i32 entity_id[MAX_ENTITIES];
+
 } Game_Entities;
 
 typedef struct {
+
     i32 object_id;
     void *component[64];
+
 } Game_Object;
 
 typedef struct {
@@ -264,7 +274,6 @@ typedef struct{
     i32 basic_move;
     float base_speed;
     Action action_current;
-
 
 } Secondary_Characteristics;
 
