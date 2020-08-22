@@ -5,9 +5,7 @@
 #ifndef SAND_ROGUE_SAND_COMBAT_H
 #define SAND_ROGUE_SAND_COMBAT_H
 
-#include "Source/Sand_Dice.h"
 #include "Source/Core/Game_Objects.h"
-#include "Source/Core/Dungeon_Level.h"
 #include "Source/GURPS/Sand_Damage.h"
 
 

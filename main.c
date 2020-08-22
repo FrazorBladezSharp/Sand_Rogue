@@ -27,8 +27,6 @@
 ###############################################################
 */
 
-#include "Source/OpenGL/Sand_Window_3D.h"
-#include "Source/OpenGL/Shaders.h"
 #include  "Source/Core/Main_Game_Loop.h"
 
 int

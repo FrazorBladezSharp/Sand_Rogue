@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_DUNGEON_LEVEL_H
 #define SAND_ROGUE_DUNGEON_LEVEL_H
 
-#include "Source/Common.h"
 #include "Map.h"
 
 void Dungeon_Level_Initialize();

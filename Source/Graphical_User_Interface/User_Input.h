@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_USER_INPUT_H
 #define SAND_ROGUE_USER_INPUT_H
 
-#include "Source/Common.h"
 #include "Source/Sand_Maths/Matrix_Utils.h"
 #include "Source/GURPS/Injuries_Healing.h"
 

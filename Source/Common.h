@@ -14,9 +14,9 @@
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <cglm/cglm.h>
 
 /////////////////// C Standard Lib Includes ////////////////////////////
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +24,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
-#include <cglm/cglm.h>
 
 //////////////////////////// Defines //////////////////////////////////
 

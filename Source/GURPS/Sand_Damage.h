@@ -6,7 +6,6 @@
 #define SAND_ROGUE_SAND_DAMAGE_H
 
 #include "Source/Core/Game_Objects.h"
-#include "Source/Sand_Dice.h"
 
 void Damage_Melee(
     Action opponents_action,

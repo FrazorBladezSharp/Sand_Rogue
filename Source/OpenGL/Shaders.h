@@ -21,7 +21,6 @@
 #ifndef SHADERS_H
 #define SHADERS_H
 
-#include "Source/Common.h"
 #include "Source/Core/Text_File_Utils.h"
 
 

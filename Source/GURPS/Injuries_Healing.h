@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_INJURIES_HEALING_H
 #define SAND_ROGUE_INJURIES_HEALING_H
 
-#include "Source/Common.h"
 #include "Source/GURPS/Sand_Damage.h"
 
 i32 Injuries_Healing_Update(

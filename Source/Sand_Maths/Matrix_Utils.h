@@ -21,7 +21,6 @@
 #ifndef MATRIX_UTILS_H
 #define MATRIX_UTILS_H
 
-#include <cglm/cglm.h>
 #include "Source/Common.h"
 
 

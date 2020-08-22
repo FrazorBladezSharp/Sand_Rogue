@@ -5,7 +5,6 @@
 #ifndef SAND_ROGUE_ITEMS_FIXTURES_H
 #define SAND_ROGUE_ITEMS_FIXTURES_H
 
-#include "Source/Common.h"
 #include "Source/Sand_Dice.h"
 #include "Source/OpenGL/Load_Model_3D.h"
 #include "Source/Core/Dungeon_Level.h"

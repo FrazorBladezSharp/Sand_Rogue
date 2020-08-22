@@ -5,9 +5,6 @@
 #ifndef SAND_ROGUE_GAME_OBJECTS_H
 #define SAND_ROGUE_GAME_OBJECTS_H
 
-#include "Source/Core/Sand_Vector.h"
-#include "Source/OpenGL/Load_Model_3D.h"
-#include "Source/Core/Map.h"
 #include "Source/GURPS/Monsters.h"
 #include "Source/GURPS/Items_Fixtures.h"
 #include "Source/GURPS/Monster_AI.h"
