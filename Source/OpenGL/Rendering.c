@@ -160,7 +160,7 @@ void Render_Model(
     Game_Model* game_model = Object_Lookup_Component(model, COMP_MODEL);
     Position* position = Object_Lookup_Component(model, COMP_POSITION);
 
-    if(*position->position == 0){
+    if(*position->position == 0x0){
 
         return;
     }
