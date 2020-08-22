@@ -4,10 +4,15 @@
 
 #include "Load_Model_3D.h"
 
-Game_Model* Load_Model_3D(const char* path, vec4 color,
-                        Vector *vao_storage, Vector *vbo_storage)
-{
-    Game_Model* loaded_asset = (Game_Model*) malloc(sizeof(Game_Model));
+Game_Model* Load_Model_3D(
+    const char* path,
+    vec4 color,
+    Vector *vao_storage,
+    Vector *vbo_storage){
+
+    Game_Model* loaded_asset = (Game_Model*) malloc(
+        sizeof(Game_Model)
+    );
 
     loaded_asset->vaoID = 0;
     loaded_asset->num_indices = 0;
@@ -19,7 +24,9 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
         aiProcessPreset_TargetRealtime_Quality
     );
 
-    assert(scene != NULL);
+    assert(
+        scene != NULL
+    );
 
     //////////////// Setup VAO /////////////////////////////
 
@@ -238,17 +245,24 @@ Game_Model* Load_Model_3D(const char* path, vec4 color,
     // 	/* cleanup - calling 'aiReleaseImport' is important, as the library
     //   keeps internal resources until the scene is freed again. Not
     //   doing so can cause severe resource leaking. */
-    aiReleaseImport(scene);
+    aiReleaseImport(
+        scene
+    );
 
     /* We added a log stream to the library, it's our job to disable it
        again. This will definitely release the last resources allocated
        by Assimp.*/
     //aiDetachAllLogStreams();
 
-    free(face_array);
+    free(
+        face_array
+    );
 
     if(colors_array) {
-        free(colors_array);
+
+        free(
+            colors_array
+        );
     }
 
     return loaded_asset;

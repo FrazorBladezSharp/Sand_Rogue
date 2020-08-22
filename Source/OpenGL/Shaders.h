@@ -27,8 +27,12 @@
 
 Shader Load_Shader();
 
-void check_shader_error(GLuint shader, GLuint flag,
-                        bool isProgram, const char *errorMessage);
+void check_shader_error(
+    GLuint shader,
+    GLuint flag,
+    bool isProgram,
+    const char *errorMessage
+);
 
 
 #endif // SHADERS_H

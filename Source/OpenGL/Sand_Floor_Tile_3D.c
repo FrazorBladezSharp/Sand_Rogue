@@ -4,22 +4,26 @@
 
 #include "Sand_Floor_Tile_3D.h"
 
-static GLuint vaoID;
-static GLuint iboID;                                     // Index Buffer Object for our Indices
+static GLuint vaoID;                                  // Vertex Array Buffer
+static GLuint iboID;                                  // Index Buffer Object for our Indices
 static GLuint vboID;                                  // Vertex Buffer Object for the vertices
-static GLuint color_buffer;                           // Vertex Buffer Object for the vertices
-static GLuint nboID;                                  // Vertex Buffer Object for the vertices
+static GLuint color_buffer;                           // Vertex Buffer Object for the color
+static GLuint nboID;                                  // Vertex Buffer Object for the normals
 
 
-Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
-{
-    SDL_GL_MakeCurrent(window, SDL_GL_GetCurrentContext());
+Game_Model Sand_Floor_Tile_3D_Create(
+    SDL_Window* window){
+
+    SDL_GL_MakeCurrent(
+        window,
+        SDL_GL_GetCurrentContext()
+    );
 
     GLfloat vertex_array[] = {
-        -0.5f, 0.0f, -0.5f, // v0 far left
-        -0.5f, 0.0f, 0.5f, // v1 near left
-        0.5f, 0.0f, 0.5f, // v2 near right
-        0.5f, 0.0f, -0.5f  // v3 far right
+        -0.5f, 0.0f, -0.5f,     // v0 far left
+        -0.5f, 0.0f, 0.5f,      // v1 near left
+        0.5f, 0.0f, 0.5f,       // v2 near right
+        0.5f, 0.0f, -0.5f       // v3 far right
     };
 
     GLfloat color_array[] = {
@@ -89,12 +93,12 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
     );
 
     glVertexAttribPointer(
-        0,                  // attribute must match the layout in the shader.
-        3,                  // size
-        GL_FLOAT,           // type
-        GL_FALSE,           // normalized
-        0,                  // stride
-        (void *) 0            // array buffer offset
+        0,                      // attribute must match the layout in the shader.
+        3,                      // size
+        GL_FLOAT,               // type
+        GL_FALSE,               // normalized
+        0,                      // stride
+        (void *) 0              // array buffer offset
     );
 
     glEnableVertexAttribArray(
@@ -121,12 +125,12 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
     );
 
     glVertexAttribPointer(
-        1,                  // attribute must match the layout in the shader.
-        4,                  // size
-        GL_FLOAT,           // type
-        GL_FALSE,           // normalized
-        0,                  // stride
-        (void *) 0            // array buffer offset
+        1,                      // attribute must match the layout in the shader.
+        4,                      // size
+        GL_FLOAT,               // type
+        GL_FALSE,               // normalized
+        0,                      // stride
+        (void *) 0              // array buffer offset
     );
 
     glEnableVertexAttribArray(
@@ -153,12 +157,12 @@ Game_Model Sand_Floor_Tile_3D_Create(SDL_Window* window)
     );
 
     glVertexAttribPointer(
-        2,                  // attribute must match the layout in the shader.
-        3,                  // size
-        GL_FLOAT,           // type
-        GL_TRUE,           // normalized
-        0,                  // stride
-        (void *) 0            // array buffer offset
+        2,                      // attribute must match the layout in the shader.
+        3,                      // size
+        GL_FLOAT,               // type
+        GL_TRUE,                // normalized   *Note : this is true
+        0,                      // stride
+        (void *) 0              // array buffer offset
     );
 
     glEnableVertexAttribArray(

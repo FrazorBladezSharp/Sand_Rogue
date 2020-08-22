@@ -22,16 +22,24 @@
 
 
 Shader Load_Shader() {
+
     const char *vertex_shader_source = Read_A_Text_File(
         "Resource/GLSL/Color_Vertex.shader"
     );
 
     if (vertex_shader_source == NULL){
-        printf("Shader failed to load.\n");
+
+        printf("Vertex Shader failed to load.\n");
     }
+
     const char *fragment_shader_source = Read_A_Text_File(
         "Resource/GLSL/Color_Fragment.shader"
     );
+
+    if (fragment_shader_source == NULL){
+
+        printf("Fragment Shader failed to load.\n");
+    }
 
     GLuint shader_program = glCreateProgram();
 
@@ -107,72 +115,73 @@ Shader Load_Shader() {
     glUseProgram(
         shader_program
     );
-    /* this could be made into an enum and moved to common.h
-     * model_matrix_loc = 0
-     * view_matrix_loc = 1
-     * projection_matrix_loc = 2
-     * light_position_loc = 3
-     * light_color_loc = 4
-     * shine_damper_loc = 5
-     * reflectivity_loc = 6
-     * sky_color_loc = 7
-     * camera_position_loc = 8
-     */
-    free((void*)vertex_shader_source);
-    free((void*)fragment_shader_source);
+
+    free(
+        (void*)vertex_shader_source
+    );
+
+    free(
+        (void*)fragment_shader_source
+    );
 
     Shader current_shader = {
+
         .shader_program = shader_program,
         .uniform_Locations[0] = glGetUniformLocation(
             shader_program,
-        "model_matrix"
+            "model_matrix"
         ),
 
         .uniform_Locations[1] = glGetUniformLocation(
             shader_program,
-        "view_matrix"
+            "view_matrix"
         ),
 
         .uniform_Locations[2] = glGetUniformLocation(
             shader_program,
-        "projection_matrix"
+            "projection_matrix"
         ),
 
         .uniform_Locations[3] = glGetUniformLocation(
             shader_program,
-        "light_position"
+            "light_position"
         ),
 
         .uniform_Locations[4] = glGetUniformLocation(
             shader_program,
-        "light_color"
+            "light_color"
         ),
 
         .uniform_Locations[5] = glGetUniformLocation(
             shader_program,
-        "shine_damper"
+            "shine_damper"
         ),
 
         .uniform_Locations[6] = glGetUniformLocation(
             shader_program,
-        "reflectivity"
+            "reflectivity"
         ),
 
         .uniform_Locations[7] = glGetUniformLocation(
             shader_program,
-        "sky_color"
+            "sky_color"
         ),
 
         .uniform_Locations[8] = glGetUniformLocation(
             shader_program,
-        "camera_position"
+            "camera_position"
         ),
     };
+
     return current_shader;
 }
 
-void check_shader_error(GLuint shader, GLuint flag,
-                        bool isProgram, const char *errorMessage) {
+void check_shader_error(
+    GLuint shader,
+    GLuint flag,
+    bool isProgram,
+    const char *errorMessage){
+
     GLint success = 0;
     GLchar error[1024] = {0};
 
@@ -207,7 +216,8 @@ void check_shader_error(GLuint shader, GLuint flag,
                 shader,
                 sizeof(error),
                 NULL,
-                error);
+                error
+            );
         }
 
         printf(
@@ -217,4 +227,3 @@ void check_shader_error(GLuint shader, GLuint flag,
         );
     }
 }
-

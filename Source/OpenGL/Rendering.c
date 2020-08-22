@@ -11,8 +11,8 @@ void Render_all(
     Current_Game_State current_game_state,
     vec3 light_position,
     vec3 light_color,
-    Dungeon_Level_Current* dungeon_level_current)
-{
+    Dungeon_Level_Current* dungeon_level_current){
+
     glClear(
         GL_COLOR_BUFFER_BIT |
         GL_DEPTH_BUFFER_BIT
@@ -96,7 +96,11 @@ void Render_all(
 
             if (dungeon_level_current->map_cells[x][z]) {
 
-                vec3 floor_position = {(float) x, 0.0f, (float) z};
+                vec3 floor_position = {
+                    (float) x,
+                    0.0f,
+                    (float) z
+                };
 
                 Position current_floor_position = {
                     0,
@@ -133,7 +137,13 @@ void Render_all(
 
     for(i32 index = 0; index < Vector_Size(&current_game_state.models_to_render); index++){
 
-        Render_Model(Vector_Get(&current_game_state.models_to_render, index), shader);
+        Render_Model(
+            Vector_Get(
+                &current_game_state.models_to_render,
+                index
+            ),
+            shader
+        );
     }
 
     glBindVertexArray(                          // disable the used VAO
@@ -149,6 +159,11 @@ void Render_Model(
 
     Game_Model* game_model = Object_Lookup_Component(model, COMP_MODEL);
     Position* position = Object_Lookup_Component(model, COMP_POSITION);
+
+    if(*position->position == 0){
+
+        return;
+    }
 
     glBindVertexArray(                          // set which VAO to draw
         game_model->vaoID

@@ -6,8 +6,8 @@
 
 
 
-SDL_Window* Sand_Window_Create()
-{
+SDL_Window* Sand_Window_Create(){
+
     SDL_Init(
         SDL_INIT_EVENTS |
         SDL_INIT_TIMER |
@@ -58,7 +58,9 @@ SDL_Window* Sand_Window_Create()
             window
         );
 
-        assert(false);
+        assert(
+            false
+        );
     }
 
     if (glewInit() != GLEW_OK) {                          // generate the OpenGL functions
@@ -71,7 +73,9 @@ SDL_Window* Sand_Window_Create()
             window
         );
 
-        assert(false);
+        assert(
+            false
+        );
     }
 
     SDL_GL_SetSwapInterval(
@@ -99,8 +103,9 @@ SDL_Window* Sand_Window_Create()
     return window;
 }
 
-void Sand_Window_Destroy(SDL_Window* window)
-{
+void Sand_Window_Destroy(
+    SDL_Window* window){
+
     SDL_DestroyWindow(
         window
     );
