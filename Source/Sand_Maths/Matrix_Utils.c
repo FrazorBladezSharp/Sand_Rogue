@@ -21,7 +21,8 @@
 #include "Matrix_Utils.h"
 
 
-Main_Camera Calc_Camera_View_Matrix(Main_Camera camera) {
+Main_Camera Calc_Camera_View_Matrix(
+    Main_Camera camera){
 
     glm_mat4_identity(
         camera.view_matrix
@@ -63,8 +64,9 @@ Main_Camera Calc_Camera_View_Matrix(Main_Camera camera) {
     return camera;
 }
 
-Game_Model Calc_Model_matrix(Game_Model model,
-                             Position* current_position) {
+Game_Model Calc_Model_matrix(
+    Game_Model model,
+    Position* current_position){
 
     glm_mat4_identity(
         model.model_matrix
@@ -118,4 +120,3 @@ Game_Model Calc_Model_matrix(Game_Model model,
 
     return model;
 }
-

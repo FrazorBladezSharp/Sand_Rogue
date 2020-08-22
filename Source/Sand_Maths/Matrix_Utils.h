@@ -25,11 +25,13 @@
 #include "Source/Common.h"
 
 
-Main_Camera Calc_Camera_View_Matrix(Main_Camera camera);
-
-Game_Model Calc_Model_matrix(Game_Model model,
-                             Position* current_position
+Main_Camera Calc_Camera_View_Matrix(
+    Main_Camera camera
 );
 
+Game_Model Calc_Model_matrix(
+    Game_Model model,
+    Position* current_position
+);
 
 #endif // MATRIX_UTILS_H
